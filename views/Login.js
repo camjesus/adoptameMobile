@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   TextInput,
@@ -12,13 +12,18 @@ import globalStyles from '../styles/global';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Login = ({navigation}) => {
+
+const Login = (props) => {
+  const {navigation} = props;
+  console.log(navigation);
   const [user, guardoUsuario] = useState(null);
   const [idLogIn, gUserLogIn] = useState('');
   const [usuario, guardarEmail] = useState('');
   const [password, guardarPass] = useState('');
   const [mensaje, guardaMensaje] = useState('');
   const [alerta, ingresarAlerta] = useState(false);
+  const isFirstTime = useRef(true);
+
   const userDefault = {
     id: '',
     nombre: '',
@@ -28,13 +33,21 @@ const Login = ({navigation}) => {
   };
 
   useEffect(() => {
-    obtenerDatosStorage();
-       console.log("ID LOGIN"+idLogIn);
-    
+    userLoggedGoToDisponibles();    
   }, []);
 
+
+
   useEffect(() => {
-    userStorage();
+    //Solo quiero que este hook se ejecute cuando modifico user
+    //no quiero que entre la primera vez que renderiza la pantalla
+    if (isFirstTime.current) {
+     isFirstTime.current = false
+
+   }else{
+        saveUserInStorage();
+
+   }
   }, [user]);
 
   const crearUsuario = () => {
@@ -67,35 +80,40 @@ const Login = ({navigation}) => {
     }
   };
 
-  const userStorage = async () => {
+  const saveUserInStorage = async () => {
     try {
-                console.log("ENTRE iuser storage");
+    
+    console.log("ENTRE user storage");
 
-    const v = await AsyncStorage.getItem("userId");
-
-    console.log(" valor de userID: "+v);
-    //  await AsyncStorage.setItem('userId', 'lucas');
-  //    await AsyncStorage.setItem('nombre', user.nombre);
-    //  await AsyncStorage.setItem('apellido', user.apellido);
-     // await AsyncStorage.setItem('telefono', user.telefono);
-      //await AsyncStorage.setItem('email', user.email);
+ 
+      await AsyncStorage.setItem('userId', user.id);
+      await AsyncStorage.setItem('nombre', user.nombre);
+      await AsyncStorage.setItem('apellido', user.apellido);
+      await AsyncStorage.setItem('telefono', user.telefono);
+      await AsyncStorage.setItem('email', user.email);
+ 
+    
+  
       //navigation.navigate('Disponibles');
+
     } catch (error) {
       console.log(error);
     }
   };
 
-  const obtenerDatosStorage = async () => {
+  const userLoggedGoToDisponibles = async () => {
     try {
-           console.log("entre a obtenerDatosStorage");
+           console.log("entre a userLoggedGoToDisponibles");
 
      await AsyncStorage.getItem('userId').then((value) => {
       console.log("averrr "+value); 
 
       if (value ) {
-          console.log("ENTRE id LOGIN"+value);
+          console.log("Hay un id guardado me voy a la pantalla de Masc Dis"+value);
 
-     // navigation.navigate('Disponibles');
+          // navigation.navigate('Disponibles');
+          navigation.navigate('buscar', { screen: 'Disponibles' });
+
     }
 });
 

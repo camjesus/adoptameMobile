@@ -6,7 +6,7 @@ import CrearMascota from '../views/CrearMascota';
 
 const Stack = createStackNavigator();
 
-export default function MisMascotasStack({navigation}) {
+export default function MisMascotasStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -17,7 +17,7 @@ export default function MisMascotasStack({navigation}) {
       <Stack.Screen
         name="verMascota"
         component={VerMascota}
-        options={{headerShown: false}}
+        options={{htitle: 'Mi mascota'}}
       />
       <Stack.Screen
         name="crearMascota"
