@@ -6,7 +6,8 @@ import globalStyles from '../styles/global';
 import MascotaItem from '../components/ui/MascotaItem';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const MisMascotas = ({navigation, route}) => {
+const MisMascotas = (props) => {
+  const {navigation} = props;
   const [mascotas, guardarMascotas] = useState({});
   const [userId, gUserId] = useState('');
 
@@ -62,7 +63,7 @@ const MisMascotas = ({navigation, route}) => {
           icon="plus"
           style={styles.fab}
           onPress={() => {
-            navigation.navigate('CrearMascota', {navigation, gConsMascotaApi});
+            navigation.navigate('CrearMascota', {gConsMascotaApi});
           }}
           animated="true"
         />

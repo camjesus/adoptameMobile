@@ -12,7 +12,9 @@ import globalStyles from '../styles/global';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Login = ({navigation}) => {
+const Login = (props) => {
+  const {navigation} = props;
+  console.log(navigation);
   const [user, guardoUsuario] = useState(userDefault);
   const [idLogIn, gUserLogIn] = useState('');
   const [usuario, guardarEmail] = useState('');
@@ -29,9 +31,9 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     obtenerDatosStorage();
-    if (idLogIn !== '') {
-      navigation.navigate('Disponibles');
-    }
+    //if (idLogIn) {
+    //  navigation.navigate('Disponibles');
+    //}
   });
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const Login = ({navigation}) => {
       await AsyncStorage.setItem('apellido', user.apellido);
       await AsyncStorage.setItem('telefono', user.telefono);
       await AsyncStorage.setItem('email', user.email);
-      navigation.navigate('Disponibles');
+      //navigation.navigate('Cuenta', {navigation});
     } catch (error) {
       console.log(error);
     }
