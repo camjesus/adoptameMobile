@@ -13,7 +13,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const Login = ({navigation}) => {
-  const [user, guardoUsuario] = useState(userDefault);
+  const [user, guardoUsuario] = useState(null);
   const [idLogIn, gUserLogIn] = useState('');
   const [usuario, guardarEmail] = useState('');
   const [password, guardarPass] = useState('');
@@ -29,10 +29,9 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     obtenerDatosStorage();
-    if (idLogIn !== '') {
-      navigation.navigate('Disponibles');
-    }
-  });
+       console.log("ID LOGIN"+idLogIn);
+    
+  }, []);
 
   useEffect(() => {
     userStorage();
@@ -70,12 +69,17 @@ const Login = ({navigation}) => {
 
   const userStorage = async () => {
     try {
-      await AsyncStorage.setItem('userId', user.id.toString());
-      await AsyncStorage.setItem('nombre', user.nombre);
-      await AsyncStorage.setItem('apellido', user.apellido);
-      await AsyncStorage.setItem('telefono', user.telefono);
-      await AsyncStorage.setItem('email', user.email);
-      navigation.navigate('Disponibles');
+                console.log("ENTRE iuser storage");
+
+    const v = await AsyncStorage.getItem("userId");
+
+    console.log(" valor de userID: "+v);
+    //  await AsyncStorage.setItem('userId', 'lucas');
+  //    await AsyncStorage.setItem('nombre', user.nombre);
+    //  await AsyncStorage.setItem('apellido', user.apellido);
+     // await AsyncStorage.setItem('telefono', user.telefono);
+      //await AsyncStorage.setItem('email', user.email);
+      //navigation.navigate('Disponibles');
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +87,21 @@ const Login = ({navigation}) => {
 
   const obtenerDatosStorage = async () => {
     try {
-      gUserLogIn(await AsyncStorage.getItem('userId'));
+           console.log("entre a obtenerDatosStorage");
+
+     await AsyncStorage.getItem('userId').then((value) => {
+      console.log("averrr "+value); 
+
+      if (value ) {
+          console.log("ENTRE id LOGIN"+value);
+
+     // navigation.navigate('Disponibles');
+    }
+});
+
+      
+    
+
     } catch (error) {
       console.log(error);
     }
