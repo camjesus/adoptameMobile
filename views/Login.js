@@ -24,13 +24,6 @@ const Login = (props) => {
   const [alerta, ingresarAlerta] = useState(false);
   const isFirstTime = useRef(true);
 
-  const userDefault = {
-    id: '',
-    nombre: '',
-    apellido: '',
-    email: '',
-    telefono: '',
-  };
 
   useEffect(() => {
     userLoggedGoToDisponibles();    
@@ -73,31 +66,30 @@ const Login = (props) => {
         ingresarAlerta(true);
         return;
       }
+      console.log("me logueo bien , guardo el user");
       guardoUsuario(resultado.data);
-      console.log(user);
     } catch (error) {
-      console.log(error);
+      console.log("erro buscanbdo usuario"+error);
     }
   };
 
   const saveUserInStorage = async () => {
     try {
     
-    console.log("ENTRE user storage");
-
- 
-      await AsyncStorage.setItem('userId', user.id);
+     console.log("ENTRE user storage");
+      await AsyncStorage.setItem('userId', JSON.stringify(user.id));
       await AsyncStorage.setItem('nombre', user.nombre);
       await AsyncStorage.setItem('apellido', user.apellido);
-      await AsyncStorage.setItem('telefono', user.telefono);
+    //  await AsyncStorage.setItem('telefono', user.telefono);
       await AsyncStorage.setItem('email', user.email);
- 
-    
-  
-      //navigation.navigate('Disponibles');
+
+      await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then((value) =>{
+        navigation.navigate('buscar', { screen: 'Disponibles' });
+
+      });
 
     } catch (error) {
-      console.log(error);
+      console.log("User Storage Error: "+error);
     }
   };
 
@@ -106,15 +98,13 @@ const Login = (props) => {
            console.log("entre a userLoggedGoToDisponibles");
 
      await AsyncStorage.getItem('userId').then((value) => {
-      console.log("averrr "+value); 
+      console.log("valor de userId "+value); 
 
       if (value ) {
           console.log("Hay un id guardado me voy a la pantalla de Masc Dis"+value);
 
-          // navigation.navigate('Disponibles');
           navigation.navigate('buscar', { screen: 'Disponibles' });
-
-    }
+       }
 });
 
       

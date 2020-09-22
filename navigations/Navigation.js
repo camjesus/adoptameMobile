@@ -49,6 +49,7 @@ export default function Navigation() {
           component={BuscarStack}
           options={{title: 'Buscar'}}
         />
+       
       </Tab.Navigator>
     </NavigationContainer>
   );

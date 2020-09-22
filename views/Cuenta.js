@@ -10,15 +10,28 @@ const Cuenta = ({navigation}) => {
   const [telefono, gTelefono] = useState('');
 
   useEffect(() => {
+    console.log("entre a cuena");
     obtenerDatosStorage();
   }, []);
 
   const obtenerDatosStorage = async () => {
     try {
-      gNombre(await AsyncStorage.getItem('nombre'));
-      gTelefono(await AsyncStorage.getItem('telefono'));
-      gApellido(await AsyncStorage.getItem('apellido'));
-      gEmail(await AsyncStorage.getItem('email'));
+
+       await AsyncStorage.getItem('nombre').then((value) => {
+        gNombre(value);
+      });
+     
+      await AsyncStorage.getItem('telefono').then((value) => {
+        gTelefono(value);
+      });
+
+      await AsyncStorage.getItem('apellido').then((value) => {
+        gApellido(value);
+      });
+
+      await AsyncStorage.getItem('email').then((value) => {
+        gEmail(value);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -30,14 +43,19 @@ const Cuenta = ({navigation}) => {
 
   const eliminoStorage = async () => {
     try {
-      await AsyncStorage.removeItem('userId');
+      console.log("borro del storage")
+      
       await AsyncStorage.removeItem('nombre');
       await AsyncStorage.removeItem('apellido');
       await AsyncStorage.removeItem('email');
       await AsyncStorage.removeItem('telefono');
-      navigation.navigate('Login');
+      await AsyncStorage.removeItem('userId').then((value)=>{
+       // navigation.navigate('Login');
+        navigation.navigate('account', { screen: 'login' });
+
+      });
     } catch (error) {
-      console.log(error);
+      console.log("error eliminando del storage"+error);
     }
   };
 
@@ -50,11 +68,14 @@ const Cuenta = ({navigation}) => {
           <Text>Apellido: {apellido}</Text>
           <Text>Email: {email}</Text>
           <Text>Telefono: {telefono}</Text>
-        </View>
-      </Card>
-      <Button mode="contained" onPress={() => logOut()}>
+          <Button mode="contained" onPress={() => logOut()}>
         Cerrar sesion
       </Button>
+        </View>
+        
+      </Card>
+      
+     
     </View>
   );
 };

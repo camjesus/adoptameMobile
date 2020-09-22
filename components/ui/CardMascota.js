@@ -9,7 +9,7 @@ const CardMascota = ({mascota}) => {
   const [nombreSexo, gNombreSexo] = useState('');
 
   useEffect(() => {
-    console.log(mascota);
+    console.log("entro a useEffec con la mascota " +mascota);
     modificoURL();
     console.log(image);
   }, [foto_url]);
@@ -20,13 +20,13 @@ const CardMascota = ({mascota}) => {
 
   const modificoURL = () => {
     if (foto_url !== '') {
-      const urlServicio = image.substring(17, image.length);
+      const urlServicio = foto_url.substring(17, foto_url.length);
       gFotoURL('http://10.0.2.2:' + urlServicio);
       console.log(urlServicio);
     }
   };
   const tomoNombreIcon = () => {
-    if (sexo === 'Macho') {
+    if (sexo === 'MACHO') {
       gNombreSexo('gender-male');
     } else {
       gNombreSexo('gender-female');
