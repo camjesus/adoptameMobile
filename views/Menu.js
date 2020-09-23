@@ -1,8 +1,8 @@
 import React from 'react';
 import Navigation from '../navigations/Navigation';
 
-const Menu = ({route, navigation}) => {
-  return <Navigation params={(navigation, route)} />;
+const Menu = ({navigation}) => {
+  return <Navigation />;
 };
 
 export default Menu;

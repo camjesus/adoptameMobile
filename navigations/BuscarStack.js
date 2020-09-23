@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Filtros from '../views/Filtros';
 import Disponibles from '../views/Disponibles';
+import BarraFiltro from '../components/ui/BarraFiltro';
 
 const Stack = createStackNavigator();
 
@@ -11,7 +12,13 @@ export default function BuscarStack() {
       <Stack.Screen
         name="Disponibles"
         component={Disponibles}
-        options={{title: 'Adoptame'}}
+        options={({navigation, route}) => ({
+          title: 'Adoptame',
+          headerTitleAlign: 'center',
+          headerRight: (props) => (
+            <BarraFiltro {...props} navigation={navigation} route={route} />
+          ),
+        })}
       />
       <Stack.Screen
         name="filtros"

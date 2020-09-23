@@ -2,9 +2,12 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Navigation from './navigations/Navigation';
+import Login from './views/Login';
+import Menu from './views/Menu';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+
+const Strack = createStackNavigator();
 
 //Defino el tema
 
@@ -21,7 +24,30 @@ const App = () => {
   return (
     <>
       <PaperProvider>
-        <Navigation />
+        <NavigationContainer>
+          <Strack.Navigator
+            initialRouteName="Login"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: theme.colors.primary,
+              },
+              headerTintColor: theme.colors.surface,
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}>
+            <Strack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+            <Strack.Screen
+              name="Menu"
+              component={Menu}
+              options={{headerShown: false}}
+            />
+          </Strack.Navigator>
+        </NavigationContainer>
       </PaperProvider>
     </>
   );

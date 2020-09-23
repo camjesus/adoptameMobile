@@ -54,16 +54,18 @@ const MisMascotas = (props) => {
           renderItem={({item}) => <MascotaItem mascota={item} />}
           keyExtractor={(item) => item.id}
           onPress={(item) => {
-            navigation.navigate('VerMascota', {item});
+            //navigation.navigate('VerMascota', {item});
+            navigation.navigate('misMascotas', {screen: 'VerMascota'});
           }}
         />
       </View>
-      <View>
+      <View style={styles.container}>
         <FAB
           icon="plus"
           style={styles.fab}
           onPress={() => {
-            navigation.navigate('CrearMascota', {gConsMascotaApi});
+            //navigation.navigate('misMascotas', {screen: 'crearMascota'});
+            navigation.navigate('crearMascota', {gConsMascotaApi});
           }}
           animated="true"
         />
@@ -77,6 +79,9 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
   },
 });
 

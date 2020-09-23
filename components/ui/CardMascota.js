@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
 import {Card, Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CardMascota = ({mascota}) => {
   const [image, gFotoURL] = useState('');
@@ -9,7 +9,7 @@ const CardMascota = ({mascota}) => {
   const [nombreSexo, gNombreSexo] = useState('');
 
   useEffect(() => {
-    console.log("entro a useEffec con la mascota " +mascota);
+    console.log('entro a useEffec con la mascota ' + mascota);
     modificoURL();
     console.log(image);
   }, [foto_url]);
@@ -46,7 +46,7 @@ const CardMascota = ({mascota}) => {
         </View>
         <View style={style.containerSexo}>
           <Text style={style.nombre}>Nombre: {nombre}</Text>
-          <Icon
+          <Maticons
             style={style.iconSexo}
             name={nombreSexo}
             size={25}
@@ -60,17 +60,17 @@ const CardMascota = ({mascota}) => {
           <Button
             style={style.flecha}
             type="clear"
-            icon={<Icon name="arrow-left-thick" size={30} color="grey" />}
+            icon={<Maticons name="arrow-left-thick" size={30} color="grey" />}
           />
           <Button
             style={style.mensaje}
             type="clear"
-            icon={<Icon name="email" size={30} color="blue" />}
+            icon={<Maticons name="email" size={30} color="blue" />}
           />
           <Button
             style={style.flecha}
             type="clear"
-            icon={<Icon name="arrow-right-thick" size={30} color="grey" />}
+            icon={<Maticons name="arrow-right-thick" size={30} color="grey" />}
           />
         </View>
       </View>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect,useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   TextInput,
@@ -12,7 +12,6 @@ import globalStyles from '../styles/global';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 const Login = (props) => {
   const {navigation} = props;
   console.log(navigation);
@@ -24,23 +23,18 @@ const Login = (props) => {
   const [alerta, ingresarAlerta] = useState(false);
   const isFirstTime = useRef(true);
 
-
   useEffect(() => {
-    userLoggedGoToDisponibles();    
+    userLoggedGoToDisponibles();
   }, []);
-
-
 
   useEffect(() => {
     //Solo quiero que este hook se ejecute cuando modifico user
     //no quiero que entre la primera vez que renderiza la pantalla
     if (isFirstTime.current) {
-     isFirstTime.current = false
-
-   }else{
-        saveUserInStorage();
-
-   }
+      isFirstTime.current = false;
+    } else {
+      saveUserInStorage();
+    }
   }, [user]);
 
   const crearUsuario = () => {
@@ -66,50 +60,49 @@ const Login = (props) => {
         ingresarAlerta(true);
         return;
       }
-      console.log("me logueo bien , guardo el user");
+      console.log('me logueo bien , guardo el user');
       guardoUsuario(resultado.data);
     } catch (error) {
-      console.log("erro buscanbdo usuario"+error);
+      console.log('erro buscanbdo usuario' + error);
     }
   };
 
   const saveUserInStorage = async () => {
     try {
-    
-     console.log("ENTRE user storage");
+      console.log('ENTRE user storage');
       await AsyncStorage.setItem('userId', JSON.stringify(user.id));
       await AsyncStorage.setItem('nombre', user.nombre);
       await AsyncStorage.setItem('apellido', user.apellido);
-    //  await AsyncStorage.setItem('telefono', user.telefono);
+      //  await AsyncStorage.setItem('telefono', user.telefono);
       await AsyncStorage.setItem('email', user.email);
 
-      await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then((value) =>{
-        navigation.navigate('buscar', { screen: 'Disponibles' });
-
-      });
-
+      await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then(
+        (value) => {
+          //navigation.navigate('buscar', {screen: 'Disponibles'});
+          navigation.navigate('Menu', {navigation});
+        },
+      );
     } catch (error) {
-      console.log("User Storage Error: "+error);
+      console.log('User Storage Error: ' + error);
     }
   };
 
   const userLoggedGoToDisponibles = async () => {
     try {
-           console.log("entre a userLoggedGoToDisponibles");
+      console.log('entre a userLoggedGoToDisponibles');
 
-     await AsyncStorage.getItem('userId').then((value) => {
-      console.log("valor de userId "+value); 
+      await AsyncStorage.getItem('userId').then((value) => {
+        console.log('valor de userId ' + value);
 
-      if (value ) {
-          console.log("Hay un id guardado me voy a la pantalla de Masc Dis"+value);
+        if (value) {
+          console.log(
+            'Hay un id guardado me voy a la pantalla de Masc Dis' + value,
+          );
 
-          navigation.navigate('buscar', { screen: 'Disponibles' });
-       }
-});
-
-      
-    
-
+          //navigation.navigate('buscar', {screen: 'Disponibles'});
+          navigation.navigate('Menu', {navigation});
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -129,6 +122,7 @@ const Login = (props) => {
         value={password}
         onChangeText={(texto) => guardarPass(texto)}
         style={style.input}
+        password={true}
       />
 
       <Button mode="contained" onPress={() => logIn()}>

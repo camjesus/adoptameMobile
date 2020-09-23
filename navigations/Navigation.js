@@ -49,7 +49,6 @@ export default function Navigation() {
           component={BuscarStack}
           options={{title: 'Buscar'}}
         />
-       
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -68,7 +67,7 @@ function screenOptions(route, color) {
     case 'eventos':
       iconName = 'calendar-multiple';
       break;
-    case 'cuenta':
+    case 'account':
       iconName = 'account';
       break;
     case 'buscar':
