@@ -51,7 +51,9 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.removeItem('telefono');
       await AsyncStorage.removeItem('userId').then((value)=>{
        // navigation.navigate('Login');
-        navigation.navigate('account', { screen: 'login' });
+       // navigation.navigate('Login');
+       navigation.navigate('Login');
+
 
       });
     } catch (error) {

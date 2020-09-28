@@ -1,6 +1,6 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MisMascotasStack from './MisMascotasStack';
 import EventoStack from './EventoStack';
 import ServicioStack from './ServicioStack';
@@ -12,45 +12,45 @@ const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
   return (
-    <NavigationContainer independent={true}>
       <Tab.Navigator
         initialRouteName="account"
         tabBarOptions={{
           inactiveTintColor: '#646464',
           activeTintColor: '#00a680',
         }}
-        screenOptions={({route}) => ({
-          tabBarIcon: ({color}) => screenOptions(route, color),
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color }) => screenOptions(route, color),
         })}>
         <Tab.Screen
           name="misMascotas"
           component={MisMascotasStack}
-          options={{title: 'Mis Mascotas'}}
+          options={{ title: 'Mis Mascotas' }}
         />
 
         <Tab.Screen
           name="eventos"
           component={EventoStack}
-          options={{title: 'Eventos'}}
+          options={{ title: 'Eventos' }}
         />
 
         <Tab.Screen
           name="serivcios"
           component={ServicioStack}
-          options={{title: 'Serivcios'}}
+          options={{ title: 'Serivcios' }}
         />
         <Tab.Screen
           name="account"
           component={AccountStack}
-          options={{title: 'Cuenta'}}
+          options={{ title: 'Cuenta' }}
         />
         <Tab.Screen
           name="buscar"
           component={BuscarStack}
-          options={{title: 'Buscar'}}
+          options={{ title: 'Buscar' }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+
+
   );
 }
 

@@ -6,6 +6,7 @@ import Login from './views/Login';
 import Menu from './views/Menu';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import Navigation from './navigations/Navigation';
 
 const Strack = createStackNavigator();
 
@@ -43,10 +44,11 @@ const App = () => {
             />
             <Strack.Screen
               name="Menu"
-              component={Menu}
+              component={Navigation}
               options={{headerShown: false}}
             />
           </Strack.Navigator>
+         
         </NavigationContainer>
       </PaperProvider>
     </>
