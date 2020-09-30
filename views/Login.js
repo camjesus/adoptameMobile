@@ -133,7 +133,7 @@ const Login = (props) => {
       </Button>
       <Button onPress={() => crearUsuario()}>Nueva Cuenta</Button>
 
-      <FacebookLoginBtn/>
+      <FacebookLoginBtn {...props}/>
       <Portal>
         <Dialog visible={alerta}>
           <Dialog.Title>Error</Dialog.Title>

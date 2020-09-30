@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, Card, HelperText, Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
+import  { LoginManager} from 'react-native-fbsdk';
 
 const Cuenta = ({navigation}) => {
   const [nombre, gNombre] = useState('');
@@ -52,6 +53,8 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.removeItem('userId').then((value)=>{
        // navigation.navigate('Login');
        // navigation.navigate('Login');
+     //  LoginManager.logOut(); no seria necesario 
+
        navigation.navigate('Login');
 
 
