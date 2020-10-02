@@ -15,7 +15,7 @@ const CrearMascota = ({route}) => {
   const {gConsMascotaApi} = route.params;
   const [nombre, gNombre] = useState('');
   const [sexo, gSexo] = useState('');
-  const [temanio, gTamanio] = useState('');
+  const [tamanio, gTamanio] = useState('');
   const [descripcion, gDescripcion] = useState('');
   const [edad, gEdad] = useState('');
   const [raza, gRaza] = useState('');
@@ -30,26 +30,23 @@ const CrearMascota = ({route}) => {
   const [checkedMacho, setCheckedMacho] = React.useState(true);
   const [checkedHembra, setCheckedHembra] = React.useState(false);
   const [disableEdad, gDisableEddad] = React.useState(true);
-  const [checkedEdad, setCheckedEdad] = React.useState(true);
 
   const guardarMascota = async () => {
     try {
-      await axios.post('url de guardar mascota');
+      const postMascotas = {nombre, sexo,tamanio};
+
+      const resultado = await axios.post(
+        'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
+        postMascotas,
+      );      
+      
       gConsMascotaApi(true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const edadCheck = () => {
-    setCheckedEdad(!checkedEdad);
-    if (checkedEdad) {
-      gDisableEddad(false);
-    } else {
-      gDisableEddad(true);
-      gEdad('');
-    }
-  };
+ 
 
   //<Headline style={globalStyles.titulo}> Crear nueva mascota</Headline>
   return (
@@ -108,13 +105,7 @@ const CrearMascota = ({route}) => {
           style={style.edad}
           disabled={disableEdad}
         />
-        <Text style={style.textCheckEdad}>Menos de 1 año</Text>
-        <Checkbox
-          status={checkedEdad ? 'checked' : 'unchecked'}
-          onPress={() => {
-            edadCheck();
-          }}
-        />
+        
       </View>
       <Button mode="contained" onPress={() => guardarMascota()}>
         Guardar

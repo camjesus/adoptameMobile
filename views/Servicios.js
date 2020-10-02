@@ -17,7 +17,7 @@ const Servicios = ({navigation, route}) => {
         console.log('paso por obetener los Servicios');
         guardarServicios(resultado.data);
       } catch (error) {
-        console.loge(error);
+        console.log(error);
       }
     };
     obtenerServicios();

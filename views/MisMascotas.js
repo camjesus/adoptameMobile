@@ -17,14 +17,14 @@ const MisMascotas = (props) => {
     obtenerDatosStorage();
     const obtenerMascotas = async () => {
       try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/{userId}`;
+        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${1}`;
         console.log(userId);
         const resultado = await axios.get(url);
         console.log(resultado.data);
         console.log('paso por obetener mascotas');
         guardarMascotas(resultado.data);
       } catch (error) {
-        console.loge(error);
+        console.log(error);
       }
     };
     if (consultarMascotas) {
@@ -43,6 +43,14 @@ const MisMascotas = (props) => {
       console.log(error);
     }
   };
+
+
+  verMascota = (item) => {
+    console.log("paso por detalle "+item);
+    navigation.navigate("verMascota",{item});
+  };
+
+
   return (
     <View>
       <View>
@@ -51,12 +59,9 @@ const MisMascotas = (props) => {
         </Headline>
         <FlatList
           data={mascotas}
-          renderItem={({item}) => <MascotaItem mascota={item} />}
-          keyExtractor={(item) => item.id}
-          onPress={(item) => {
-            //navigation.navigate('VerMascota', {item});
-            navigation.navigate('misMascotas', {screen: 'VerMascota'});
-          }}
+          renderItem={({item}) => <MascotaItem mascota={item}  verMascota={() => this.verMascota(item)}/>}
+          keyExtractor={(item) => JSON.stringify(item.id)}
+        
         />
       </View>
       <View style={styles.container}>

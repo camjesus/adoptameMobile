@@ -22,7 +22,7 @@ const Disponibles = ({navigation, route}) => {
       console.log('paso por obetener mascotas Disponibles');
       gDisponibles(resultado.data);
     } catch (error) {
-      console.loge(error);
+      console.log(error);
     }
   };
 

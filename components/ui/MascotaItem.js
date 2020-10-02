@@ -2,32 +2,34 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
   Image,
   Text,
-  ActivityIndicator,
-  Card,
+  TouchableOpacity
 } from 'react-native';
-const MascotaItem = ({mascota}) => {
+
+import {Card} from 'react-native-elements';
+
+const MascotaItem = ({mascota,verMascota}) => {
   console.log('mascota');
   console.log(mascota);
-
-  const goMascota = () => {
-    //navigation.navigate('VerMascota', {mascota});
-    console.log(mascota.id);
-  };
+  var that = this;
+  console.log(verMascota)
   return (
-    <Card>
+    <Card  > 
       <View style={style.viewMascota}>
         <View style={style.viewMascotaImg}>
+        <TouchableOpacity onPress={() => {this.verMascota(mascota)} }>
+
           <Image
             style={style.imgMascota}
             source={{
               uri: 'https://reactnative.dev/img/tiny_logo.png',
             }}
+           
           />
+          </TouchableOpacity>
         </View>
-        <View style={style.viewMascotaImg}>
+        <View style={style.viewMascotaImg}  >
           <Text style={style.nombreText}>{mascota.nombre}</Text>
 
           <View>
@@ -36,6 +38,7 @@ const MascotaItem = ({mascota}) => {
           <View>
             <Text style={style.descripcionText}>Edad: {mascota.edad}</Text>
           </View>
+          
         </View>
       </View>
     </Card>
