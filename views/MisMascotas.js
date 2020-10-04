@@ -45,10 +45,7 @@ const MisMascotas = (props) => {
   };
 
 
-  verMascota = (item) => {
-    console.log("paso por detalle "+item);
-    navigation.navigate("verMascota",{item});
-  };
+
 
 
   return (
@@ -59,7 +56,7 @@ const MisMascotas = (props) => {
         </Headline>
         <FlatList
           data={mascotas}
-          renderItem={({item}) => <MascotaItem mascota={item}  verMascota={() => this.verMascota(item)}/>}
+          renderItem={({item}) => <MascotaItem mascota={item} />}
           keyExtractor={(item) => JSON.stringify(item.id)}
         
         />
@@ -70,7 +67,7 @@ const MisMascotas = (props) => {
           style={styles.fab}
           onPress={() => {
             //navigation.navigate('misMascotas', {screen: 'crearMascota'});
-            navigation.navigate('crearMascota', {gConsMascotaApi});
+            navigation.navigate('crearMascota', {consultarMascotas});
           }}
           animated="true"
         />

@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState, useEffect } from 'react';
+import {StyleSheet, View,PermissionsAndroid,Image} from 'react-native';
 import {
   TextInput,
   Headline,
@@ -7,9 +7,12 @@ import {
   Checkbox,
   Text,
   Card,
+  TouchableOpacity
+  
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
 import axios from 'axios';
+import ImagePicker from 'react-native-image-picker';
 
 const CrearMascota = ({route}) => {
   const {gConsMascotaApi} = route.params;
@@ -24,13 +27,12 @@ const CrearMascota = ({route}) => {
   const [latitud, gLatitud] = useState('');
   const [fotoUrl, gFotoURL] = useState('');
   const [rescatista, gRescatista] = useState('');
-  const [imagen, gImagen] = useState('');
+  const [imagen, gImagen] = useState(null);
   const [checkedPerro, setCheckedPerro] = React.useState(true);
   const [checkedGato, setCheckedGato] = React.useState(false);
   const [checkedMacho, setCheckedMacho] = React.useState(true);
   const [checkedHembra, setCheckedHembra] = React.useState(false);
-  const [disableEdad, gDisableEddad] = React.useState(true);
-
+ 
   const guardarMascota = async () => {
     try {
       const postMascotas = {nombre, sexo,tamanio};
@@ -46,7 +48,77 @@ const CrearMascota = ({route}) => {
     }
   };
 
- 
+
+  useEffect(() => {
+    console.log('entro a useEffec con la mascota ' );
+  
+    console.log(imagen);
+  }, [imagen]);
+
+
+
+ const selectPhotoTapped=async ()=> {
+  const options = {
+    quality: 1.0,
+    maxWidth: 500,
+    maxHeight: 500,
+    storageOptions: {
+      privateDirectory: true,
+      skipBackup: true
+    },
+  };
+
+
+  try {
+    console.log("pidiendo permiso");
+    await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+    ])
+
+    const permissionCamera = await PermissionsAndroid.check('android.permission.CAMERA')
+    const permissionWriteStorage = await PermissionsAndroid.check('android.permission.WRITE_EXTERNAL_STORAGE')
+    const permissionREADStorage = await PermissionsAndroid.check('android.permission.READ_EXTERNAL_STORAGE')
+    console.log("sali de perdir permiso");
+
+    if (!permissionCamera || !permissionWriteStorage || !permissionREADStorage) {
+      console.log("Failed to get the required permissions");
+
+      return {
+        error: 'Failed to get the required permissions.'
+      }
+    }
+  } catch (error) {
+    console.log("error"+error);
+
+    return {
+      error: 'Failed to get the required permissions.'
+    }
+  }
+
+console.log("abriendo camara");
+
+  ImagePicker.showImagePicker(options, response => {
+    console.log('Response = ', response);
+
+    if (response.didCancel) {
+      console.log('User cancelled photo picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else if (response.customButton) {
+      console.log('User tapped custom button: ', response.customButton);
+    } else {
+      let source = {uri: response.uri};
+
+      // You can also display the image using data:
+      // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+      gImagen(source);
+    }
+  });
+}
+
 
   //<Headline style={globalStyles.titulo}> Crear nueva mascota</Headline>
   return (
@@ -101,12 +173,22 @@ const CrearMascota = ({route}) => {
         <TextInput
           label="Edad"
           value={edad}
+          keyboardType = 'numeric'
           onChangeText={(texto) => gEdad(texto)}
           style={style.edad}
-          disabled={disableEdad}
-        />
-        
+       />
       </View>
+      
+
+          
+              <Button mode="contained" onPress={() => selectPhotoTapped()}>
+              elegir foto
+            </Button>
+          <Image  style={style.imgMascota} source={imagen} />
+
+
+     
+     
       <Button mode="contained" onPress={() => guardarMascota()}>
         Guardar
       </Button>
@@ -145,5 +227,9 @@ const style = StyleSheet.create({
     paddingTop: 8,
     marginStart: 5,
   },
+  imgMascota: {
+    width: 66,
+    height: 58,
+  }
 });
 export default CrearMascota;

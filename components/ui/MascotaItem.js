@@ -18,8 +18,6 @@ const MascotaItem = ({mascota,verMascota}) => {
     <Card  > 
       <View style={style.viewMascota}>
         <View style={style.viewMascotaImg}>
-        <TouchableOpacity onPress={() => {this.verMascota(mascota)} }>
-
           <Image
             style={style.imgMascota}
             source={{
@@ -27,7 +25,7 @@ const MascotaItem = ({mascota,verMascota}) => {
             }}
            
           />
-          </TouchableOpacity>
+        
         </View>
         <View style={style.viewMascotaImg}  >
           <Text style={style.nombreText}>{mascota.nombre}</Text>
