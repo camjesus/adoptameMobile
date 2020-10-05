@@ -31,7 +31,7 @@ const Servicios = ({navigation, route}) => {
       <FlatList
         data={servicios}
         renderItem={({item}) => <ServicioItem servicio={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => JSON.stringify(item.id)}
       />
     </View>
   );

@@ -14,6 +14,7 @@ const MascotaItem = ({mascota,verMascota}) => {
   console.log(mascota);
   var that = this;
   console.log(verMascota)
+
   return (
     <Card  > 
       <View style={style.viewMascota}>
@@ -21,7 +22,7 @@ const MascotaItem = ({mascota,verMascota}) => {
           <Image
             style={style.imgMascota}
             source={{
-              uri: 'https://reactnative.dev/img/tiny_logo.png',
+              uri: `${mascota.foto_url}`,
             }}
            
           />

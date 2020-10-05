@@ -25,7 +25,6 @@ const CrearMascota = ({route}) => {
   const [tipoMascota, gTipoMascota] = useState('');
   const [longitud, gLongitud] = useState('');
   const [latitud, gLatitud] = useState('');
-  const [fotoUrl, gFotoURL] = useState('');
   const [rescatista, gRescatista] = useState('');
   const [imagen, gImagen] = useState(null);
   const [checkedPerro, setCheckedPerro] = React.useState(true);
@@ -35,19 +34,67 @@ const CrearMascota = ({route}) => {
  
   const guardarMascota = async () => {
     try {
-      const postMascotas = {nombre, sexo,tamanio};
+      const postMascotas = {nombre, sexo,tamanio,imagen};
+      var bodyFormData = new FormData();
+      bodyFormData.append('nombre', nombre);
+      bodyFormData.append('estado', 'DISPONIBLE');
 
-      const resultado = await axios.post(
-        'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
-        postMascotas,
-      );      
-      
-      gConsMascotaApi(true);
+      if(checkedMacho){
+        bodyFormData.append('sexo', 'MACHO');
+
+      }else{
+        bodyFormData.append('sexo', 'HEMBRA');
+
+      }
+      bodyFormData.append('tamanio', tamanio); //poner en pantalla
+      bodyFormData.append('raza', raza);
+      if(checkedPerro){
+        bodyFormData.append('tipoMascota', 'PERRO');
+
+      }else{
+        bodyFormData.append('tipoMascota', 'GATO');
+
+      }
+      bodyFormData.append('raza', raza);
+      bodyFormData.append('edad', edad);
+      bodyFormData.append('descripcion', 'aca va la descripcion');
+
+
+      bodyFormData.append('rescatista', '1'); //sacarlo de user storage
+      bodyFormData.append('image', {
+                                     name: imagen.fileName,
+                                     type: imagen.type,
+                                     uri:
+                                     Platform.OS === "android" ? imagen.uri : imagen.uri.replace("file://", "")
+                                    });
+
+     axios.request({
+       method: 'post',
+       url: 'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
+       data: bodyFormData,
+       headers: {
+         'Content-Type': 'multipart/form-data'
+       }        
+      })
+      .then(function (response) {
+          //handle success
+          console.log(response);
+       })
+      .catch(function (response) {
+          //handle error
+         console.log(response);
+      });
+
+
+    //  gConsMascotaApi(true);
     } catch (error) {
       console.log(error);
     }
   };
 
+
+
+ 
 
   useEffect(() => {
     console.log('entro a useEffec con la mascota ' );
@@ -109,12 +156,12 @@ console.log("abriendo camara");
     } else if (response.customButton) {
       console.log('User tapped custom button: ', response.customButton);
     } else {
-      let source = {uri: response.uri};
+      //let source = {uri: response.uri};
 
       // You can also display the image using data:
       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-      gImagen(source);
+      gImagen(response);
     }
   });
 }
