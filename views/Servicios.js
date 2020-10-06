@@ -17,7 +17,7 @@ const Servicios = ({navigation, route}) => {
         console.log('paso por obetener los Servicios');
         guardarServicios(resultado.data);
       } catch (error) {
-        console.loge(error);
+        console.log(error);
       }
     };
     obtenerServicios();
@@ -31,7 +31,7 @@ const Servicios = ({navigation, route}) => {
       <FlatList
         data={servicios}
         renderItem={({item}) => <ServicioItem servicio={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => JSON.stringify(item.id)}
       />
     </View>
   );

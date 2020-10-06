@@ -17,7 +17,7 @@ const Eventos = ({navigation, route}) => {
         console.log('paso por obetener los eventos');
         guardarEventos(resultado.data);
       } catch (error) {
-        console.loge(error);
+        console.log(error);
       }
     };
     obtenerEventos();

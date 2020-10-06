@@ -17,14 +17,14 @@ const MisMascotas = (props) => {
     obtenerDatosStorage();
     const obtenerMascotas = async () => {
       try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/{1}`;
+        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${1}`;
         console.log(userId);
         const resultado = await axios.get(url);
         console.log(resultado.data);
         console.log('paso por obetener mascotas');
         guardarMascotas(resultado.data);
       } catch (error) {
-        console.loge(error);
+        console.log(error);
       }
     };
     if (consultarMascotas) {
@@ -43,6 +43,7 @@ const MisMascotas = (props) => {
       console.log(error);
     }
   };
+
   return (
     <View>
       <View>
@@ -52,11 +53,7 @@ const MisMascotas = (props) => {
         <FlatList
           data={mascotas}
           renderItem={({item}) => <MascotaItem mascota={item} />}
-          keyExtractor={(item) => item.id}
-          onPress={(item) => {
-            //navigation.navigate('VerMascota', {item});
-            navigation.navigate('misMascotas', {screen: 'VerMascota'});
-          }}
+          keyExtractor={(item) => JSON.stringify(item.id)}
         />
       </View>
       <View style={styles.container}>
@@ -65,7 +62,7 @@ const MisMascotas = (props) => {
           style={styles.fab}
           onPress={() => {
             //navigation.navigate('misMascotas', {screen: 'crearMascota'});
-            navigation.navigate('crearMascota', {gConsMascotaApi});
+            navigation.navigate('crearMascota', {consultarMascotas});
           }}
           animated="true"
         />
