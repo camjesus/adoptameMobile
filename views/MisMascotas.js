@@ -5,6 +5,7 @@ import axios from 'axios';
 import globalStyles from '../styles/global';
 import MascotaItem from '../components/ui/MascotaItem';
 import AsyncStorage from '@react-native-community/async-storage';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const MisMascotas = (props) => {
   const {navigation} = props;
@@ -17,7 +18,7 @@ const MisMascotas = (props) => {
     obtenerDatosStorage();
     const obtenerMascotas = async () => {
       try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${1}`;
+        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${2}`;
         console.log(userId);
         const resultado = await axios.get(url);
         console.log(resultado.data);
@@ -45,29 +46,32 @@ const MisMascotas = (props) => {
   };
 
   return (
-    <View>
       <View>
+        <FlatList 
+        ListHeaderComponent={
+
         <Headline style={globalStyles.titulo}>
           {mascotas.length > 0 ? 'Mis mascotas' : 'Aún no cargaste mascotas'}
         </Headline>
-        <FlatList
+
+        }
           data={mascotas}
           renderItem={({item}) => <MascotaItem mascota={item} />}
           keyExtractor={(item) => JSON.stringify(item.id)}
+
+        
         />
-      </View>
-      <View style={styles.container}>
-        <FAB
-          icon="plus"
-          style={styles.fab}
-          onPress={() => {
-            //navigation.navigate('misMascotas', {screen: 'crearMascota'});
-            navigation.navigate('crearMascota', {consultarMascotas});
-          }}
-          animated="true"
-        />
-      </View>
-    </View>
+      <FAB
+            icon="plus"
+            style={styles.fab}
+            onPress={() => {
+              //navigation.navigate('misMascotas', {screen: 'crearMascota'});
+              navigation.navigate('crearMascota', {consultarMascotas});
+            }}
+            animated="true"
+          />
+     </View>
+  
   );
 };
 const styles = StyleSheet.create({
