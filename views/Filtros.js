@@ -8,20 +8,15 @@ import {
   Text,
   Card,
 } from 'react-native-paper';
+import Slider from '@react-native-community/slider';
 import globalStyles from '../styles/global';
 import axios from 'axios';
+
 const Filtros = ({navigation, route}) => {
-  const {gConsMascotaApi} = route.params;
-  const [sexo, gSexo] = useState('');
-  const [temanio, gTamanio] = useState('');
-  const [edad, gEdad] = useState('');
-  const [raza, gRaza] = useState('');
+  console.log(route.params);
+  const [edad, gEdad] = useState(30);
+  const [mascotasDisponibles, gDisponiblesM] = useState([]);
   const [tipoMascota, gTipoMascota] = useState('');
-  const [longitud, gLongitud] = useState('');
-  const [latitud, gLatitud] = useState('');
-  const [fotoUrl, gFotoURL] = useState('');
-  const [rescatista, gRescatista] = useState('');
-  const [imagen, gImagen] = useState('');
   const [checkedPerro, setCheckedPerro] = React.useState(true);
   const [checkedGato, setCheckedGato] = React.useState(true);
   const [checkedMacho, setCheckedMacho] = React.useState(true);
@@ -30,48 +25,68 @@ const Filtros = ({navigation, route}) => {
   const [checkedMediano, setCheckedMediano] = React.useState(true);
   const [checkedGrande, setCheckedGrande] = React.useState(true);
 
+  const filtros = [];
+  const params = new URLSearchParams();
+
   const aplicarFiltros = () => {
-    if (checkedPerro && checkedGato) {
-      gTipoMascota(null);
-    } else {
-      if (checkedPerro) {
-        gTipoMascota('Perro');
-      }
-      if (checkedGato) {
-        gTipoMascota('Gato');
-      }
+    //agregar a los fitros
+    if (checkedPerro) {
+      gTipoMascota('Perro');
+    }
+    if (checkedGato) {
+      gTipoMascota('Gato');
     }
 
-    if (checkedPeque && checkedMediano && checkedGrande) {
-      gTamanio(null);
-      if (checkedPeque) {
-        gTamanio('Pequenio');
-      }
-      if (checkedMediano) {
-        gTamanio('Mediano');
-      }
-      if (checkedGrande) {
-        gTamanio('Grande');
-      }
+    if (checkedPeque) {
+      filtros.push(['tamanio', 'Pequenio']);
+      params.append('tamanio', 'Pequenio');
+    }
+    if (checkedMediano) {
+      filtros.push(['tamanio', 'Mediano']);
+      params.append('tamanio', 'Mediano');
+    }
+    if (checkedGrande) {
+      filtros.push(['tamanio', 'Grande']);
+      params.append('tamanio', 'Grande');
     }
 
-    if (checkedMacho && checkedHembra) {
-      gSexo(null);
-      if (checkedMacho) {
-        gSexo('Macho');
-      }
-      if (checkedMacho) {
-        gSexo('Hembra');
-      }
+    if (checkedMacho) {
+      filtros.push(['sexo', 'Macho']);
+      params.append('sexo', 'Macho');
     }
+    if (checkedHembra) {
+      filtros.push(['sexo', 'Hembra']);
+      params.append('sexo', 'Hembra');
+    }
+    filtros.push(['edad', edad]);
+    params.append('edad', edad);
 
-    const filtro = {
-      sexo: sexo,
-      tamanio: tamanio,
-      tipoMascota: tipoMascota,
-    };
-    gConsMascotaApi(true);
-    navigation.navigate('Disponibles', {filtro, gConsMascotaApi});
+    console.log(params);
+    console.log('FILTROS ' + filtros);
+    navigation.navigate('Disponibles', {data: params});
+    //obtenerMasDisponilbes();
+  };
+
+  const obtenerMasDisponilbes = async () => {
+    try {
+      var request = {
+        params: params,
+      };
+
+      const mascoFilt = await axios.get(
+        'http://10.0.2.2:8090/adoptame/mobile/listaMascotasDisponible',
+        request,
+      );
+      console.log(mascoFilt.data);
+      console.log('paso por obetener mascotas Disponibles en filtros');
+      gDisponiblesM(mascoFilt.data);
+
+      console.log('mascotasDisp');
+      console.log(mascotasDisponibles);
+      navigation.navigate('Disponibles', mascotasDisponibles);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //<Headline style={globalStyles.titulo}> Crear nueva mascota</Headline>
@@ -135,17 +150,19 @@ const Filtros = ({navigation, route}) => {
           }}
         />
       </View>
-
       <Text style={style.titulo}>Edad:</Text>
-
-      <View style={style.mascotaRow}>
-        <TextInput
-          label="Edad"
+      <View style={style.sliderCont}>
+        <Text style={style.text}>{edad.toString()}</Text>
+        <Slider
+          step={1}
+          maximumValue={30}
+          onValueChange={(value) => {
+            gEdad(parseFloat(value));
+          }}
           value={edad}
-          onChangeText={(texto) => gEdad(texto)}
-          style={style.edad}
         />
       </View>
+
       <Button mode="contained" onPress={() => aplicarFiltros()}>
         Aplicar
       </Button>
@@ -183,6 +200,14 @@ const style = StyleSheet.create({
   textCheckEdad: {
     paddingTop: 8,
     marginStart: 5,
+  },
+  text: {
+    fontSize: 10,
+    textAlign: 'center',
+  },
+  sliderCont: {
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
 });
 

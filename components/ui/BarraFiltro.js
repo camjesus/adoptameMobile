@@ -1,16 +1,16 @@
 import React from 'react';
 import {Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const BarraFiltro = ({navigation}) => {
+const BarraFiltro = ({navigation, route}) => {
   const heandlePress = () => {
-    navigation.navigate('Filtros');
+    navigation.navigate('filtros', {navigation, route});
   };
   return (
     <Button
       type="clear"
       onPress={() => heandlePress()}
-      icon={<Icon name="filter" size={30} color="white" />}
+      icon={<MatIcon name="filter" size={30} color="black" />}
     />
   );
 };

@@ -16,7 +16,7 @@ export default function BuscarStack() {
           title: 'Adoptame',
           headerTitleAlign: 'center',
           headerRight: (props) => (
-            <BarraFiltro onpress='' />
+            <BarraFiltro {...props} navigation={navigation} route={route} />
           ),
         })}
       />
@@ -28,3 +28,11 @@ export default function BuscarStack() {
     </Stack.Navigator>
   );
 }
+
+//options={({navigation, route}) => ({
+//  title: 'Adoptame',
+//  headerTitleAlign: 'center',
+//  headerRight: (props) => (
+//    <BarraFiltro {...props} navigation={navigation} route={route} />
+//  ),
+//})}

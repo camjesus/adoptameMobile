@@ -4,7 +4,7 @@ import {Card, Button} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CardMascota = ({mascota}) => {
-  const [image, gFotoURL] = useState('');
+  const [image, gFotoURL] = useState('../../img/default.jpg');
   const {foto_url, nombre, descripcion, sexo} = mascota;
   const [nombreSexo, gNombreSexo] = useState('');
 
@@ -26,7 +26,7 @@ const CardMascota = ({mascota}) => {
     }
   };
   const tomoNombreIcon = () => {
-    if (sexo === 'MACHO') {
+    if (sexo.toUpperCase() === 'MACHO') {
       gNombreSexo('gender-male');
     } else {
       gNombreSexo('gender-female');

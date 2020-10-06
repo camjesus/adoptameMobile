@@ -17,7 +17,7 @@ const MisMascotas = (props) => {
     obtenerDatosStorage();
     const obtenerMascotas = async () => {
       try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/{userId}`;
+        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/{1}`;
         console.log(userId);
         const resultado = await axios.get(url);
         console.log(resultado.data);

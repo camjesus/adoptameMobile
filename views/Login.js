@@ -1,7 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
-import FacebookLoginBtn from '../components/ui/FacebookLoginManager';
-
 import {
   TextInput,
   Headline,
@@ -9,7 +7,6 @@ import {
   Dialog,
   Paragraph,
   Portal,
-  faceboo
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
 import axios from 'axios';
@@ -82,7 +79,7 @@ const Login = (props) => {
       await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then(
         (value) => {
           //navigation.navigate('buscar', {screen: 'Disponibles'});
-          navigation.navigate('Menu');
+          navigation.navigate('Menu', {navigation});
         },
       );
     } catch (error) {
@@ -103,7 +100,7 @@ const Login = (props) => {
           );
 
           //navigation.navigate('buscar', {screen: 'Disponibles'});
-          navigation.navigate('Menu');
+          navigation.navigate('Menu', {navigation});
         }
       });
     } catch (error) {
@@ -133,7 +130,6 @@ const Login = (props) => {
       </Button>
       <Button onPress={() => crearUsuario()}>Nueva Cuenta</Button>
 
-      <FacebookLoginBtn {...props}/>
       <Portal>
         <Dialog visible={alerta}>
           <Dialog.Title>Error</Dialog.Title>
