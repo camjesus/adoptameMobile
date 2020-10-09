@@ -10,9 +10,13 @@ import {
   TouchableOpacity
   
 } from 'react-native-paper';
+import GetLocation from 'react-native-get-location'
+
 import globalStyles from '../styles/global';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
+import MapView from 'react-native-maps';
+
 
 const CrearMascota = ({route}) => {
   const {gConsMascotaApi} = route.params;
@@ -99,6 +103,20 @@ const CrearMascota = ({route}) => {
   useEffect(() => {
     console.log('entro a useEffec con la mascota ' );
   
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+  })
+  .then(location => {
+      console.log(location);
+  })
+  .catch(error => {
+      const { code, message } = error;
+      console.warn(code, message);
+  })
+
+
+
     console.log(imagen);
   }, [imagen]);
 
@@ -169,81 +187,28 @@ console.log("abriendo camara");
 
   //<Headline style={globalStyles.titulo}> Crear nueva mascota</Headline>
   return (
+
+    
     <View style={globalStyles.contenedor}>
-      <TextInput
-        label="Nombre"
-        value={nombre}
-        onChangeText={(texto) => gNombre(texto)}
-        style={style.input}
-      />
-      <Text style={style.titulo}>Tipo:</Text>
-      <View style={style.mascotaRow}>
-        <Text style={style.textCheck}>Perro</Text>
-        <Checkbox
-          status={checkedPerro ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setCheckedPerro(true);
-            setCheckedGato(false);
-          }}
-        />
-        <Text style={style.textCheck}>Gato</Text>
-        <Checkbox
-          status={checkedGato ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setCheckedPerro(false);
-            setCheckedGato(true);
-          }}
-        />
-      </View>
-      <Text style={style.titulo}>Sexo:</Text>
-      <View style={style.mascotaRow}>
-        <Text style={style.textCheck}>Macho</Text>
-        <Checkbox
-          status={checkedMacho ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setCheckedMacho(true);
-            setCheckedHembra(false);
-          }}
-        />
-        <Text style={style.textCheck}>Hembra</Text>
-        <Checkbox
-          status={checkedHembra ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setCheckedMacho(false);
-            setCheckedHembra(true);
-          }}
-        />
-      </View>
-      <Text style={style.titulo}>Edad:</Text>
 
-      <View style={style.mascotaRow}>
-        <TextInput
-          label="Edad"
-          value={edad}
-          keyboardType = 'numeric'
-          onChangeText={(texto) => gEdad(texto)}
-          style={style.edad}
-       />
-      </View>
-      
-
-          
-              <Button mode="contained" onPress={() => selectPhotoTapped()}>
-              elegir foto
-            </Button>
-          <Image  style={style.imgMascota} source={imagen} />
-
-
+<MapView style={style.map}
+    initialRegion={{
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }}
+  />
      
-     
-      <Button mode="contained" onPress={() => guardarMascota()}>
-        Guardar
-      </Button>
     </View>
   );
 };
 
 const style = StyleSheet.create({
+
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
   contenedor: {
     flex: 1,
     alignItems: 'center',
