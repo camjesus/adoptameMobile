@@ -13,7 +13,7 @@ const MascotaItem = ({mascota,verMascota}) => {
   console.log('mascota');
   console.log(mascota);
   var that = this;
-  console.log(verMascota)
+  console.log(verMascota);
 
   return (
     <Card  > 
@@ -29,13 +29,28 @@ const MascotaItem = ({mascota,verMascota}) => {
         
         </View>
         <View style={style.viewMascotaImg}  >
+        <View>
           <Text style={style.nombreText}>{mascota.nombre}</Text>
+         </View>
+          <View>
+          <Text style={style.nombreText}>{mascota.tipoMascota}</Text>
+          </View>
+          <View>
+            <Text style={style.descripcionText}>{mascota.descripcion}</Text>
+          </View>
 
           <View>
             <Text style={style.descripcionText}>{mascota.descripcion}</Text>
           </View>
           <View>
             <Text style={style.descripcionText}>Edad: {mascota.edad}</Text>
+          </View>
+          <View>
+            <Text style={style.descripcionText}>Sexo: {mascota.sexo}</Text>
+          </View>
+          <View>
+            <Text style={style.descripcionText}>Tamaño: {mascota.tamanio}</Text>
+
           </View>
           
         </View>

@@ -44,7 +44,7 @@ const Cuenta = ({navigation}) => {
 
   const eliminoStorage = async () => {
     try {
-      console.log("borro del storage")
+      console.log("borro del storage");
       
       await AsyncStorage.removeItem('nombre');
       await AsyncStorage.removeItem('apellido');
@@ -53,7 +53,7 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.removeItem('userId').then((value)=>{
        // navigation.navigate('Login');
        // navigation.navigate('Login');
-     //  LoginManager.logOut(); no seria necesario 
+     //  LoginManager.logOut(); no seria necesario
 
        navigation.navigate('Login');
 

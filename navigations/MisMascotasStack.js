@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import MisMascotas from '../views/MisMascotas';
-import VerMascota from '../views/VerMascota';
+import VerMapa from '../views/VerMapa';
 import CrearMascota from '../views/CrearMascota';
 
 const Stack = createStackNavigator();
@@ -14,15 +14,16 @@ export default function MisMascotasStack() {
         component={MisMascotas}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="verMascota"
-        component={VerMascota}
-        options={{htitle: 'Mi mascota'}}
-      />
+     
       <Stack.Screen
         name="crearMascota"
         component={CrearMascota}
         options={{title: 'Nueva mascota'}}
+      />
+       <Stack.Screen
+        name="verMapa"
+        component={VerMapa}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

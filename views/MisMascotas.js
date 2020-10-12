@@ -6,6 +6,9 @@ import globalStyles from '../styles/global';
 import MascotaItem from '../components/ui/MascotaItem';
 import AsyncStorage from '@react-native-community/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
+
+
 
 const MisMascotas = (props) => {
   const {navigation} = props;
@@ -13,42 +16,54 @@ const MisMascotas = (props) => {
   const [userId, gUserId] = useState('');
 
   const [consultarMascotas, gConsMascotaApi] = useState(true);
+  const isFocused = useIsFocused();//devuelve true si la pantalla tiene foco
+
   //const id = route.params;
   useEffect(() => {
-    obtenerDatosStorage();
-    const obtenerMascotas = async () => {
-      try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${2}`;
-        console.log(userId);
-        const resultado = await axios.get(url);
-        console.log(resultado.data);
-        console.log('paso por obetener mascotas');
-        guardarMascotas(resultado.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (consultarMascotas) {
-      obtenerMascotas();
-      gConsMascotaApi(false);
+    if (isFocused) {
+      obtenerDatosStorage();
     }
-  }, [consultarMascotas]);
+  }, [isFocused]);//cuando la pantalla tiene el foco 
 
+ 
+ 
   const obtenerDatosStorage = async () => {
     try {
-      const id = await AsyncStorage.getItem('userId');
-      console.log('id storage');
-      console.log(id);
-      gUserId(id);
+      await AsyncStorage.getItem('userId');
+      AsyncStorage.getItem('userId').then((value) => {
+        gUserId(value);
+        //voy a buscar las mascotas una vez que tengo cargado el id, ya que es asincrono
+        obtenerMascotas(value);
+
+      });
+     
+      
     } catch (error) {
       console.log(error);
     }
   };
 
+
+  const obtenerMascotas = async (value) => {
+    try {
+      const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${value}`;
+      console.log(url);
+      const resultado = await axios.get(url);
+      console.log(resultado.data);
+      console.log('paso por obetener mascotas');
+      guardarMascotas(resultado.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+
   return (
       <View>
         <FlatList 
-        ListHeaderComponent={
+        ListHeaderComponent={ //cabecera, sino lo pongo asi no puedo usar scroll con flatlist
 
         <Headline style={globalStyles.titulo}>
           {mascotas.length > 0 ? 'Mis mascotas' : 'Aún no cargaste mascotas'}
@@ -65,8 +80,7 @@ const MisMascotas = (props) => {
             icon="plus"
             style={styles.fab}
             onPress={() => {
-              //navigation.navigate('misMascotas', {screen: 'crearMascota'});
-              navigation.navigate('crearMascota', {consultarMascotas});
+              navigation.navigate('crearMascota');
             }}
             animated="true"
           />

@@ -1,5 +1,6 @@
 import React, {useState, useEffect } from 'react';
-import {StyleSheet, View,PermissionsAndroid,Image} from 'react-native';
+import {StyleSheet, View,PermissionsAndroid,Image,} from 'react-native';
+
 import {
   TextInput,
   Headline,
@@ -7,19 +8,18 @@ import {
   Checkbox,
   Text,
   Card,
-  TouchableOpacity
+  Avatar
   
 } from 'react-native-paper';
-import GetLocation from 'react-native-get-location'
-
 import globalStyles from '../styles/global';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
-import MapView from 'react-native-maps';
+import {ScrollView} from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
-const CrearMascota = ({route}) => {
-  const {gConsMascotaApi} = route.params;
+
+const CrearMascota = ({navigation,route}) => {
   const [nombre, gNombre] = useState('');
   const [sexo, gSexo] = useState('');
   const [tamanio, gTamanio] = useState('');
@@ -35,7 +35,12 @@ const CrearMascota = ({route}) => {
   const [checkedGato, setCheckedGato] = React.useState(false);
   const [checkedMacho, setCheckedMacho] = React.useState(true);
   const [checkedHembra, setCheckedHembra] = React.useState(false);
- 
+  const [checkedChico, setCheckedChico] = React.useState(true);
+  const [checkedMediano, setCheckedMediano] = React.useState(false);
+  const [checkedGrande, setCheckedGrande] = React.useState(false);
+  const [coordenadas, setCoordenadas] = React.useState(null);
+
+
   const guardarMascota = async () => {
     try {
       const postMascotas = {nombre, sexo,tamanio,imagen};
@@ -50,7 +55,18 @@ const CrearMascota = ({route}) => {
         bodyFormData.append('sexo', 'HEMBRA');
 
       }
-      bodyFormData.append('tamanio', tamanio); //poner en pantalla
+
+
+      if(checkedChico){
+        bodyFormData.append('tamanio', "CHICO"); 
+      }
+      if(checkedMediano){
+        bodyFormData.append('tamanio', "MEDIANO"); 
+      }
+      if(checkedGrande){
+        bodyFormData.append('tamanio', "GRANDE"); 
+      }
+
       bodyFormData.append('raza', raza);
       if(checkedPerro){
         bodyFormData.append('tipoMascota', 'PERRO');
@@ -59,12 +75,19 @@ const CrearMascota = ({route}) => {
         bodyFormData.append('tipoMascota', 'GATO');
 
       }
+
       bodyFormData.append('raza', raza);
       bodyFormData.append('edad', edad);
-      bodyFormData.append('descripcion', 'aca va la descripcion');
+      bodyFormData.append('descripcion', descripcion);
+      bodyFormData.append('latitud', latitud);
+      bodyFormData.append('longitud', longitud);
 
 
-      bodyFormData.append('rescatista', '1'); //sacarlo de user storage
+
+     
+
+      bodyFormData.append('rescatista', rescatista); 
+
       bodyFormData.append('image', {
                                      name: imagen.fileName,
                                      type: imagen.type,
@@ -98,42 +121,41 @@ const CrearMascota = ({route}) => {
 
 
 
- 
+  const abrirMapa =  () => {
+    console.log('abrir Mapa ' );
+    navigation.navigate('verMapa');
+
+  }
+
+  
 
   useEffect(() => {
-    console.log('entro a useEffec con la mascota ' );
-  
-    GetLocation.getCurrentPosition({
-      enableHighAccuracy: true,
-      timeout: 15000,
-  })
-  .then(location => {
-      console.log(location);
-  })
-  .catch(error => {
-      const { code, message } = error;
-      console.warn(code, message);
-  })
+    console.log('entro a useEffec con coordenadas ' +route);
+   AsyncStorage.getItem('userId').then((value) => {
+      gRescatista(value);
+    });
 
+    if (route.params?.coordinates) {
+        console.log(route.params?.coordinates);
+        gLatitud(route.params?.coordinates.latitude);
+        gLongitud(route.params?.coordinates.longitude);
 
-
-    console.log(imagen);
-  }, [imagen]);
+    }
+  },[route.params?.coordinates]);
 
 
 
  const selectPhotoTapped=async ()=> {
-  const options = {
-    quality: 1.0,
-    maxWidth: 500,
-    maxHeight: 500,
-    storageOptions: {
-      privateDirectory: true,
-      skipBackup: true
-    },
-  };
-
-
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        privateDirectory: true,
+        skipBackup: true
+      },
+    };
+ 
   try {
     console.log("pidiendo permiso");
     await PermissionsAndroid.requestMultiple([
@@ -185,30 +207,128 @@ console.log("abriendo camara");
 }
 
 
-  //<Headline style={globalStyles.titulo}> Crear nueva mascota</Headline>
   return (
-
-    
-    <View style={globalStyles.contenedor}>
-
-<MapView style={style.map}
-    initialRegion={{
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }}
-  />
+    <ScrollView>
      
+    <View style={globalStyles.contenedor}>
+      <Avatar.Image size={200} source={imagen} />
+
+       <Button mode="contained" onPress={() => selectPhotoTapped()}> Elegir foto </Button>
+       <Button mode="contained" onPress={() => abrirMapa()}> Ubicacion</Button>
+        <TextInput
+          label="Nombre"
+          value={nombre}
+          onChangeText={(texto) => gNombre(texto)}
+          style={style.input}
+        />
+        <TextInput
+          label="Descripcion"
+          value={descripcion}
+          onChangeText={(texto) => gDescripcion(texto)}
+          style={style.input}
+        />
+        <TextInput
+          label="Raza"
+          value={raza}
+          onChangeText={(texto) => gRaza(texto)}
+          style={style.input}
+        />
+
+        <TextInput
+            label="Edad"
+            value={edad}
+            keyboardType = 'numeric'
+            onChangeText={(texto) => gEdad(texto)}
+            style={style.input}
+        />
+
+        <Text style={style.titulo}>Tipo:</Text>
+        <View style={style.mascotaRow}>
+          <Text style={style.textCheck}>Perro</Text>
+          <Checkbox
+            status={checkedPerro ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedPerro(true);
+              setCheckedGato(false);
+            }}
+          />
+          <Text style={style.textCheck}>Gato</Text>
+          <Checkbox
+            status={checkedGato ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedPerro(false);
+              setCheckedGato(true);
+            }}
+          />
+        </View>
+        <Text style={style.titulo}>Sexo:</Text>
+        <View style={style.mascotaRow}>
+          <Text style={style.textCheck}>Macho</Text>
+          <Checkbox
+            status={checkedMacho ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedMacho(true);
+              setCheckedHembra(false);
+            }}
+          />
+          <Text style={style.textCheck}>Hembra</Text>
+          <Checkbox
+            status={checkedHembra ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedMacho(false);
+              setCheckedHembra(true);
+            }}
+          />
+        </View>
+
+        <Text style={style.titulo}>Tamaño:</Text>
+        <View style={style.mascotaRow}>
+          <Text style={style.textCheck}>Chico</Text>
+          <Checkbox
+            status={checkedChico ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedChico(true);
+              setCheckedMediano(false);
+              setCheckedGrande(false);
+            }}
+          />
+          <Text style={style.textCheck}>Mediano</Text>
+          <Checkbox
+            status={checkedMediano ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedChico(false);
+              setCheckedMediano(true);
+              setCheckedGrande(false);
+            }}
+          />
+          
+        
+        <Text style={style.textCheck}>Grande</Text>
+          <Checkbox
+            status={checkedGrande ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setCheckedChico(false);
+              setCheckedMediano(false);
+              setCheckedGrande(true);
+            }}
+          />
+        </View>
+
+
+
+
+      <Button mode="contained" onPress={() => guardarMascota()}>
+        Guardar
+      </Button>
+
     </View>
+    </ScrollView>
   );
 };
 
 const style = StyleSheet.create({
 
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
+  
   contenedor: {
     flex: 1,
     alignItems: 'center',
