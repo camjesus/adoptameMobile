@@ -1,61 +1,95 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-const MascotaItem = ({evento}) => {
+import {StyleSheet, View} from 'react-native';
+import {Text, Card} from 'react-native-paper';
+
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const EventoItem = ({evento}) => {
   console.log('evento');
   console.log(evento);
+  const espacio = ' - ';
 
   return (
-    <View style={style.viewMascota}>
-      <View style={style.viewMascotaImg}></View>
-      <View style={style.viewMascotaImg}>
-        <Text style={style.nombreText}>Direccion:{evento.direccion}</Text>
-
+    <Card style={style.titulo}>
+      <View style={style.viewHeader}>
         <View>
-          <Text style={style.descripcionText}>Lugar: {evento.lugar}</Text>
+          <Maticons
+            style={style.tituloIcon}
+            name="calendar-week"
+            size={40}
+            color="#252932"
+          />
         </View>
-        <View>
-          <Text style={style.descripcionText}>Barrio: {evento.barrio}</Text>
+        <Text style={style.titHeader}>{evento.lugar}</Text>
+      </View>
+      <View style={style.viewEvento}>
+        <View style={style.viewDesc}>
+          <View style={style.viewRow}>
+            <Text style={style.nombreText}>Dirección: </Text>
+            <Text style={style.descripcionText}>{evento.direccion}</Text>
+          </View>
+
+          <View style={style.viewRow}>
+            <Text style={style.nombreText}>Barrio: </Text>
+            <Text style={style.descripcionText}>{evento.barrio}</Text>
+          </View>
+          <View style={style.viewRow}>
+            <Text style={style.nombreText}>Día y Horario: </Text>
+            <Text style={style.descripcionText}>
+              {evento.dias}
+              {espacio}
+              {evento.horarios}
+            </Text>
+          </View>
+          <View style={style.viewRow}>
+            <Text style={style.nombreText}>Descripción: </Text>
+            <Text style={style.descripcionText}>{evento.consultas}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </Card>
   );
 };
 
 const style = StyleSheet.create({
-  viewMascota: {
-    flexDirection: 'row',
+  titulo: {
     margin: 10,
-  },
-  viewMascotaImg: {
-    marginRight: 15,
-  },
-  imgMascota: {
-    width: 66,
-    height: 58,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
   },
   nombreText: {
     fontWeight: 'bold',
   },
   descripcionText: {
-    fontSize: 10,
+    fontSize: 13,
   },
-  container: {
-    paddingTop: 50,
+  viewEvento: {
+    flexDirection: 'row',
+    margin: 15,
   },
-  tinyLogo: {
-    width: 50,
-    height: 50,
+  viewDesc: {
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
-  logo: {
-    width: 66,
-    height: 58,
+  tituloIcon: {
+    margin: 10,
+  },
+  viewRow: {
+    flexDirection: 'row',
+  },
+  viewHeader: {
+    backgroundColor: '#FF9D4E',
+    flexDirection: 'row',
+    borderBottomColor: '#252932',
+    borderBottomWidth: 1,
+  },
+  titHeader: {
+    fontSize: 20,
+    marginVertical: 20,
+    fontWeight: 'bold',
+    color: '#252932',
+    paddingStart: 10,
   },
 });
-export default MascotaItem;
+export default EventoItem;

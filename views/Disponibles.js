@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import axios from 'axios';
 import CardMascota from '../components/ui/CardMascota';
+import globalStyle from '../styles/global';
 
 const Disponibles = ({navigation, route}) => {
   const data = route.params;
@@ -61,7 +62,7 @@ const Disponibles = ({navigation, route}) => {
   }, [data]);
 
   return (
-    <View>
+    <View style={globalStyle.base}>
       <FlatList
         data={mascotasDisp}
         renderItem={({item}) => <CardMascota mascota={item} />}

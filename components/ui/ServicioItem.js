@@ -1,63 +1,92 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import {Text, Card, Button} from 'react-native-paper';
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 const ServicioItem = ({servicio}) => {
   console.log('servicio');
   console.log(servicio);
+  const {costo, titulo, descripcion} = servicio;
 
   return (
-    <View style={style.viewMascota}>
-      <View style={style.viewMascotaImg}></View>
-      <View style={style.viewMascotaImg}>
-        <Text style={style.nombreText}>Servicio: {servicio.tipoServicio}</Text>
+    <View>
+      <Card style={style.titulo}>
+        <View style={style.viewHeader}>
+          <Text style={style.titHeader}>{titulo}</Text>
+        </View>
 
-        <View>
-          <Text style={style.descripcionText}>
-            Telefono: {servicio.telefono}
-          </Text>
+        <View style={style.viewRow}>
+          <Text style={style.descripcionText}>{descripcion}</Text>
         </View>
-        <View>
-          <Text style={style.descripcionText}>Barrio: {servicio.barrio}</Text>
+        <View style={style.viewRowPrecio}>
+          <Text style={style.precioTit}>Precio: </Text>
+          <Text style={style.precioDato}>${costo}</Text>
         </View>
-      </View>
+      </Card>
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  viewMascota: {
-    flexDirection: 'row',
+  titulo: {
     margin: 10,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
   },
-  viewMascotaImg: {
-    marginRight: 15,
+  viewHeader: {
+    backgroundColor: '#FF9D4E',
+    flexDirection: 'row',
+    borderBottomColor: '#252932',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
   },
-  imgMascota: {
-    width: 66,
-    height: 58,
-  },
-  nombreText: {
+  titHeader: {
+    fontSize: 20,
+    marginVertical: 20,
     fontWeight: 'bold',
+    color: '#252932',
+    paddingStart: 10,
+  },
+  viewRow: {
+    flexDirection: 'row',
   },
   descripcionText: {
-    fontSize: 10,
+    margin: 10,
+    fontSize: 15,
   },
-  container: {
-    paddingTop: 50,
+  nombreText: {
+    fontSize: 15,
+    fontWeight: 'bold',
   },
-  tinyLogo: {
-    width: 50,
-    height: 50,
+  precioTit: {
+    fontSize: 20,
+    marginVertical: 10,
+    fontWeight: 'bold',
   },
-  logo: {
-    width: 66,
-    height: 58,
+  viewRowPrecio: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  precioDato: {
+    fontSize: 20,
+    marginVertical: 10,
+    marginEnd: 10,
+    fontWeight: 'bold',
+  },
+  botonesGroup: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  iconContact: {
+    backgroundColor: '#252932',
+    padding: 8,
+    borderRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
   },
 });
 export default ServicioItem;

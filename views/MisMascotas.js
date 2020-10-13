@@ -5,6 +5,8 @@ import axios from 'axios';
 import globalStyles from '../styles/global';
 import MascotaItem from '../components/ui/MascotaItem';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Text, Card} from 'react-native-paper';
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const MisMascotas = (props) => {
   const {navigation} = props;
@@ -44,22 +46,34 @@ const MisMascotas = (props) => {
     }
   };
 
+  //<Headline style={globalStyles.titulo}>
+  //{mascotas.length === 0 ? 'Aún no cargaste mascotas!' : ''}
+  //</Headline>
+
   return (
-    <View>
-      <View>
-        <Headline style={globalStyles.titulo}>
-          {mascotas.length > 0 ? 'Mis mascotas' : 'Aún no cargaste mascotas'}
-        </Headline>
-        <FlatList
-          data={mascotas}
-          renderItem={({item}) => <MascotaItem mascota={item} />}
-          keyExtractor={(item) => JSON.stringify(item.id)}
-        />
-      </View>
+    <View style={globalStyles.base}>
+      <Card style={styles.titulo}>
+        <View style={styles.viewTitulo}>
+          <Maticons
+            style={styles.tituloIcon}
+            name="paw"
+            size={30}
+            color="#252932"
+          />
+          <Text style={styles.tituloTxt}>Mis Mascotas</Text>
+        </View>
+      </Card>
+
+      <FlatList
+        data={mascotas}
+        renderItem={({item}) => <MascotaItem mascota={item} />}
+        keyExtractor={(item) => JSON.stringify(item.id)}
+      />
       <View style={styles.container}>
         <FAB
           icon="plus"
           style={styles.fab}
+          color="#252932"
           onPress={() => {
             //navigation.navigate('misMascotas', {screen: 'crearMascota'});
             navigation.navigate('crearMascota', {consultarMascotas});
@@ -76,9 +90,26 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    backgroundColor: '#FF9D4E',
   },
-  container: {
-    flex: 1,
+  titulo: {
+    margin: 10,
+    justifyContent: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+  },
+  tituloTxt: {
+    textAlign: 'center',
+    fontSize: 35,
+    color: '#252932',
+  },
+  viewTitulo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  tituloIcon: {
+    margin: 10,
   },
 });
 

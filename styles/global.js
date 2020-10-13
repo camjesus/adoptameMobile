@@ -12,6 +12,11 @@ const globalStyles = StyleSheet.create({
     marginBottom: 30,
     fontSize: 30,
   },
+  base: {
+    backgroundColor: '#252932',
+    flex: 1,
+    color: '#252932',
+  },
 });
 
 export default globalStyles;

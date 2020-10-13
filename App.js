@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './views/Login';
 import Menu from './views/Menu';
+import CrearUsuario from './views/CrearUsuario';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Navigation from './navigations/Navigation';
@@ -14,29 +15,32 @@ const Strack = createStackNavigator();
 
 const theme = {
   ...DefaultTheme,
+  roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    prymary: '#177472',
-    accent: '#0655BF',
+    accent: '#ff9d4e',
+    backdrop: 'rgba(192,192,192,0.3)',
+    background: '#252932',
+    disabled: 'rgba(0, 0, 0, 0.26)',
+    error: '#B00020',
+    notification: '#f50057',
+    onBackground: '#252932',
+    onSurface: '#252932',
+    placeholder: '#ff9d4e',
+    primary: '#ff9d4e',
+    surface: '#ff9d4e',
+    text: '#ffffff',
   },
 };
-
 const App = () => {
+  console.log(theme);
+  console.log(DefaultTheme);
+
   return (
     <>
       <PaperProvider>
         <NavigationContainer>
-          <Strack.Navigator
-            initialRouteName="Login"
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: theme.colors.primary,
-              },
-              headerTintColor: theme.colors.surface,
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}>
+          <Strack.Navigator initialRouteName="Login">
             <Strack.Screen
               name="Login"
               component={Login}
@@ -47,8 +51,12 @@ const App = () => {
               component={Navigation}
               options={{headerShown: false}}
             />
+            <Strack.Screen
+              name="crearUsuario"
+              component={CrearUsuario}
+              options={{title: 'Nueva usuario'}}
+            />
           </Strack.Navigator>
-         
         </NavigationContainer>
       </PaperProvider>
     </>

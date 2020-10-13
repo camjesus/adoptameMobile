@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, StyleSheet} from 'react-native';
 import {Headline} from 'react-native-paper';
 import axios from 'axios';
 import globalStyles from '../styles/global';
 import ServicioItem from '../components/ui/ServicioItem';
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Card, Text} from 'react-native-paper';
 
 const Servicios = ({navigation, route}) => {
   const [servicios, guardarServicios] = useState([]);
@@ -24,10 +26,18 @@ const Servicios = ({navigation, route}) => {
   }, [consultarServicios]);
 
   return (
-    <View>
-      <Headline style={globalStyles.titulo}>
-        {servicios.length > 0 ? 'Servicios' : 'No hay servicios disponibles'}{' '}
-      </Headline>
+    <View style={globalStyles.base}>
+      <Card style={styles.titulo}>
+        <View style={styles.viewTitulo}>
+          <Maticons
+            style={styles.tituloIcon}
+            name="hospital"
+            size={30}
+            color="#252932"
+          />
+          <Text style={styles.tituloTxt}>Servicios</Text>
+        </View>
+      </Card>
       <FlatList
         data={servicios}
         renderItem={({item}) => <ServicioItem servicio={item} />}
@@ -36,5 +46,27 @@ const Servicios = ({navigation, route}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  titulo: {
+    margin: 10,
+    justifyContent: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+  },
+  tituloTxt: {
+    textAlign: 'center',
+    fontSize: 35,
+    color: '#252932',
+  },
+  viewTitulo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  tituloIcon: {
+    margin: 10,
+  },
+});
 
 export default Servicios;

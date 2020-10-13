@@ -5,7 +5,7 @@ import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CardMascota = ({mascota}) => {
   const [image, gFotoURL] = useState('../../img/default.jpg');
-  const {foto_url, nombre, descripcion, sexo} = mascota;
+  const {foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
   const [nombreSexo, gNombreSexo] = useState('');
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const CardMascota = ({mascota}) => {
 
   return (
     <Card>
-      <View>
+      <View style={style.viewContainer}>
         <View style={style.viewMascota}>
           <Image
             style={style.imgMascota}
@@ -44,33 +44,38 @@ const CardMascota = ({mascota}) => {
             }}
           />
         </View>
-        <View style={style.containerSexo}>
-          <Text style={style.nombre}>Nombre: {nombre}</Text>
+        <View style={style.containerH1}>
+          <Text style={style.nombre}>{nombre}</Text>
           <Maticons
             style={style.iconSexo}
             name={nombreSexo}
-            size={25}
+            size={30}
             color="grey"
           />
+        </View>
+
+        <View style={style.containerH2}>
+          <View>
+            <Text style={style.tamanio}>{tamanio}</Text>
+          </View>
+          <Text style={style.edad}>{edad} años</Text>
         </View>
 
         <Text style={style.descripcion}>{descripcion}</Text>
 
         <View style={style.botonesGroup}>
           <Button
-            style={style.flecha}
-            type="clear"
-            icon={<Maticons name="arrow-left-thick" size={30} color="grey" />}
-          />
-          <Button
+            mode="contained"
             style={style.mensaje}
             type="clear"
-            icon={<Maticons name="email" size={30} color="blue" />}
-          />
-          <Button
-            style={style.flecha}
-            type="clear"
-            icon={<Maticons name="arrow-right-thick" size={30} color="grey" />}
+            icon={
+              <Maticons
+                style={style.iconContact}
+                name="email"
+                size={40}
+                color="#FF9D4E"
+              />
+            }
           />
         </View>
       </View>
@@ -82,12 +87,13 @@ const style = StyleSheet.create({
   viewMascota: {
     flexDirection: 'row',
     margin: 15,
+    alignContent: 'center',
   },
   viewMascotaImg: {
     marginRight: 15,
   },
   imgMascota: {
-    height: 250,
+    height: 290,
     flex: 1,
   },
   nombreText: {
@@ -109,7 +115,7 @@ const style = StyleSheet.create({
   },
   botonesGroup: {
     flexDirection: 'row',
-    marginStart: 60,
+    justifyContent: 'center',
   },
   descripcion: {
     fontSize: 12,
@@ -117,17 +123,41 @@ const style = StyleSheet.create({
   },
   nombre: {
     paddingTop: 5,
-    fontSize: 15,
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  edad: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginRight: 15,
+  },
+  tamanio: {
+    fontSize: 20,
     fontWeight: 'bold',
   },
   flecha: {
     margin: 10,
   },
   iconSexo: {
+    marginTop: 15,
     marginStart: 10,
   },
-  containerSexo: {
+  containerH1: {
     flexDirection: 'row',
+  },
+  containerH2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  iconContact: {
+    backgroundColor: '#252932',
+    padding: 8,
+    borderRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
   },
 });
 export default CardMascota;
