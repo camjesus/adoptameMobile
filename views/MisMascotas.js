@@ -15,15 +15,18 @@ const MisMascotas = (props) => {
   const [mascotas, guardarMascotas] = useState({});
   const [userId, gUserId] = useState('');
 
-  const [consultarMascotas, gConsMascotaApi] = useState(true);
+  const [consultarMascotas, gConsMascotaApi] = useState(false); //si adopto una mascota es para saber si recargo la pagina
   const isFocused = useIsFocused();//devuelve true si la pantalla tiene foco
 
   //const id = route.params;
   useEffect(() => {
+    console.log('pase por el effect');
     if (isFocused) {
       obtenerDatosStorage();
+      gConsMascotaApi(false);
+
     }
-  }, [isFocused]);//cuando la pantalla tiene el foco 
+  }, [isFocused,consultarMascotas]);//cuando la pantalla tiene el foco 
 
  
  
@@ -34,6 +37,7 @@ const MisMascotas = (props) => {
         gUserId(value);
         //voy a buscar las mascotas una vez que tengo cargado el id, ya que es asincrono
         obtenerMascotas(value);
+
 
       });
      
@@ -71,7 +75,8 @@ const MisMascotas = (props) => {
 
         }
           data={mascotas}
-          renderItem={({item}) => <MascotaItem mascota={item} />}
+          ListEmptyComponent={<View></View>}
+          renderItem={({item}) => <MascotaItem mascota={item} consultarMascotas={gConsMascotaApi} />}
           keyExtractor={(item) => JSON.stringify(item.id)}
 
         

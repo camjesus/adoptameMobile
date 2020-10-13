@@ -4,16 +4,39 @@ import {
   View,
   Image,
   Text,
-  TouchableOpacity
+  Alert
 } from 'react-native';
+import axios from 'axios';
+
+import {Button} from 'react-native-paper';
 
 import {Card} from 'react-native-elements';
 
-const MascotaItem = ({mascota,verMascota}) => {
+const MascotaItem = ({mascota,consultarMascotas}) => {
   console.log('mascota');
   console.log(mascota);
   var that = this;
-  console.log(verMascota);
+
+  const cambiarEstadoMascota = async (id) => {
+
+    const postEstado = {id, "estado":"ADOPTADA"};
+
+    const resultado = await axios.post(
+      'http://10.0.2.2:8090/adoptame/mobile/estadoMascota',
+      postEstado
+    );
+    consultarMascotas(true);
+  
+    Alert.alert(
+      'Felicitaciones',
+      'Diste una mascota en adopción',
+      [
+        
+        { text: 'OK'}
+      ],
+      { cancelable: false }
+    );
+  }
 
   return (
     <Card  > 
@@ -51,6 +74,17 @@ const MascotaItem = ({mascota,verMascota}) => {
           <View>
             <Text style={style.descripcionText}>Tamaño: {mascota.tamanio}</Text>
 
+          </View>
+          <View>
+            <Text style={style.descripcionText}>Estado: {mascota.estado}</Text>
+
+          </View>
+          <View>
+          { mascota.estado=='DISPONIBLE' &&
+          <Button  mode="contained" onPress={() => cambiarEstadoMascota(mascota.id)}>
+                  Me Adoptaron!
+            </Button>
+          }
           </View>
           
         </View>

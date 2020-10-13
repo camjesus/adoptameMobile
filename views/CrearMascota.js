@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from 'react';
-import {StyleSheet, View,PermissionsAndroid,Image,} from 'react-native';
+import {StyleSheet, View,PermissionsAndroid,Image,Alert} from 'react-native';
 
 import {
   TextInput,
@@ -8,7 +8,10 @@ import {
   Checkbox,
   Text,
   Card,
-  Avatar
+  Avatar,
+  Portal,
+  Dialog,
+  Paragraph
   
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
@@ -39,11 +42,31 @@ const CrearMascota = ({navigation,route}) => {
   const [checkedMediano, setCheckedMediano] = React.useState(false);
   const [checkedGrande, setCheckedGrande] = React.useState(false);
   const [coordenadas, setCoordenadas] = React.useState(null);
+  const [alerta, ingresarAlerta] = useState(false);
+  const [mensaje, guardaMensaje] = useState('');
 
 
   const guardarMascota = async () => {
     try {
-      const postMascotas = {nombre, sexo,tamanio,imagen};
+
+
+      if (
+        nombre === '' ||
+        raza === '' ||
+        edad === '' ||
+        descripcion === '' ||
+        latitud === '' ||
+        longitud === '' ||
+        !imagen 
+      ) {
+        guardaMensaje('Todos los campos son requeridos');
+        ingresarAlerta(true);
+        return;
+      }
+  
+
+
+
       var bodyFormData = new FormData();
       bodyFormData.append('nombre', nombre);
       bodyFormData.append('estado', 'DISPONIBLE');
@@ -68,6 +91,7 @@ const CrearMascota = ({navigation,route}) => {
       }
 
       bodyFormData.append('raza', raza);
+
       if(checkedPerro){
         bodyFormData.append('tipoMascota', 'PERRO');
 
@@ -76,7 +100,6 @@ const CrearMascota = ({navigation,route}) => {
 
       }
 
-      bodyFormData.append('raza', raza);
       bodyFormData.append('edad', edad);
       bodyFormData.append('descripcion', descripcion);
       bodyFormData.append('latitud', latitud);
@@ -104,22 +127,55 @@ const CrearMascota = ({navigation,route}) => {
        }        
       })
       .then(function (response) {
-          //handle success
-          console.log(response);
+
+        Alert.alert(
+          'Nueva Mascota',
+          'Agregaste una nueva mascota',
+          [
+            
+            { text: 'OK', onPress: () => goback()}
+          ],
+          { cancelable: false }
+        );
+            
+
        })
       .catch(function (response) {
           //handle error
          console.log(response);
+         Alert.alert(
+          'Nueva Mascota',
+          'Ha ocurrido un error, intente mas tarde',
+          [
+            
+            { text: 'OK'}
+          ],
+          { cancelable: false }
+        );
       });
 
 
-    //  gConsMascotaApi(true);
     } catch (error) {
       console.log(error);
+
+      Alert.alert(
+        'Nueva Mascota',
+        'Ha ocurrido un error, intente mas tarde',
+        [
+          
+          { text: 'OK'}
+        ],
+        { cancelable: false }
+      );
     }
   };
 
 
+  const goback=()=>{
+    console.log('vuelvo a mis mascotas');
+    navigation.navigate('misMascotas');
+
+  }
 
   const abrirMapa =  () => {
     console.log('abrir Mapa ' );
@@ -320,6 +376,18 @@ console.log("abriendo camara");
       <Button mode="contained" onPress={() => guardarMascota()}>
         Guardar
       </Button>
+
+      <Portal>
+          <Dialog visible={alerta}>
+            <Dialog.Title>Error</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>{mensaje}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
 
     </View>
     </ScrollView>
