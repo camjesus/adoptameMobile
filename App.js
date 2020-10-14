@@ -17,7 +17,6 @@ const theme = {
   ...DefaultTheme,
   roundness: 2,
   colors: {
-    ...DefaultTheme.colors,
     accent: '#ff9d4e',
     backdrop: 'rgba(192,192,192,0.3)',
     background: '#252932',
@@ -25,8 +24,8 @@ const theme = {
     error: '#B00020',
     notification: '#f50057',
     onBackground: '#252932',
-    onSurface: '#252932',
-    placeholder: '#ff9d4e',
+    onSurface: '#ffffff',
+    placeholder: '#ffffff',
     primary: '#ff9d4e',
     surface: '#ff9d4e',
     text: '#ffffff',
@@ -38,9 +37,20 @@ const App = () => {
 
   return (
     <>
-      <PaperProvider>
+      <PaperProvider theme={theme}>
         <NavigationContainer>
-          <Strack.Navigator initialRouteName="Login">
+          <Strack.Navigator
+            initialRouteName="Login"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: theme.colors.text,
+              },
+              headerTintColor: theme.colors.surface,
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerTitleAlign: 'center',
+            }}>
             <Strack.Screen
               name="Login"
               component={Login}
@@ -54,7 +64,7 @@ const App = () => {
             <Strack.Screen
               name="crearUsuario"
               component={CrearUsuario}
-              options={{title: 'Nueva usuario'}}
+              options={{title: 'Nuevo usuario'}}
             />
           </Strack.Navigator>
         </NavigationContainer>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Text, Card, Button} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -8,9 +8,10 @@ const ServicioItem = ({servicio}) => {
   console.log(servicio);
   const {costo, titulo, descripcion} = servicio;
 
+  const contratarServicio = () => {};
   return (
-    <View>
-      <Card style={style.titulo}>
+    <Card style={style.titulo}>
+      <View style={style.viewContainer}>
         <View style={style.viewHeader}>
           <Text style={style.titHeader}>{titulo}</Text>
         </View>
@@ -22,8 +23,14 @@ const ServicioItem = ({servicio}) => {
           <Text style={style.precioTit}>Precio: </Text>
           <Text style={style.precioDato}>${costo}</Text>
         </View>
-      </Card>
-    </View>
+        <Button
+          style={style.iconContact}
+          mode="contained"
+          onPress={() => contratarServicio(servicio.id)}>
+          Contratar
+        </Button>
+      </View>
+    </Card>
   );
 };
 
@@ -54,15 +61,18 @@ const style = StyleSheet.create({
   descripcionText: {
     margin: 10,
     fontSize: 15,
+    color: '#252932',
   },
   nombreText: {
     fontSize: 15,
     fontWeight: 'bold',
+    color: '#252932',
   },
   precioTit: {
     fontSize: 20,
     marginVertical: 10,
     fontWeight: 'bold',
+    color: '#252932',
   },
   viewRowPrecio: {
     flexDirection: 'row',
@@ -73,13 +83,15 @@ const style = StyleSheet.create({
     marginVertical: 10,
     marginEnd: 10,
     fontWeight: 'bold',
+    color: '#252932',
   },
   botonesGroup: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
   iconContact: {
-    backgroundColor: '#252932',
+    marginHorizontal: 100,
+    backgroundColor: '#FF9D4E',
     padding: 8,
     borderRadius: 50,
     shadowColor: '#000000',
@@ -87,6 +99,7 @@ const style = StyleSheet.create({
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
+    marginBottom: 10,
   },
 });
 export default ServicioItem;

@@ -54,28 +54,37 @@ const MisMascotas = (props) => {
   };
 
   return (
-    <View>
+    <View style={globalStyles.base}>
+      <Card style={styles.titulo}>
+        <View style={styles.viewTitulo}>
+          <Maticons
+            style={styles.tituloIcon}
+            name="paw"
+            size={30}
+            color="#252932"
+          />
+          <Text style={styles.tituloTxt}>Mis Mascotas</Text>
+        </View>
+      </Card>
+
       <FlatList
-        ListHeaderComponent={
-          <Headline style={globalStyles.titulo}>
-            {mascotas.length > 0 ? 'Mis mascotas' : 'Aún no cargaste mascotas'}
-          </Headline>
-        }
         data={mascotas}
-        ListEmptyComponent={<View></View>}
         renderItem={({item}) => (
           <MascotaItem mascota={item} consultarMascotas={gConsMascotaApi} />
         )}
         keyExtractor={(item) => JSON.stringify(item.id)}
       />
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() => {
-          navigation.navigate('crearMascota');
-        }}
-        animated="true"
-      />
+      <View style={styles.container}>
+        <FAB
+          icon="plus"
+          style={styles.fab}
+          color="#252932"
+          onPress={() => {
+            navigation.navigate('crearMascota');
+          }}
+          animated="true"
+        />
+      </View>
     </View>
   );
 };

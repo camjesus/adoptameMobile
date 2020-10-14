@@ -160,9 +160,17 @@ const style = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   cerrarSesion: {
-    marginTop: 20,
-    marginHorizontal: 40,
     backgroundColor: '#FF9D4E',
+    padding: 3,
+    borderRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
+    marginHorizontal: 40,
+    marginVertical: 10,
+    marginTop: 10,
   },
 });
 export default Cuenta;

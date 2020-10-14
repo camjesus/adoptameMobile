@@ -60,9 +60,11 @@ const style = StyleSheet.create({
   },
   nombreText: {
     fontWeight: 'bold',
+    color: '#252932',
   },
   descripcionText: {
     fontSize: 13,
+    color: '#252932',
   },
   viewEvento: {
     flexDirection: 'row',

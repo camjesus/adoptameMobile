@@ -9,6 +9,7 @@ import {
   Dialog,
   Paragraph,
   Portal,
+  Text,
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
 import axios from 'axios';
@@ -40,7 +41,7 @@ const Login = (props) => {
   }, [user]);
 
   const crearUsuario = () => {
-    navigation.navigate('CrearUsuario');
+    navigation.navigate('crearUsuario');
   };
 
   const logIn = async () => {
@@ -111,39 +112,49 @@ const Login = (props) => {
   };
 
   return (
-    <View style={globalStyles.contenedor}>
-      <Headline style={globalStyles.titulo}> Bienvenido!</Headline>
-      <TextInput
-        label="E-Mail"
-        value={usuario}
-        onChangeText={(texto) => guardarEmail(texto)}
-        style={style.input}
-      />
-      <TextInput
-        label="Contraseña"
-        value={password}
-        onChangeText={(texto) => guardarPass(texto)}
-        style={style.input}
-        password={true}
-      />
+    <View style={globalStyles.base}>
+      <View style={globalStyles.contenedor}>
+        <Text style={globalStyles.titulo}> Bienvenido!</Text>
+        <TextInput
+          label="E-Mail"
+          value={usuario}
+          onChangeText={(texto) => guardarEmail(texto)}
+          style={style.input}
+        />
+        <TextInput
+          label="Contraseña"
+          value={password}
+          onChangeText={(texto) => guardarPass(texto)}
+          style={style.input}
+          secureTextEntry={true}
+        />
 
-      <Button mode="contained" onPress={() => logIn()}>
-        Ingresar
-      </Button>
-      <Button onPress={() => crearUsuario()}>Nueva Cuenta</Button>
-
-      <FacebookLoginBtn {...props} />
-      <Portal>
-        <Dialog visible={alerta}>
-          <Dialog.Title>Error</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{mensaje}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+        <Button style={style.ingresar} mode="contained" onPress={() => logIn()}>
+          Ingresar
+        </Button>
+        <FacebookLoginBtn {...props} />
+        <View style={style.viewNuevaCuenta}>
+          <Text style={style.registrate}>Registrate acá</Text>
+          <Button
+            style={style.nuevaCuenta}
+            mode="text"
+            color="#FFFFFF"
+            onPress={() => crearUsuario()}>
+            Nueva Cuenta
+          </Button>
+        </View>
+        <Portal>
+          <Dialog visible={alerta}>
+            <Dialog.Title>Error</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>{mensaje}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </View>
     </View>
   );
 };
@@ -151,6 +162,26 @@ const style = StyleSheet.create({
   input: {
     marginBottom: 20,
     backgroundColor: 'transparent',
+  },
+  ingresar: {
+    backgroundColor: '#FF9D4E',
+    padding: 3,
+    borderRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
+    marginHorizontal: 40,
+    marginVertical: 10,
+    marginTop: 10,
+  },
+  viewNuevaCuenta: {
+    marginVertical: 50,
+  },
+  registrate: {
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
 });
 export default Login;

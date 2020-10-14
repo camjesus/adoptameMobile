@@ -10,7 +10,7 @@ const BarraFiltro = ({navigation, route}) => {
     <Button
       type="clear"
       onPress={() => heandlePress()}
-      icon={<MatIcon name="filter" size={30} color="black" />}
+      icon={<MatIcon name="filter" size={30} color="#252932" />}
     />
   );
 };

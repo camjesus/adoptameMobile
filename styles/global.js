@@ -8,9 +8,9 @@ const globalStyles = StyleSheet.create({
   },
   titulo: {
     textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 30,
-    fontSize: 30,
+    marginVertical: 20,
+    fontSize: 50,
+    color: '#FFFFFF',
   },
   base: {
     backgroundColor: '#252932',
