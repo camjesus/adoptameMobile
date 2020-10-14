@@ -15,7 +15,6 @@ const globalStyles = StyleSheet.create({
   base: {
     backgroundColor: '#252932',
     flex: 1,
-    color: '#252932',
   },
 });
 

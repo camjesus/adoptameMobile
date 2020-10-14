@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
+import FacebookLoginBtn from '../components/ui/FacebookLoginManager';
+
 import {
   TextInput,
   Headline,
@@ -38,7 +40,7 @@ const Login = (props) => {
   }, [user]);
 
   const crearUsuario = () => {
-    navigation.navigate('crearUsuario');
+    navigation.navigate('CrearUsuario');
   };
 
   const logIn = async () => {
@@ -79,7 +81,7 @@ const Login = (props) => {
       await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then(
         (value) => {
           //navigation.navigate('buscar', {screen: 'Disponibles'});
-          navigation.navigate('Menu', {navigation});
+          navigation.navigate('Menu');
         },
       );
     } catch (error) {
@@ -100,7 +102,7 @@ const Login = (props) => {
           );
 
           //navigation.navigate('buscar', {screen: 'Disponibles'});
-          navigation.navigate('Menu', {navigation});
+          navigation.navigate('Menu');
         }
       });
     } catch (error) {
@@ -109,48 +111,39 @@ const Login = (props) => {
   };
 
   return (
-    <View style={globalStyles.base}>
-      <View style={globalStyles.contenedor}>
-        <Headline style={style.bienvenido}> Bienvenido!</Headline>
-        <TextInput
-          label="E-Mail"
-          value={usuario}
-          onChangeText={(texto) => guardarEmail(texto)}
-          style={style.input}
-        />
-        <TextInput
-          label="Contraseña"
-          value={password}
-          onChangeText={(texto) => guardarPass(texto)}
-          style={style.input}
-          password={true}
-        />
+    <View style={globalStyles.contenedor}>
+      <Headline style={globalStyles.titulo}> Bienvenido!</Headline>
+      <TextInput
+        label="E-Mail"
+        value={usuario}
+        onChangeText={(texto) => guardarEmail(texto)}
+        style={style.input}
+      />
+      <TextInput
+        label="Contraseña"
+        value={password}
+        onChangeText={(texto) => guardarPass(texto)}
+        style={style.input}
+        password={true}
+      />
 
-        <Button
-          style={style.logInButton}
-          mode="contained"
-          onPress={() => logIn()}>
-          Ingresar
-        </Button>
-        <Button
-          style={style.nuevaCuenta}
-          mode="contained"
-          onPress={() => crearUsuario()}>
-          Nueva Cuenta
-        </Button>
+      <Button mode="contained" onPress={() => logIn()}>
+        Ingresar
+      </Button>
+      <Button onPress={() => crearUsuario()}>Nueva Cuenta</Button>
 
-        <Portal>
-          <Dialog visible={alerta}>
-            <Dialog.Title>Error</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph>{mensaje}</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-      </View>
+      <FacebookLoginBtn {...props} />
+      <Portal>
+        <Dialog visible={alerta}>
+          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>{mensaje}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };
@@ -158,23 +151,6 @@ const style = StyleSheet.create({
   input: {
     marginBottom: 20,
     backgroundColor: 'transparent',
-    color: '#ffffff',
-  },
-  logInButton: {
-    marginTop: 20,
-    marginHorizontal: 40,
-    backgroundColor: '#FF9D4E',
-  },
-  bienvenido: {
-    color: '#ffffff',
-    textAlign: 'center',
-    fontSize: 30,
-    marginVertical: 40,
-  },
-  nuevaCuenta: {
-    color: '#ffffff',
-    backgroundColor: 'transparent',
-    marginVertical: 10,
   },
 });
 export default Login;

@@ -50,11 +50,8 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.removeItem('apellido');
       await AsyncStorage.removeItem('email');
       await AsyncStorage.removeItem('telefono');
-      await AsyncStorage.removeItem('userId').then((value) => {
-        // navigation.navigate('Login');
-        // navigation.navigate('Login');
-        //  LoginManager.logOut(); no seria necesario
 
+      await AsyncStorage.removeItem('userId').then((value) => {
         navigation.navigate('Login');
       });
     } catch (error) {

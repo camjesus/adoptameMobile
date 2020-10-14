@@ -22,7 +22,7 @@ export default class LoginFBKMgr extends Component {
 
             const responseInfoCallback = (error, result) => {
               if (error) {
-                console.log(error)
+                console.log(error);
                 alert('Error trayendo data: ' + error.toString());
              } else {
                 let user = {
