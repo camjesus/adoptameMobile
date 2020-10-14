@@ -252,7 +252,7 @@ const CrearMascota = ({navigation, route}) => {
               onPress={() => selectPhotoTapped()}
             />
             <IconButton
-              icon="map-marker-radius"
+              icon="map-search"
               color="#FF9D4E"
               size={30}
               onPress={() => abrirMapa()}
@@ -284,7 +284,11 @@ const CrearMascota = ({navigation, route}) => {
             style={style.input}
           />
           <View style={style.containerCheck}>
-            <Text style={style.titulo}>Tipo:</Text>
+            <View style={style.mascotaRow}>
+              <Text style={style.titulo}>Tipo:</Text>
+
+              <Text style={style.tituloright}>Sexo:</Text>
+            </View>
             <View style={style.mascotaRow}>
               <Text style={style.textCheck}>Perro</Text>
               <Checkbox
@@ -302,9 +306,6 @@ const CrearMascota = ({navigation, route}) => {
                   setCheckedGato(true);
                 }}
               />
-            </View>
-            <Text style={style.titulo}>Sexo:</Text>
-            <View style={style.mascotaRow}>
               <Text style={style.textCheck}>Macho</Text>
               <Checkbox
                 status={checkedMacho ? 'checked' : 'unchecked'}
@@ -401,13 +402,17 @@ const style = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: 'transparent',
   },
+  tituloright: {
+    fontSize: 14,
+    marginStart: 160,
+  },
   mascotaRow: {
     flexDirection: 'row',
     paddingBottom: 8,
   },
   textCheck: {
     paddingTop: 8,
-    marginStart: 50,
+    marginStart: 20,
   },
   titulo: {
     fontSize: 14,
