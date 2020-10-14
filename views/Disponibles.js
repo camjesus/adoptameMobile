@@ -8,7 +8,6 @@ const Disponibles = ({navigation, route}) => {
   const data = route.params;
   console.log('params');
   console.log(data);
-  const pruebaString = '?tamanio=Mediano&tamanio=Grande&sexo=Macho&edad=15';
   const [mascotasDisp, gDisponibles] = useState([]);
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
@@ -16,12 +15,12 @@ const Disponibles = ({navigation, route}) => {
   const paramsDefault = new URLSearchParams();
   const paramsFiltro = new URLSearchParams();
 
-  paramsDefault.append('tamanio', 'Pequenio');
-  paramsDefault.append('tamanio', 'Mediano');
-  paramsDefault.append('tamanio', 'Grande');
+  paramsDefault.append('tamanio', 'CHICO');
+  paramsDefault.append('tamanio', 'MEDIANO');
+  paramsDefault.append('tamanio', 'GRANDE');
 
-  paramsDefault.append('sexo', 'Macho');
-  paramsDefault.append('sexo', 'Hembra');
+  paramsDefault.append('sexo', 'MACHO');
+  paramsDefault.append('sexo', 'HEMBRA');
 
   paramsDefault.append('edad', 30);
   console.log('default');
