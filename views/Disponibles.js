@@ -3,18 +3,15 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import axios from 'axios';
 import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Disponibles = ({navigation, route}) => {
   const data = route.params;
-  console.log('params');
-  console.log(data);
-  const pruebaString = '?tamanio=Mediano&tamanio=Grande&sexo=Macho&edad=15';
   const [mascotasDisp, gDisponibles] = useState([]);
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
   const [parametros, gParametros] = useState('');
   const paramsDefault = new URLSearchParams();
-  const paramsFiltro = new URLSearchParams();
 
   paramsDefault.append('tamanio', 'Pequenio');
   paramsDefault.append('tamanio', 'Mediano');
