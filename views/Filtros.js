@@ -34,27 +34,27 @@ const Filtros = ({navigation, route}) => {
   const aplicarFiltros = () => {
     //agregar a los fitros
     if (checkedPerro) {
-      gTipoMascota('Perro');
+      gTipoMascota('PERRO');
     }
     if (checkedGato) {
-      gTipoMascota('Gato');
+      gTipoMascota('GATO');
     }
 
     if (checkedPeque) {
-      params.append('tamanio', 'Pequenio');
+      params.append('tamanio', 'CHICO');
     }
     if (checkedMediano) {
-      params.append('tamanio', 'Mediano');
+      params.append('tamanio', 'MEDIANO');
     }
     if (checkedGrande) {
-      params.append('tamanio', 'Grande');
+      params.append('tamanio', 'GRANDE');
     }
 
     if (checkedMacho) {
-      params.append('sexo', 'Macho');
+      params.append('sexo', 'MACHO');
     }
     if (checkedHembra) {
-      params.append('sexo', 'Hembra');
+      params.append('sexo', 'HEMBRA');
     }
     params.append('edad', edad);
 
@@ -85,7 +85,6 @@ const Filtros = ({navigation, route}) => {
     }
   };
 
-  //<Headline style={globalStyles.titulo}> Crear nueva mascota</Headline>
   return (
     <View style={globalStyles.base}>
       <View style={globalStyles.contenedor}>

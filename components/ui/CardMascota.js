@@ -40,7 +40,7 @@ const CardMascota = ({mascota}) => {
           <Image
             style={style.imgMascota}
             source={{
-              uri: image,
+              uri: foto_url,
             }}
           />
         </View>

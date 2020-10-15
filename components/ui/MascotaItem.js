@@ -62,7 +62,7 @@ const MascotaItem = ({mascota, consultarMascotas}) => {
           <Image
             style={style.imgMascota}
             source={{
-              uri: `${image}`,
+              uri: foto_url,
             }}
           />
         </View>
