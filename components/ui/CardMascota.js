@@ -1,30 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Image, Text} from 'react-native';
+import {StyleSheet, View, Image, Text,Alert} from 'react-native';
 import {Card, Button} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const CardMascota = ({mascota}) => {
   const [image, gFotoURL] = useState('../../img/default.jpg');
-  const {foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
+  const {id,foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
   const [nombreSexo, gNombreSexo] = useState('');
 
-  useEffect(() => {
-    console.log('entro a useEffec con la mascota ' + mascota);
-    modificoURL();
-    console.log(image);
-  }, [foto_url]);
+ 
 
   useEffect(() => {
     tomoNombreIcon();
   }, [sexo]);
 
-  const modificoURL = () => {
-    if (foto_url !== '') {
-      const urlServicio = foto_url.substring(17, foto_url.length);
-      gFotoURL('http://10.0.2.2:' + urlServicio);
-      console.log(urlServicio);
-    }
-  };
+
   const tomoNombreIcon = () => {
     if (sexo.toUpperCase() === 'MACHO') {
       gNombreSexo('gender-male');
@@ -32,6 +24,47 @@ const CardMascota = ({mascota}) => {
       gNombreSexo('gender-female');
     }
   };
+
+
+  const enviaMail = async (id) => {
+    try {
+      
+      console.log('request');
+      console.log(request);
+
+     const value= await AsyncStorage.getItem('email');
+
+      var request = {
+        "idMascota":id,
+        "senderName":value
+      };
+
+      const resultado = await axios.post(
+        'http://10.0.2.2:8090/adoptame/mobile/enviarMailMascota',
+        request
+      );
+      console.log('Mande email');
+      console.log(resultado.data);
+      Alert.alert(
+        'Contacto Hecho!',
+        'El resctatista se comunicara con vos en breve!',
+        [{text: 'OK'}],
+        {cancelable: false}
+      );
+
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        'Error',
+        'Ha ocurrido un error intente nuevamente',
+        [{text: 'OK'}],
+        {cancelable: false}
+      );
+    }
+  };
+
+  
+
 
   return (
     <Card>
@@ -76,6 +109,7 @@ const CardMascota = ({mascota}) => {
                 color="#FF9D4E"
               />
             }
+            onPress={() => enviaMail(id)}
           />
         </View>
       </View>
