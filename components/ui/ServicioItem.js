@@ -1,12 +1,34 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {StyleSheet, View, Linking} from 'react-native';
 import {Text, Card, Button} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ServicioItem = ({servicio}) => {
   console.log('servicio');
   console.log(servicio);
-  const {costo, titulo, descripcion} = servicio;
+  const {costo, titulo, descripcion, urlPago} = servicio;
+  const supportedURL = 'https://mpago.la/2fCvVnm';
+
+  const OpenURLButton = ({url, children}) => {
+    const handlePress = useCallback(async () => {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(`Don't know how to open this URL: ${url}`);
+      }
+    }, [url]);
+
+    return (
+      <Button
+        style={style.iconContact}
+        mode="contained"
+        title={children}
+        onPress={handlePress}>
+        Contratar
+      </Button>
+    );
+  };
 
   const contratarServicio = () => {};
   return (
@@ -23,12 +45,7 @@ const ServicioItem = ({servicio}) => {
           <Text style={style.precioTit}>Precio: </Text>
           <Text style={style.precioDato}>${costo}</Text>
         </View>
-        <Button
-          style={style.iconContact}
-          mode="contained"
-          onPress={() => contratarServicio(servicio.id)}>
-          Contratar
-        </Button>
+        <OpenURLButton url={supportedURL}>Open Supported URL</OpenURLButton>
       </View>
     </Card>
   );
