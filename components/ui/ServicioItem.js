@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Linking} from 'react-native';
+import {StyleSheet, View, Linking, Alert} from 'react-native';
 import {Text, Card, Button} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 
