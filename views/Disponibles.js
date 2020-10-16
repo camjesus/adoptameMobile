@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,useRef} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import axios from 'axios';
 import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
 import {ScrollView} from 'react-native-gesture-handler';
+import GetLocation from 'react-native-get-location';
+
 
 const Disponibles = ({navigation, route}) => {
   const data = route.params;
@@ -13,22 +15,32 @@ const Disponibles = ({navigation, route}) => {
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
   const [parametros, gParametros] = useState('');
-  const paramsDefault = new URLSearchParams();
+  const isFirstTime = useRef(true);
+  const [distancia, gDistancia] = useState(100);
 
-  paramsDefault.append('tamanio', 'CHICO');
-  paramsDefault.append('tamanio', 'MEDIANO');
-  paramsDefault.append('tamanio', 'GRANDE');
 
-  paramsDefault.append('sexo', 'MACHO');
-  paramsDefault.append('sexo', 'HEMBRA');
+ 
 
-  paramsDefault.append('edad', 30);
-  console.log('default');
 
-  console.log(paramsDefault);
+  const obtenerMasDisponilbes = async (latitud,longitud) => {
 
-  const obtenerMasDisponilbes = async () => {
+    const paramsDefault = new URLSearchParams();
+
+    paramsDefault.append('tamanio', 'CHICO');
+    paramsDefault.append('tamanio', 'MEDIANO');
+    paramsDefault.append('tamanio', 'GRANDE');
+  
+    paramsDefault.append('sexo', 'MACHO');
+    paramsDefault.append('sexo', 'HEMBRA');
+  
+    paramsDefault.append('edad', 30);
+    paramsDefault.append("latitud",latitud);
+    paramsDefault.append("longitud",longitud);
+    paramsDefault.append("distancia",distancia);
+
+
     try {
+      
       var request = {
         params: primerCarga === true ? paramsDefault : data.data,
       };
@@ -47,17 +59,49 @@ const Disponibles = ({navigation, route}) => {
     }
   };
 
+
+  const   getCurrentPosition = async () =>{
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+      .then((location) => {
+        console.log(location);
+
+       
+          console.log(location);
+         
+          obtenerMasDisponilbes(location.latitude,location.longitude); 
+      })
+      .catch((error) => {
+        const {code, message} = error;
+        console.warn(code, message);
+      });
+
+      
+  }
+
+
   useEffect(() => {
+     
+
     if (consultarDisponibles) {
       console.log('entra a consultar');
-      obtenerMasDisponilbes();
+   //   obtenerMasDisponilbes();
+     getCurrentPosition();
       gConsDisponibles(false);
     }
   }, [consultarDisponibles]);
 
+
   useEffect(() => {
-    gConsDisponibles(true);
-    obtenerMasDisponilbes();
+
+    if (isFirstTime.current) {
+      isFirstTime.current = false;
+    } else {
+      gConsDisponibles(true);
+    }    
+  //  obtenerMasDisponilbes();
   }, [data]);
 
   return (

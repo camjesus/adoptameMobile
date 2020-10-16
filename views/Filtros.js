@@ -12,6 +12,8 @@ import {
 import Slider from '@react-native-community/slider';
 import globalStyles from '../styles/global';
 import axios from 'axios';
+import GetLocation from 'react-native-get-location';
+
 
 const Filtros = ({navigation, route}) => {
   console.log(route.params);
@@ -19,8 +21,10 @@ const Filtros = ({navigation, route}) => {
   const [mascotasDisponibles, gDisponiblesM] = useState([]);
   const [tipoMascota, gTipoMascota] = useState('');
   const [distancia, gDistancia] = useState(100);
-  const [checkedPerro, setCheckedPerro] = React.useState(true);
-  const [checkedGato, setCheckedGato] = React.useState(true);
+  const [latitud, setLatitud] = useState(-34.6038);
+  const [longitud, setLongitud] = useState(-58.3818);
+
+
   const [checkedMacho, setCheckedMacho] = React.useState(true);
   const [checkedHembra, setCheckedHembra] = React.useState(true);
   const [checkedPeque, setCheckedPeque] = React.useState(true);
@@ -32,14 +36,7 @@ const Filtros = ({navigation, route}) => {
   const params = new URLSearchParams();
 
   const aplicarFiltros = () => {
-    //agregar a los fitros
-    if (checkedPerro) {
-      gTipoMascota('PERRO');
-    }
-    if (checkedGato) {
-      gTipoMascota('GATO');
-    }
-
+   
     if (checkedPeque) {
       params.append('tamanio', 'CHICO');
     }
@@ -60,30 +57,14 @@ const Filtros = ({navigation, route}) => {
 
     console.log(params);
     navigation.navigate('Disponibles', {data: params});
-    //obtenerMasDisponilbes();
   };
 
-  const obtenerMasDisponilbes = async () => {
-    try {
-      var request = {
-        params: params,
-      };
 
-      const mascoFilt = await axios.get(
-        'http://10.0.2.2:8090/adoptame/mobile/listaMascotasDisponible',
-        request,
-      );
-      console.log(mascoFilt.data);
-      console.log('paso por obetener mascotas Disponibles en filtros');
-      gDisponiblesM(mascoFilt.data);
 
-      console.log('mascotasDisp');
-      console.log(mascotasDisponibles);
-      navigation.navigate('Disponibles', mascotasDisponibles);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
+
+
+  
 
   return (
     <View style={globalStyles.base}>

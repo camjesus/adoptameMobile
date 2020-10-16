@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 const CardMascota = ({mascota}) => {
   const [image, gFotoURL] = useState('../../img/default.jpg');
   const {id,foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
-  const [nombreSexo, gNombreSexo] = useState('');
+  const [nombreSexo, gNombreSexo] = useState('gender-male');
 
  
 
