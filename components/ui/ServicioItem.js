@@ -15,7 +15,7 @@ const ServicioItem = ({servicio}) => {
       if (supported) {
         await Linking.openURL(url);
       } else {
-        Alert.alert(`Don't know how to open this URL: ${url}`);
+        Alert.alert(`Ha ocurrido un error , intente mas tarde`);
       }
     }, [url]);
 

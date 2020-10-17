@@ -17,6 +17,7 @@ const Disponibles = ({navigation, route}) => {
   const [parametros, gParametros] = useState('');
   const isFirstTime = useRef(true);
   const [distancia, gDistancia] = useState(100);
+  const paramsDefault = new URLSearchParams();
 
 
  
@@ -24,7 +25,6 @@ const Disponibles = ({navigation, route}) => {
 
   const obtenerMasDisponilbes = async (latitud,longitud) => {
 
-    const paramsDefault = new URLSearchParams();
 
     paramsDefault.append('tamanio', 'CHICO');
     paramsDefault.append('tamanio', 'MEDIANO');

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View,Alert} from 'react-native';
 import {
   TextInput,
   Headline,
@@ -21,8 +21,7 @@ const Filtros = ({navigation, route}) => {
   const [mascotasDisponibles, gDisponiblesM] = useState([]);
   const [tipoMascota, gTipoMascota] = useState('');
   const [distancia, gDistancia] = useState(100);
-  const [latitud, setLatitud] = useState(-34.6038);
-  const [longitud, setLongitud] = useState(-58.3818);
+
 
 
   const [checkedMacho, setCheckedMacho] = React.useState(true);
@@ -35,7 +34,7 @@ const Filtros = ({navigation, route}) => {
   const filtros = [];
   const params = new URLSearchParams();
 
-  const aplicarFiltros = () => {
+  const aplicarFiltros = (latitud, longitud) => {
    
     if (checkedPeque) {
       params.append('tamanio', 'CHICO');
@@ -55,16 +54,31 @@ const Filtros = ({navigation, route}) => {
     }
     params.append('edad', edad);
 
+    params.append("latitud",latitud);
+    params.append("longitud",longitud);
+    params.append("distancia",distancia);
+
     console.log(params);
     navigation.navigate('Disponibles', {data: params});
   };
 
 
 
-
-
-
-  
+  const   getCurrentPosition = async () =>{
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+      .then((location) => {
+        console.log(location);
+        aplicarFiltros(location.latitude,location.longitude);
+      })
+      .catch((error) => {
+        const {code, message} = error;
+        Alert.alert(`Ha ocurrido un error , intente mas tarde`);
+        console.warn(code, message);
+      });
+  }
 
   return (
     <View style={globalStyles.base}>
@@ -149,7 +163,7 @@ const Filtros = ({navigation, route}) => {
         <Button
           style={style.ingresar}
           mode="contained"
-          onPress={() => aplicarFiltros()}>
+          onPress={() => getCurrentPosition()}>
           Aplicar
         </Button>
       </View>
