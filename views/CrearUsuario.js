@@ -13,11 +13,11 @@ import globalStyles from '../styles/global';
 import axios from 'axios';
 import {ScrollView} from 'react-native-gesture-handler';
 
+
 const CrearUsuario = ({navigation}) => {
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
-  const [telefono, gTelefono] = useState('');
   const [password, gPassword] = useState('');
   const [passwordRep, gPasswordRep] = useState('');
   const [alerta, ingresarAlerta] = useState(false);
@@ -29,14 +29,20 @@ const CrearUsuario = ({navigation}) => {
       nombre === '' ||
       apellido === '' ||
       email === '' ||
-      telefono === '' ||
       password === ''
     ) {
       guardaMensaje('Todos los campos son requeridos');
       ingresarAlerta(true);
       return;
     }
+    //password con una mayuscula , un numero y 8 caracteres
+    let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
+    if (reg.test(password) === false){
+      guardaMensaje('Las contraseñasdebe tener 8 caracteres una mayuscula y un numero');
+      ingresarAlerta(true);
+      return;
+    }
     if (password !== passwordRep) {
       guardaMensaje('Las contraseñas no coinciden');
       ingresarAlerta(true);
@@ -46,7 +52,6 @@ const CrearUsuario = ({navigation}) => {
       nombre,
       apellido,
       email,
-      telefono,
       password,
       ubicacion,
     };
@@ -79,12 +84,7 @@ const CrearUsuario = ({navigation}) => {
             style={style.input}
             value={apellido}
           />
-          <TextInput
-            label="Teléfono"
-            onChangeText={(texto) => gTelefono(texto)}
-            style={style.input}
-            value={telefono}
-          />
+   
           <TextInput
             label="E-Mail"
             onChangeText={(texto) => gEmail(texto)}
@@ -96,12 +96,17 @@ const CrearUsuario = ({navigation}) => {
             onChangeText={(texto) => gPassword(texto)}
             style={style.input}
             value={password}
+            secureTextEntry={true}
+
           />
+        
           <TextInput
             label="Repetir contraseña"
             onChangeText={(texto) => gPasswordRep(texto)}
             style={style.input}
             value={passwordRep}
+            secureTextEntry={true}
+
           />
 
           <Button
