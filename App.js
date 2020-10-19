@@ -27,7 +27,7 @@ const theme = {
     onSurface: '#ffffff',
     placeholder: '#ffffff',
     primary: '#ff9d4e',
-    surface: '#ff9d4e',
+    surface: '#252932',
     text: '#ffffff',
   },
 };

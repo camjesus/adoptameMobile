@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   TextInput,
-  Headline,
   Button,
   Portal,
   Dialog,
@@ -38,7 +37,7 @@ const CrearUsuario = ({navigation}) => {
     //password con una mayuscula , un numero y 8 caracteres
     let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
-    if (reg.test(password) === false){
+    if (reg.test(password) === false) { 
       guardaMensaje('Las contraseñasdebe tener 8 caracteres una mayuscula y un numero');
       ingresarAlerta(true);
       return;
@@ -68,7 +67,6 @@ const CrearUsuario = ({navigation}) => {
     }
   };
   return (
-    <ScrollView>
       <View style={globalStyles.base}>
         <View style={globalStyles.contenedor}>
           <Text style={style.titulo}> Nueva cuenta</Text>
@@ -129,7 +127,6 @@ const CrearUsuario = ({navigation}) => {
           </Portal>
         </View>
       </View>
-    </ScrollView>
   );
 };
 

@@ -38,6 +38,11 @@ const Servicios = ({navigation, route}) => {
           <Text style={styles.tituloTxt}>Servicios</Text>
         </View>
       </Card>
+      <View>
+          {servicios.length === 0  && (
+              <Text style={globalStyles.msjAdvertencia} >No hay servicios disponibles</Text>
+            )}
+          </View>
       <FlatList
         data={servicios}
         renderItem={({item}) => <ServicioItem servicio={item} />}
