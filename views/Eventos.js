@@ -41,6 +41,11 @@ const Eventos = ({navigation, route}) => {
           <Text style={styles.tituloTxt}>Eventos</Text>
         </View>
       </Card>
+      <View>
+          {eventos.length === 0  && (
+              <Text style={globalStyles.msjAdvertencia} >No hay eventos disponibles</Text>
+            )}
+          </View>
       <FlatList
         data={eventos}
         renderItem={({item}) => <EventoItem evento={item} />}

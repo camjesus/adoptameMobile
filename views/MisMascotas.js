@@ -68,6 +68,13 @@ const MisMascotas = (props) => {
           <Text style={styles.tituloTxt}>Mis Mascotas</Text>
         </View>
       </Card>
+      <View >
+          <View>
+          {mascotas.length === 0  && (
+              <Text style={globalStyles.msjAdvertencia} >Aún no cargaste mascotas</Text>
+            )}
+          </View>
+        </View>
 
       <FlatList
         data={mascotas}

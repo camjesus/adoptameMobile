@@ -5,6 +5,8 @@ import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
 import {ScrollView} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
+import {Text} from 'react-native-paper';
+import globalStyles from '../styles/global';
 
 
 const Disponibles = ({navigation, route}) => {
@@ -106,6 +108,11 @@ const Disponibles = ({navigation, route}) => {
 
   return (
     <View style={globalStyle.base}>
+       <View>
+          {mascotasDisp.length === 0  && (
+              <Text style={globalStyles.msjDisponibles} >No hay mascotas disponibles para los filtros aplicados</Text>
+            )}
+          </View>
       <FlatList
         data={mascotasDisp}
         renderItem={({item}) => <CardMascota mascota={item} />}

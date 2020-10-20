@@ -16,6 +16,18 @@ const globalStyles = StyleSheet.create({
     backgroundColor: '#252932',
     flex: 1,
   },
+  msjAdvertencia: {
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 30,
+    color: '#FFFFFF',
+  },
+  msjDisponibles: {
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 20,
+    color: '#FFFFFF',
+  },
 });
 
 export default globalStyles;
