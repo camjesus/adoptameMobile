@@ -114,7 +114,7 @@ const Login = (props) => {
   return (
     <View style={globalStyles.base}>
       <View style={globalStyles.contenedor}>
-        <Text style={globalStyles.titulo}> Bienvenido!</Text>
+        <Text style={globalStyles.titulo}> Adopta.Me!</Text>
         <TextInput
           label="E-Mail"
           value={usuario}
@@ -140,7 +140,7 @@ const Login = (props) => {
             mode="text"
             color="#FFFFFF"
             onPress={() => crearUsuario()}>
-            Nueva Cuenta
+            Nueva Usuario
           </Button>
         </View>
         <Portal>

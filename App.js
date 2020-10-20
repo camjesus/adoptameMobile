@@ -64,7 +64,7 @@ const App = () => {
             <Strack.Screen
               name="crearUsuario"
               component={CrearUsuario}
-              options={{title: 'Nuevo usuario'}}
+              options={{title: 'Nuevo Usuario'}}
             />
           </Strack.Navigator>
         </NavigationContainer>
