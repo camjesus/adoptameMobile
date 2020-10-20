@@ -42,7 +42,9 @@ const MisMascotas = (props) => {
 
   const obtenerMascotas = async (value) => {
     try {
-      const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${value}`;
+     // const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${value}`;
+     const url = `http://adoptameapp.herokuapp.com/adoptame/mobile/mascotasUsuario/${value}`;
+     
       console.log(url);
       const resultado = await axios.get(url);
       console.log(resultado.data);
