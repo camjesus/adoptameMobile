@@ -11,7 +11,7 @@ const MascotaItem = ({mascota, consultarMascotas}) => {
   console.log(mascota);
   const [image, gFotoURL] = useState('../../img/default.jpg');
   const {foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
-  const [nombreSexo, gNombreSexo] = useState('');
+  const [nombreSexo, gNombreSexo] = useState('gender-male');
   var that = this;
 
   const cambiarEstadoMascota = async (id) => {
@@ -29,17 +29,11 @@ const MascotaItem = ({mascota, consultarMascotas}) => {
       {cancelable: false},
     );
   };
-  const modificoURL = () => {
-    if (foto_url !== '') {
-      const urlServicio = foto_url.substring(17, foto_url.length);
-      gFotoURL('http://10.0.2.2:' + urlServicio);
-      console.log(urlServicio);
-    }
-  };
+ 
 
   useEffect(() => {
     console.log('entro a useEffec con la mascota ' + mascota);
-    modificoURL();
+    
     console.log(image);
   }, [foto_url]);
 
