@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View,Alert} from 'react-native';
 import FacebookLoginBtn from '../components/ui/FacebookLoginManager';
 
 import {
@@ -55,7 +55,7 @@ const Login = (props) => {
     try {
       const resultado = await axios.post(
       //  'http://10.0.2.2:8090/adoptame/mobile/ingresarMobile
-      'http://adoptameapp.herokuapp.com/adoptame/mobile/ingresarMobile',
+      'https://adoptameapp.herokuapp.com/adoptame/mobile/ingresarMobile',
         postUsuarios,
       );
       console.log(resultado.data);
@@ -67,6 +67,12 @@ const Login = (props) => {
       console.log('me logueo bien , guardo el user');
       guardoUsuario(resultado.data);
     } catch (error) {
+      Alert.alert(
+        'Error',
+        'Ha ocurrido un error intente nuevamente'+error,
+        [{text: 'OK'}],
+        {cancelable: false}
+      );
       console.log('erro buscanbdo usuario' + error);
     }
   };

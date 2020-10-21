@@ -12,7 +12,7 @@ import {useIsFocused} from '@react-navigation/native';
 
 const MisMascotas = (props) => {
   const {navigation} = props;
-  const [mascotas, guardarMascotas] = useState({});
+  const [mascotas, guardarMascotas] = useState([]);
   const [userId, gUserId] = useState('');
 
   const [consultarMascotas, gConsMascotaApi] = useState(false); //si adopto una mascota es para saber si recargo la pagina
