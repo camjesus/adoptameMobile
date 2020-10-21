@@ -40,7 +40,7 @@ const CardMascota = ({mascota}) => {
       };
 
       const resultado = await axios.post(
-        'http://10.0.2.2:8090/adoptame/mobile/enviarMailMascota',
+        'https://adoptameapp.herokuapp.com/adoptame/mobile/enviarMailMascota',
         request
       );
       console.log('Mande email');

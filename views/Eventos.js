@@ -12,7 +12,7 @@ const Eventos = ({navigation, route}) => {
   useEffect(() => {
     const obtenerEventos = async () => {
       try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/eventos`;
+        const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/eventos`;
         const resultado = await axios.get(url);
         console.log(resultado.data);
         console.log('paso por obetener los eventos');

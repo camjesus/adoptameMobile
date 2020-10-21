@@ -18,8 +18,6 @@ import GetLocation from 'react-native-get-location';
 const Filtros = ({navigation, route}) => {
   console.log(route.params);
   const [edad, gEdad] = useState(30);
-  const [mascotasDisponibles, gDisponiblesM] = useState([]);
-  const [tipoMascota, gTipoMascota] = useState('');
   const [distancia, gDistancia] = useState(100);
 
 
@@ -31,7 +29,6 @@ const Filtros = ({navigation, route}) => {
   const [checkedGrande, setCheckedGrande] = React.useState(true);
   const km = ' km';
   const anios = ' años';
-  const filtros = [];
   const params = new URLSearchParams();
 
   const aplicarFiltros = (latitud, longitud) => {

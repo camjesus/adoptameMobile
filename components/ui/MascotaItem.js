@@ -17,7 +17,7 @@ const MascotaItem = ({mascota, consultarMascotas}) => {
   const cambiarEstadoMascota = async (id) => {
     const postEstado = {id, estado: 'ADOPTADA'};
     const resultado = await axios.post(
-      'http://10.0.2.2:8090/adoptame/mobile/estadoMascota',
+      'https://adoptameapp.herokuapp.com/adoptame/mobile/estadoMascota',
       postEstado,
     );
     consultarMascotas(true);

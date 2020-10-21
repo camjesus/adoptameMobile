@@ -13,7 +13,7 @@ const Servicios = ({navigation, route}) => {
   useEffect(() => {
     const obtenerServicios = async () => {
       try {
-        const url = `http://10.0.2.2:8090/adoptame/mobile/servicios`;
+        const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/servicios`;
         const resultado = await axios.get(url);
         console.log(resultado.data);
         console.log('paso por obetener los Servicios');

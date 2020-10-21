@@ -45,7 +45,7 @@ const ServicioItem = ({servicio}) => {
           <Text style={style.precioTit}>Precio: </Text>
           <Text style={style.precioDato}>${costo}</Text>
         </View>
-        <OpenURLButton url={supportedURL}>Open Supported URL</OpenURLButton>
+        <OpenURLButton url={urlPago}>Open Supported URL</OpenURLButton>
       </View>
     </Card>
   );

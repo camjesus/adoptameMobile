@@ -49,7 +49,7 @@ const Disponibles = ({navigation, route}) => {
       console.log('request');
       console.log(request.params);
       const resultado = await axios.get(
-        'http://10.0.2.2:8090/adoptame/mobile/listaMascotasDisponible',
+        'https://adoptameapp.herokuapp.com/adoptame/mobile/listaMascotasDisponible',
         request,
       );
       console.log(resultado.data);

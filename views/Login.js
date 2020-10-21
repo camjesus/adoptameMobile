@@ -151,7 +151,7 @@ const Login = (props) => {
           </Button>
         </View>
         <Portal>
-          <Dialog visible={alerta}>
+          <Dialog visible={alerta} style={style.dialogBack}>
             <Dialog.Title>Error</Dialog.Title>
             <Dialog.Content>
               <Paragraph>{mensaje}</Paragraph>
@@ -190,5 +190,8 @@ const style = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
   },
+  dialogBack: {
+    backgroundColor: '#ffffff',
+  }
 });
 export default Login;

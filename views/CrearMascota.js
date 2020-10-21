@@ -107,8 +107,8 @@ const CrearMascota = ({navigation, route}) => {
       axios
         .request({
           method: 'post',
-         url: 'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
-        //  url: 'http://adoptameapp.herokuapp.com/adoptame/mobile/uploadPet',
+         //url: 'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
+          url: 'https://adoptameapp.herokuapp.com/adoptame/mobile/uploadPet',
        
           data: bodyFormData,
           headers: {
