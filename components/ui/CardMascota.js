@@ -1,3 +1,5 @@
+
+import constantes from '../context/Constantes'; 
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Image, Text,Alert} from 'react-native';
 import {Card, Button} from 'react-native-elements';
@@ -38,16 +40,17 @@ const CardMascota = ({mascota}) => {
         "idMascota":id,
         "senderName":value
       };
-
+      const url = constantes.BASE_URL+'enviarMailMascota'
       const resultado = await axios.post(
-        'https://adoptameapp.herokuapp.com/adoptame/mobile/enviarMailMascota',
+       // 'https://adoptameapp.herokuapp.com/adoptame/mobile/enviarMailMascota',
+       url,
         request
       );
       console.log('Mande email');
       console.log(resultado.data);
       Alert.alert(
         'Contacto Hecho!',
-        'El resctatista se comunicara con vos en breve!',
+        'El rescatistas se comunicara con vos en breve!',
         [{text: 'OK'}],
         {cancelable: false}
       );

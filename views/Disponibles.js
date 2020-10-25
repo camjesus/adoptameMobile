@@ -7,6 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
 import {Text} from 'react-native-paper';
 import globalStyles from '../styles/global';
+import constantes from '../components/context/Constantes'; 
 
 
 const Disponibles = ({navigation, route}) => {
@@ -48,9 +49,11 @@ const Disponibles = ({navigation, route}) => {
       };
       console.log('request');
       console.log(request.params);
+      const url=constantes.BASE_URL+'listaMascotasDisponible';
       const resultado = await axios.get(
-        'https://adoptameapp.herokuapp.com/adoptame/mobile/listaMascotasDisponible',
-        request,
+      //  'https://adoptameapp.herokuapp.com/adoptame/mobile/listaMascotasDisponible',
+      url,
+      request,
       );
       console.log(resultado.data);
       console.log('paso por obetener mascotas Disponibles');

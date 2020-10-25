@@ -9,6 +9,7 @@ import {Text, Card} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
+import constantes from '../components/context/Constantes'; 
 
 const MisMascotas = (props) => {
   const {navigation} = props;
@@ -43,8 +44,8 @@ const MisMascotas = (props) => {
   const obtenerMascotas = async (value) => {
     try {
      // const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${value}`;
-     const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/mascotasUsuario/${value}`;
-     
+    // const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/mascotasUsuario/${value}`;
+     const url = constantes.BASE_URL+`mascotasUsuario/${value}`;
       console.log(url);
       const resultado = await axios.get(url);
       console.log(resultado.data);

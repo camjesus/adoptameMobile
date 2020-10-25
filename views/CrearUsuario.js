@@ -11,6 +11,7 @@ import {
 import globalStyles from '../styles/global';
 import axios from 'axios';
 import {ScrollView} from 'react-native-gesture-handler';
+import constantes from '../components/context/Constantes'; 
 
 
 const CrearUsuario = ({navigation}) => {
@@ -55,8 +56,10 @@ const CrearUsuario = ({navigation}) => {
       ubicacion,
     };
     console.log(nuevoUsuario);
+    const url=constantes.BASE_URL+'signInUser/';
     const resultado = await axios.post(
-      'https://adoptameapp.herokuapp.com/adoptame/mobile/signInUser/',
+     // 'https://adoptameapp.herokuapp.com/adoptame/mobile/signInUser/',
+       url,
       nuevoUsuario,
     );
     console.log(resultado.data.result);

@@ -6,24 +6,33 @@ import globalStyles from '../styles/global';
 import ServicioItem from '../components/ui/ServicioItem';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Card, Text} from 'react-native-paper';
+import constantes from '../components/context/Constantes'; 
+import {useIsFocused} from '@react-navigation/native';
 
 const Servicios = ({navigation, route}) => {
   const [servicios, guardarServicios] = useState([]);
   const [consultarServicios, gConsultoServicios] = useState(true);
+  const isFocused = useIsFocused(); //devuelve true si la pantalla tiene foco
+
+
+  const obtenerServicios = async () => {
+    try {
+     // const url = `https://adoptameapp.herokuapp.com/ /servicios`;
+      const url =constantes.BASE_URL+`servicios`;
+      const resultado = await axios.get(url);
+      console.log(resultado.data);
+      console.log('paso por obetener los Servicios');
+      guardarServicios(resultado.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const obtenerServicios = async () => {
-      try {
-        const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/servicios`;
-        const resultado = await axios.get(url);
-        console.log(resultado.data);
-        console.log('paso por obetener los Servicios');
-        guardarServicios(resultado.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    obtenerServicios();
-  }, [consultarServicios]);
+    if (isFocused) {
+     obtenerServicios();
+    }
+  },[isFocused]);
 
   return (
     <View style={globalStyles.base}>

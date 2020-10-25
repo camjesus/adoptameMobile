@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View,Alert} from 'react-native';
 import FacebookLoginBtn from '../components/ui/FacebookLoginManager';
-
+import constantes from '../components/context/Constantes'; 
 import {
   TextInput,
   Headline,
@@ -51,11 +51,14 @@ const Login = (props) => {
       return;
     }
     const postUsuarios = {usuario, password};
-    console.log(postUsuarios);
+    
+    const url=constantes.BASE_URL+'ingresarMobile';
+    console.log(url);
     try {
       const resultado = await axios.post(
       //  'http://10.0.2.2:8090/adoptame/mobile/ingresarMobile
-      'https://adoptameapp.herokuapp.com/adoptame/mobile/ingresarMobile',
+    //  'https://adoptameapp.herokuapp.com/adoptame/mobile/ingresarMobile',
+         url,
         postUsuarios,
       );
       console.log(resultado.data);

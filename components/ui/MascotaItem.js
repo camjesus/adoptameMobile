@@ -5,6 +5,7 @@ import axios from 'axios';
 import {Button} from 'react-native-paper';
 import {Card} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import constantes from '../context/Constantes'; 
 
 const MascotaItem = ({mascota, consultarMascotas}) => {
   console.log('mascota');
@@ -16,8 +17,11 @@ const MascotaItem = ({mascota, consultarMascotas}) => {
 
   const cambiarEstadoMascota = async (id) => {
     const postEstado = {id, estado: 'ADOPTADA'};
+    const url = constantes.BASE_URL+'estadoMascota'
+
     const resultado = await axios.post(
-      'https://adoptameapp.herokuapp.com/adoptame/mobile/estadoMascota',
+     // 'https://adoptameapp.herokuapp.com/adoptame/mobile/estadoMascota',
+     url,
       postEstado,
     );
     consultarMascotas(true);

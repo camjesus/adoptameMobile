@@ -6,10 +6,11 @@ import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 const ServicioItem = ({servicio}) => {
   console.log('servicio');
   console.log(servicio);
-  const {costo, titulo, descripcion, urlPago} = servicio;
+  const {costo, titulo, descripcion, urlPago,email,nombre,apellido} = servicio;
   const supportedURL = 'https://mpago.la/2fCvVnm';
 
   const OpenURLButton = ({url, children}) => {
+    
     const handlePress = useCallback(async () => {
       const supported = await Linking.canOpenURL(url);
       if (supported) {
@@ -39,8 +40,15 @@ const ServicioItem = ({servicio}) => {
         </View>
 
         <View style={style.viewRow}>
-          <Text style={style.descripcionText}>{descripcion}</Text>
+        <Text style={style.descripcionText}>{descripcion}</Text>
         </View>
+        <View style={style.viewRow}>
+         <Text style={style.descripcionText}>{nombre} {apellido}</Text>
+         </View>
+         <View style={style.viewRow}>
+         <Text style={style.descripcionText}>{email} </Text>
+         </View>
+       
         <View style={style.viewRowPrecio}>
           <Text style={style.precioTit}>Precio: </Text>
           <Text style={style.precioDato}>${costo}</Text>

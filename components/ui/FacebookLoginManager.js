@@ -8,6 +8,7 @@ import {
 } from 'react-native-fbsdk';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import constantes from '../context/Constantes'; 
 
 export default class LoginFBKMgr extends Component {
   facebookAuth = () => {
@@ -42,9 +43,12 @@ export default class LoginFBKMgr extends Component {
 
                 console.log(postUsuarios);
                 try {
+                  const url = constantes.BASE_URL+'ingresarMobile'
+
                   const resultado = axios
                     .post(
-                      'http://10.0.2.2:8090/adoptame/mobile/ingresarMobile',
+                    //  'http://10.0.2.2:8090/adoptame/mobile/ingresarMobile',
+                    url,
                       postUsuarios,
                     )
                     .then((resp) => {

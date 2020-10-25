@@ -9,7 +9,6 @@ const Cuenta = ({navigation}) => {
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
-  const [telefono, gTelefono] = useState('');
   const espacio = ' ';
   useEffect(() => {
     console.log('entre a cuena');
@@ -22,9 +21,6 @@ const Cuenta = ({navigation}) => {
         gNombre(value);
       });
 
-      await AsyncStorage.getItem('telefono').then((value) => {
-        gTelefono(value);
-      });
 
       await AsyncStorage.getItem('apellido').then((value) => {
         gApellido(value);
@@ -49,7 +45,6 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.removeItem('nombre');
       await AsyncStorage.removeItem('apellido');
       await AsyncStorage.removeItem('email');
-      await AsyncStorage.removeItem('telefono');
 
       await AsyncStorage.removeItem('userId').then((value) => {
         navigation.navigate('Login');

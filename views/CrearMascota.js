@@ -20,6 +20,7 @@ import ImagePicker from 'react-native-image-picker';
 import {ScrollView} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import constantes from '../components/context/Constantes'; 
 
 const CrearMascota = ({navigation, route}) => {
   const [nombre, gNombre] = useState('');
@@ -104,12 +105,13 @@ const CrearMascota = ({navigation, route}) => {
             : imagen.uri.replace('file://', ''),
       });
 
+      const urlUpload =constantes.BASE_URL+'uploadPet';
       axios
         .request({
           method: 'post',
          //url: 'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
-          url: 'https://adoptameapp.herokuapp.com/adoptame/mobile/uploadPet',
-       
+        //  url: 'https://adoptameapp.herokuapp.com/adoptame/mobile/uploadPet',
+          url:urlUpload,
           data: bodyFormData,
           headers: {
             'Content-Type': 'multipart/form-data',
