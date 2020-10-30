@@ -77,7 +77,7 @@ const Cuenta = ({navigation}) => {
               color="#252932"
             />
             <Text style={style.itemTitulo}>Nombre y Apellido:</Text>
-            <Text style={style.itemDato}>
+            <Text style={style.itemNombre}>
               {nombre}
               {espacio}
               {apellido}
@@ -133,6 +133,14 @@ const style = StyleSheet.create({
     paddingTop: 5,
     color: '#252932',
   },
+  itemNombre: {
+    fontSize: 15,
+    marginTop: 10,
+    paddingTop: 5,
+    color: '#252932',
+    textTransform: 'capitalize',
+  },
+
   itemTitulo: {
     fontSize: 15,
     margin: 10,

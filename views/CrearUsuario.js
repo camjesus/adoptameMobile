@@ -39,7 +39,7 @@ const CrearUsuario = ({navigation}) => {
     let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
     if (reg.test(password) === false) { 
-      guardaMensaje('Las contraseñasdebe tener 8 caracteres una mayuscula y un numero');
+      guardaMensaje('Las contraseñas deben tener 8 caracteres una mayúscula y un número');
       ingresarAlerta(true);
       return;
     }

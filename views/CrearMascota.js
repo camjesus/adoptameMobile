@@ -44,22 +44,41 @@ const CrearMascota = ({navigation, route}) => {
   const [coordenadas, setCoordenadas] = React.useState(null);
   const [alerta, ingresarAlerta] = useState(false);
   const [mensaje, guardaMensaje] = useState('');
+  const [titulo, gTitulo] = useState('');
+  const [colorCamara, gColorCamara] = useState('#B32428');
+  const [colorUbicacion, gColorUbicacion] = useState('#B32428');
 
   const guardarMascota = async () => {
     try {
+
       if (
         nombre === '' ||
         raza === '' ||
         edad === '' ||
         descripcion === '' ||
-        latitud === '' ||
-        longitud === '' ||
         !imagen
       ) {
+        gTitulo('Advertencia');
         guardaMensaje('Todos los campos son requeridos');
         ingresarAlerta(true);
         return;
       }
+
+    if(edad > 30)
+    {
+      gTitulo('Advertencia');
+      guardaMensaje('La mascota no puede ser mayor a 30 años');
+      ingresarAlerta(true);
+      return;
+    }      
+
+      if(latitud === '' || longitud === ''){
+        gTitulo('Advertencia');
+        guardaMensaje('Por favor indique en el mapa una dirección');
+        ingresarAlerta(true);
+        return;
+      }
+
 
       var bodyFormData = new FormData();
       bodyFormData.append('nombre', nombre);
@@ -118,33 +137,24 @@ const CrearMascota = ({navigation, route}) => {
           },
         })
         .then(function (response) {
-          Alert.alert(
-            'Nueva Mascota',
-            'Agregaste una nueva mascota',
-            [{text: 'OK', onPress: () => goback()}],
-            {cancelable: false},
-          );
+          gTitulo('Nueva Mascota');
+          guardaMensaje('Agregaste una nueva mascota');
+          ingresarAlerta(true);
         })
         .catch(function (response) {
           //handle error
           console.log(response);
-          Alert.alert(
-            'Nueva Mascota',
-            'Ha ocurrido un error, intente mas tarde',
-            [{text: 'OK'}],
-            {cancelable: false},
-          );
+          gTitulo('Nueva Mascota');
+          guardaMensaje('Ha ocurrido un error, intente mas tarde');
+          ingresarAlerta(true);
         });
     } catch (error) {
       console.log(error);
-
-      Alert.alert(
-        'Nueva Mascota',
-        'Ha ocurrido un error, intente mas tarde',
-        [{text: 'OK'}],
-        {cancelable: false},
-      );
+      gTitulo('Nueva Mascota');
+      guardaMensaje('Ha ocurrido un error, intente mas tarde');
+      ingresarAlerta(true);
     }
+    
   };
 
   const goback = () => {
@@ -167,6 +177,7 @@ const CrearMascota = ({navigation, route}) => {
       console.log(route.params?.coordinates);
       gLatitud(route.params?.coordinates.latitude);
       gLongitud(route.params?.coordinates.longitude);
+      gColorUbicacion("#008f39");
     }
   }, [route.params?.coordinates]);
 
@@ -237,6 +248,7 @@ const CrearMascota = ({navigation, route}) => {
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
         gImagen(response);
+        gColorCamara("#008f39");
       }
     });
   };
@@ -251,22 +263,17 @@ const CrearMascota = ({navigation, route}) => {
           <View style={style.viewRow}>
             <IconButton
               icon="camera"
-              color="#FF9D4E"
+              color={colorCamara}
               size={30}
               onPress={() => selectPhotoTapped()}
             />
             <IconButton
               icon="map-search"
-              color="#FF9D4E"
+              color={colorUbicacion}
               size={30}
               onPress={() => abrirMapa()}
             />
           </View>
-          <Button
-            type="clear"
-            onPress={() => abrirMapa()}
-            icon={<Maticons name="filter" size={30} color="#252932" />}
-          />
           <TextInput
             label="Nombre"
             value={nombre}
@@ -274,7 +281,7 @@ const CrearMascota = ({navigation, route}) => {
             style={style.input}
           />
           <TextInput
-            label="Descripcion"
+            label="Descripción"
             value={descripcion}
             onChangeText={(texto) => gDescripcion(texto)}
             style={style.input}
@@ -288,6 +295,7 @@ const CrearMascota = ({navigation, route}) => {
             style={style.input}
           />
           <View style={style.containerCheck}>
+            <View style={style.viewCheck}>
             <View style={style.mascotaRow}>
               <Text style={style.titulo}>Tipo:</Text>
 
@@ -326,6 +334,7 @@ const CrearMascota = ({navigation, route}) => {
                   setCheckedHembra(true);
                 }}
               />
+            </View>
             </View>
 
             <Text style={style.titulo}>Tamaño:</Text>
@@ -369,7 +378,7 @@ const CrearMascota = ({navigation, route}) => {
           </View>
           <Portal>
             <Dialog visible={alerta}>
-              <Dialog.Title>Error</Dialog.Title>
+              <Dialog.Title>{titulo}</Dialog.Title>
               <Dialog.Content>
                 <Paragraph>{mensaje}</Paragraph>
               </Dialog.Content>
@@ -435,9 +444,14 @@ const style = StyleSheet.create({
     width: 66,
     height: 58,
   },
-  avatar: {marginHorizontal: 100},
+  avatar: {
+    marginHorizontal: 100,
+    justifyContent: 'center',},
   viewRow: {
     flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  viewCheck: {
     justifyContent: 'center',
   },
   containerCheck: {

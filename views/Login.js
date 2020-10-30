@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View,Alert} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import FacebookLoginBtn from '../components/ui/FacebookLoginManager';
 import constantes from '../components/context/Constantes'; 
 import {
@@ -70,12 +70,8 @@ const Login = (props) => {
       console.log('me logueo bien , guardo el user');
       guardoUsuario(resultado.data);
     } catch (error) {
-      Alert.alert(
-        'Error',
-        'Ha ocurrido un error intente nuevamente'+error,
-        [{text: 'OK'}],
-        {cancelable: false}
-      );
+      guardaMensaje('Ha ocurrido un error intente nuevamente' + error);
+      ingresarAlerta(true);
       console.log('erro buscanbdo usuario' + error);
     }
   };
@@ -154,7 +150,7 @@ const Login = (props) => {
           </Button>
         </View>
         <Portal>
-          <Dialog visible={alerta} style={style.dialogBack}>
+          <Dialog visible={alerta} >
             <Dialog.Title>Error</Dialog.Title>
             <Dialog.Content>
               <Paragraph>{mensaje}</Paragraph>

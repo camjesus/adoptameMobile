@@ -50,7 +50,7 @@ const CardMascota = ({mascota}) => {
       console.log(resultado.data);
       Alert.alert(
         'Contacto Hecho!',
-        'El rescatistas se comunicara con vos en breve!',
+        'El rescatista se comunicara con vos en breve!',
         [{text: 'OK'}],
         {cancelable: false}
       );
@@ -96,9 +96,9 @@ const CardMascota = ({mascota}) => {
           </View>
           <Text style={style.edad}>{edad} años</Text>
         </View>
-
-        <Text style={style.descripcion}>{descripcion}</Text>
-
+        <View style={style.decContainer}>
+          <Text style={style.descripcion}>{descripcion}</Text>
+        </View>
         <View style={style.botonesGroup}>
           <Button
             mode="contained"
@@ -135,6 +135,7 @@ const style = StyleSheet.create({
   },
   nombreText: {
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   descripcionText: {
     fontSize: 10,
@@ -145,6 +146,9 @@ const style = StyleSheet.create({
   tinyLogo: {
     width: 50,
     height: 50,
+  },
+  decContainer: {
+    width: 350,
   },
   logo: {
     width: 66,
@@ -171,6 +175,7 @@ const style = StyleSheet.create({
   tamanio: {
     fontSize: 20,
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   flecha: {
     margin: 10,

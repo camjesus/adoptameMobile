@@ -40,7 +40,7 @@ const ServicioItem = ({servicio}) => {
         </View>
 
         <View style={style.viewRow}>
-        <Text style={style.descripcionText}>{descripcion}</Text>
+  <Text style={style.descripcionText}>{descripcion}</Text>
         </View>
         <View style={style.viewRow}>
          <Text style={style.descripcionText}>{nombre} {apellido}</Text>
@@ -65,6 +65,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: '#ffffff',
+    textTransform: 'uppercase',
   },
   viewHeader: {
     backgroundColor: '#FF9D4E',
@@ -79,9 +80,11 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     color: '#252932',
     paddingStart: 10,
+    textTransform: 'capitalize', 
   },
   viewRow: {
     flexDirection: 'row',
+    width: 390,
   },
   descripcionText: {
     margin: 10,

@@ -43,7 +43,7 @@ const EventoItem = ({evento}) => {
           </View>
           <View style={style.viewRow}>
             <Text style={style.nombreText}>Descripción: </Text>
-            <Text style={style.descripcionText}>{evento.consultas}</Text>
+            <Text style={style.textLargo}>{evento.consultas}</Text>
           </View>
         </View>
       </View>
@@ -65,6 +65,11 @@ const style = StyleSheet.create({
   descripcionText: {
     fontSize: 13,
     color: '#252932',
+    textTransform: 'capitalize',
+  },
+  textLargo: {
+    fontSize: 13,
+    color: '#252932',
   },
   viewEvento: {
     flexDirection: 'row',
@@ -79,6 +84,7 @@ const style = StyleSheet.create({
   },
   viewRow: {
     flexDirection: 'row',
+    width: 270,
   },
   viewHeader: {
     backgroundColor: '#FF9D4E',
@@ -92,6 +98,7 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     color: '#252932',
     paddingStart: 10,
+    textTransform: 'capitalize',
   },
 });
 export default EventoItem;

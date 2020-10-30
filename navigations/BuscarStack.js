@@ -20,7 +20,7 @@ const theme = {
     onSurface: '#ffffff',
     placeholder: '#ffffff',
     primary: '#ff9d4e',
-    surface: '#ff9d4e',
+    surface: '#252932',
     text: '#ffffff',
   },
 };
@@ -47,6 +47,7 @@ export default function BuscarStack() {
             headerRight: (props) => (
               <BarraFiltro {...props} navigation={navigation} route={route} />
             ),
+            headerLeft: false,
           })}
         />
         <Stack.Screen

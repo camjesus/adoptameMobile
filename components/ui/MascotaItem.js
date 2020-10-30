@@ -80,9 +80,9 @@ const MascotaItem = ({mascota, consultarMascotas}) => {
           </View>
           <Text style={style.edad}>{edad} años</Text>
         </View>
-
-        <Text style={style.descripcion}>{descripcion}</Text>
-
+        <View style={style.decContainer}>
+          <Text style={style.descripcion}>{descripcion}</Text>
+        </View>
         <View style={style.botonesGroup}>
           <View>
             {mascota.estado === 'DISPONIBLE' && (
@@ -144,10 +144,14 @@ const style = StyleSheet.create({
     fontSize: 12,
     color: 'grey',
   },
+  decContainer: {
+    width: 350,
+  },
   nombre: {
     paddingTop: 5,
     fontSize: 30,
     fontWeight: 'bold',
+    textTransform: 'capitalize', 
   },
   edad: {
     fontSize: 20,
@@ -157,6 +161,7 @@ const style = StyleSheet.create({
   tamanio: {
     fontSize: 20,
     fontWeight: 'bold',
+    textTransform: 'capitalize', 
   },
   flecha: {
     margin: 10,
