@@ -64,7 +64,7 @@ const Cuenta = ({navigation}) => {
             size={30}
             color="#252932"
           />
-          <Text style={style.tituloTxt}>Mis datos</Text>
+          <Text style={style.tituloTxt}>Mis Datos</Text>
         </View>
       </Card>
       <Card style={style.cardCont}>

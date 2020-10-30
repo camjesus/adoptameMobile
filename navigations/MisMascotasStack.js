@@ -47,7 +47,7 @@ export default function MisMascotasStack() {
         <Stack.Screen
           name="crearMascota"
           component={CrearMascota}
-          options={{title: 'Nueva mascota'}}
+          options={{title: 'Nueva Mascota'}}
         />
         <Stack.Screen
           name="verMapa"

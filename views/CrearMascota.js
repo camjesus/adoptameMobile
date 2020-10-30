@@ -302,7 +302,7 @@ const CrearMascota = ({navigation, route}) => {
               <Text style={style.tituloright}>Sexo:</Text>
             </View>
             <View style={style.mascotaRow}>
-              <Text style={style.textCheck}>Perro</Text>
+              <Text style={style.textCheckTop}>Perro</Text>
               <Checkbox
                 status={checkedPerro ? 'checked' : 'unchecked'}
                 onPress={() => {
@@ -310,7 +310,7 @@ const CrearMascota = ({navigation, route}) => {
                   setCheckedGato(false);
                 }}
               />
-              <Text style={style.textCheck}>Gato</Text>
+              <Text style={style.textCheckTop}>Gato</Text>
               <Checkbox
                 status={checkedGato ? 'checked' : 'unchecked'}
                 onPress={() => {
@@ -318,7 +318,7 @@ const CrearMascota = ({navigation, route}) => {
                   setCheckedGato(true);
                 }}
               />
-              <Text style={style.textCheck}>Macho</Text>
+              <Text style={style.textCheckTop}>Macho</Text>
               <Checkbox
                 status={checkedMacho ? 'checked' : 'unchecked'}
                 onPress={() => {
@@ -326,7 +326,7 @@ const CrearMascota = ({navigation, route}) => {
                   setCheckedHembra(false);
                 }}
               />
-              <Text style={style.textCheck}>Hembra</Text>
+              <Text style={style.textCheckTop}>Hembra</Text>
               <Checkbox
                 status={checkedHembra ? 'checked' : 'unchecked'}
                 onPress={() => {
@@ -408,7 +408,7 @@ const style = StyleSheet.create({
   },
   contenedor: {
     flex: 1,
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
   },
   input: {
@@ -426,6 +426,10 @@ const style = StyleSheet.create({
   textCheck: {
     paddingTop: 8,
     marginStart: 20,
+  },
+  textCheckTop: {
+    paddingTop: 8,
+    marginStart: 15,
   },
   titulo: {
     fontSize: 14,
@@ -445,8 +449,9 @@ const style = StyleSheet.create({
     height: 58,
   },
   avatar: {
-    marginHorizontal: 100,
-    justifyContent: 'center',},
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   viewRow: {
     flexDirection: 'row',
     justifyContent: 'center',
