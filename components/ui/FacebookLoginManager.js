@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Button} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
   LoginManager,
   AccessToken,
   GraphRequestManager,
   GraphRequest,
 } from 'react-native-fbsdk';
+import {Button} from 'react-native-paper';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import constantes from '../context/Constantes'; 
@@ -115,11 +116,28 @@ export default class LoginFBKMgr extends Component {
   render() {
     return (
       <View>
-        <Button
+         <Button style={style.ingresar} mode="contained"
           onPress={this.facebookAuth.bind(this, 'Menu')}
-          title="Ingresa con Facebook"
-        />
+          >
+          Ingresar con Facebook
+        </Button>
       </View>
     );
   }
 }
+
+const style = StyleSheet.create({
+  ingresar: {
+    backgroundColor: '#3b5998',
+    padding: 3,
+    borderRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
+    marginHorizontal: 40,
+    marginVertical: 10,
+    marginTop: 10,
+  },
+});

@@ -141,11 +141,11 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   descripcion: {
-    fontSize: 12,
+    fontSize: 18,
     color: 'grey',
   },
   decContainer: {
-    width: 350,
+    flexWrap: 'nowrap',
   },
   nombre: {
     paddingTop: 5,

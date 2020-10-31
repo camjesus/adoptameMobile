@@ -84,7 +84,7 @@ const style = StyleSheet.create({
   },
   viewRow: {
     flexDirection: 'row',
-    width: 390,
+    flexWrap: 'wrap',
   },
   descripcionText: {
     margin: 10,

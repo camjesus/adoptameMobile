@@ -84,7 +84,7 @@ const style = StyleSheet.create({
   },
   viewRow: {
     flexDirection: 'row',
-    width: 270,
+    flexWrap: 'wrap',
   },
   viewHeader: {
     backgroundColor: '#FF9D4E',

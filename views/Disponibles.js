@@ -116,11 +116,13 @@ const Disponibles = ({navigation, route}) => {
               <Text style={globalStyles.msjDisponibles} >No hay mascotas disponibles para los filtros aplicados</Text>
             )}
           </View>
+          <View style={styles.flatStyle}>
       <FlatList
         data={mascotasDisp}
         renderItem={({item}) => <CardMascota mascota={item} />}
         keyExtractor={(item) => JSON.stringify(item.id)}
       />
+      </View>
     </View>
   );
 };

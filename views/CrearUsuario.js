@@ -72,7 +72,7 @@ const CrearUsuario = ({navigation}) => {
   return (
       <View style={globalStyles.base}>
         <View style={globalStyles.contenedor}>
-          <Text style={style.titulo}> Nueva cuenta</Text>
+          <Text style={style.titulo}>Ingresa tus datos</Text>
           <TextInput
             label="Nombre"
             onChangeText={(texto) => gNombre(texto)}

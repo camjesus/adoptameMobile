@@ -148,7 +148,7 @@ const style = StyleSheet.create({
     height: 50,
   },
   decContainer: {
-    width: 350,
+    flexWrap: 'nowrap',
   },
   logo: {
     width: 66,
@@ -159,7 +159,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   descripcion: {
-    fontSize: 12,
+    fontSize: 18,
     color: 'grey',
   },
   nombre: {

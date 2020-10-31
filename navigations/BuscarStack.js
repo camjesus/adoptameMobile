@@ -42,7 +42,7 @@ export default function BuscarStack() {
           name="Disponibles"
           component={Disponibles}
           options={({navigation, route}) => ({
-            title: 'Adoptame',
+            title: 'Adopta.Me',
             headerTitleAlign: 'center',
             headerRight: (props) => (
               <BarraFiltro {...props} navigation={navigation} route={route} />
