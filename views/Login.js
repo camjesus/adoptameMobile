@@ -146,7 +146,7 @@ const Login = (props) => {
             mode="text"
             color="#FFFFFF"
             onPress={() => crearUsuario()}>
-            Nueva Usuario
+            Nueva Cuenta
           </Button>
         </View>
         <Portal>
@@ -188,6 +188,7 @@ const style = StyleSheet.create({
   registrate: {
     color: '#FFFFFF',
     textAlign: 'center',
+    textDecorationLine: 'underline',
   },
   dialogBack: {
     backgroundColor: '#ffffff',
