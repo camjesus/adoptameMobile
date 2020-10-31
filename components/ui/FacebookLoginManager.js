@@ -13,7 +13,7 @@ import constantes from '../context/Constantes';
 export default class LoginFBKMgr extends Component {
   facebookAuth = () => {
     var that = this;
-
+    LoginManager.setLoginBehavior("web_only");
     LoginManager.logInWithPermissions(['email', 'public_profile']).then(
       (result) => {
         if (result.isCancelled) {
