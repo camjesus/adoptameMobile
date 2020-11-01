@@ -68,7 +68,7 @@ const CrearUsuario = ({navigation}) => {
       navigation.navigate('Login');
     }else{
       guardaMensaje(resultado.data.result);
-       ingresarAlerta(true);
+    ingresarAlerta(true);
     }
   };
   return (
@@ -112,14 +112,14 @@ const CrearUsuario = ({navigation}) => {
             secureTextEntry={true}
 
           />
-
+          <View  style={style.viewButton} >
           <Button
             style={style.ingresar}
             mode="contained"
             onPress={() => guardarUsuario()}>
             Crear
           </Button>
-
+          </View>
           <Portal>
             <Dialog visible={alerta}>
               <Dialog.Title>Error</Dialog.Title>
@@ -152,14 +152,17 @@ const style = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 40,
-    marginVertical: 10,
-    marginTop: 10,
+    marginVertical: 60,
+    marginTop: 12,
   },
   titulo: {
     textAlign: 'center',
-    marginVertical: 30,
+    marginVertical: 10,
     fontSize: 30,
     color: '#FFFFFF',
+  },
+  viewButton: {
+    margin: '10%',
   },
 });
 export default CrearUsuario;
