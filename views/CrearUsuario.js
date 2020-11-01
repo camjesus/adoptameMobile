@@ -63,13 +63,16 @@ const CrearUsuario = ({navigation}) => {
       nuevoUsuario,
     );
     console.log(resultado.data.result);
-    guardaMensaje(resultado.data.result);
-    ingresarAlerta(true);
+    
     if (resultado.data.status === 'SUCESS') {
       navigation.navigate('Login');
+    }else{
+      guardaMensaje(resultado.data.result);
+       ingresarAlerta(true);
     }
   };
   return (
+    <ScrollView>
       <View style={globalStyles.base}>
         <View style={globalStyles.contenedor}>
           <Text style={style.titulo}>Ingresa tus datos</Text>
@@ -130,6 +133,7 @@ const CrearUsuario = ({navigation}) => {
           </Portal>
         </View>
       </View>
+      </ScrollView>
   );
 };
 
@@ -153,7 +157,7 @@ const style = StyleSheet.create({
   },
   titulo: {
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: 30,
     fontSize: 30,
     color: '#FFFFFF',
   },
