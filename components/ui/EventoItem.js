@@ -87,7 +87,7 @@ const style = StyleSheet.create({
     flexWrap: 'wrap',
   },
   viewHeader: {
-    backgroundColor: '#FF9D4E',
+    backgroundColor: '#FFAD00',
     flexDirection: 'row',
     borderBottomColor: '#252932',
     borderBottomWidth: 1,

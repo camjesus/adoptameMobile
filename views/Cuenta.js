@@ -1,126 +1,150 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Text, Card, HelperText, Button} from 'react-native-paper';
+import {StyleSheet, View, ScrollView} from 'react-native';
+import {Text, IconButton, TextInput, Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LoginManager} from 'react-native-fbsdk';
+import globalStyles from '../styles/global';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 
 const Cuenta = ({navigation}) => {
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
-  const espacio = ' ';
+  const [telefono, gTelefono] = useState('1122551093');
+  const [camposEdit, gCamposEdit] = useState(true);
+  const [disabledEdit, setdesabledEdit] = useState(true);
+  const [iconoRight, setIconoRight] = useState('pencil');
+
   useEffect(() => {
     console.log('entre a cuena');
     obtenerDatosStorage();
+    setdesabledEdit(true);
+    setIconoRight('pencil');
+    gCamposEdit(true);
   }, []);
 
   const obtenerDatosStorage = async () => {
     try {
-      await AsyncStorage.getItem('nombre').then((value) => {
-        gNombre(value);
-      });
-
-
-      await AsyncStorage.getItem('apellido').then((value) => {
-        gApellido(value);
-      });
-
       await AsyncStorage.getItem('email').then((value) => {
         gEmail(value);
       });
     } catch (error) {
       console.log(error);
     }
+
+    await AsyncStorage.getItem('nombre').then((value) => {
+      gNombre(
+        value.substring(0, 1).toUpperCase() + value.substr(1, value.length - 1),
+      );
+    });
+
+    await AsyncStorage.getItem('apellido').then((value) => {
+      gApellido(
+        value.substring(0, 1).toUpperCase() + value.substr(1, value.length - 1),
+      );
+    });
   };
 
-  const logOut = () => {
-    eliminoStorage();
-  };
-
-  const eliminoStorage = async () => {
-    try {
-      console.log('borro del storage');
-
-      await AsyncStorage.removeItem('nombre');
-      await AsyncStorage.removeItem('apellido');
-      await AsyncStorage.removeItem('email');
-
-      await AsyncStorage.removeItem('userId').then((value) => {
-        navigation.navigate('Login');
-      });
-    } catch (error) {
-      console.log('error eliminando del storage' + error);
+  const editarUsuario = (icono) => {
+    if (icono == 'check') {
+      console.log('Edito usuario');
     }
   };
 
   return (
     <View style={style.base}>
-      <Card style={style.titulo}>
-        <View style={style.viewTitulo}>
-          <Maticons
-            style={style.tituloIcon}
-            name="account"
-            size={30}
-            color="#252932"
-          />
-          <Text style={style.tituloTxt}>Mis Datos</Text>
-        </View>
-      </Card>
-      <Card style={style.cardCont}>
+      <View style={style.header}>
+        <IconButton
+          icon="arrow-left"
+          color="#FFFFFF"
+          style={style.iconBack}
+          onPress={() => navigation.navigate('BuscarStack', {screen: 'Disponibles'})}
+          size={30}
+        />
+        <Text style={style.title}>Mis Datos</Text>
+        <IconButton
+          icon={iconoRight}
+          color="#FFFFFF"
+          style={style.iconEdit}
+          onPress={() => {
+            gCamposEdit(!camposEdit);
+            setdesabledEdit(false);
+            if (iconoRight == 'check') {
+              setIconoRight('pencil');
+            } else {
+              setIconoRight('check');
+            }
+            editarUsuario('check');
+            setdesabledEdit(!disabledEdit);
+          }}
+          size={30}
+         />
+      </View>
+      <View style={style.cardNew}>
+      <ScrollView style={style.scroll}>
         <View style={style.contenedor}>
-          <View style={style.viewItem}>
-            <Maticons
-              style={style.tituloIcon}
-              name="account"
-              size={25}
-              color="#252932"
+            <TextInput
+                label="Nombre"
+                value={nombre}
+                onChangeText={(texto) => gNombre(texto)}
+                style={style.input}
+                disabled={camposEdit}
             />
-            <Text style={style.itemTitulo}>Nombre y Apellido:</Text>
-            <Text style={style.itemNombre}>
-              {nombre}
-              {espacio}
-              {apellido}
-            </Text>
-          </View>
-
-          <View style={style.viewItem}>
-            <Maticons
-              style={style.tituloIcon}
-              name="email"
-              size={25}
-              color="#252932"
+            <TextInput
+                label="Apellido"
+                value={apellido}
+                onChangeText={(texto) => gApellido(texto)}
+                style={style.input}
+                disabled={camposEdit}
             />
-            <Text style={style.itemTitulo}>Email: </Text>
-            <Text style={style.itemDato}>{email}</Text>
-          </View>
+            <TextInput
+                label="Teléfono"
+                value={telefono}
+                onChangeText={(texto) => gTelefono(texto)}
+                style={style.input}
+                disabled={camposEdit}
+            />
+            <TextInput
+                label="Email"
+                value={email}
+                style={style.input}
+                disabled="true"
+            />
         </View>
-      </Card>
-      <Button
-        style={style.cerrarSesion}
-        mode="contained"
-        onPress={() => logOut()}>
-        Cerrar sesion
-      </Button>
+        <View style={style.Viewguardar}>
+        <Button
+            style={style.guardar}
+            mode="contained"
+            compact={true}
+            disabled={disabledEdit}
+            onPress={() => editarUsuario()}>
+            Editar
+          </Button>
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 };
 
 const style = StyleSheet.create({
+  Viewguardar: {
+    flex: 2,
+    bottom: 0,
+  },
+  scroll: {
+    padding: 0,
+    margin: 0,
+  },
   base: {
-    backgroundColor: '#252932',
+    flexDirection: 'column',
     flex: 1,
   },
   contenedor: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     margin: 10,
-  },
-  titulo: {
-    margin: 10,
-    justifyContent: 'center',
-    padding: 10,
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
   },
   tituloTxt: {
     textAlign: 'center',
@@ -134,9 +158,8 @@ const style = StyleSheet.create({
     color: '#252932',
   },
   itemNombre: {
-    fontSize: 15,
-    marginTop: 10,
-    paddingTop: 5,
+    fontSize: 20,
+    marginStart: 10,
     color: '#252932',
     textTransform: 'capitalize',
   },
@@ -148,32 +171,83 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     color: '#252932',
   },
-  tituloIcon: {
-    margin: 10,
-  },
   viewTitulo: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
   viewItem: {
+    flexDirection: 'column',
+  },
+  viewEdit: {
     flexDirection: 'row',
   },
   cardCont: {
     margin: 10,
     backgroundColor: '#ffffff',
   },
-  cerrarSesion: {
-    backgroundColor: '#FF9D4E',
+  header: {
+    paddingBottom: 90,
+    backgroundColor: '#FFAD00',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  iconBack: {
+    left: 10,
+    top: 10,
+  },
+  iconEdit: {
+    right: 10,
+    top: 10,
+  },
+  title: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: 26,
+    marginVertical: 30,
+    padding: 0,
+  },
+  cardNew: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 20,
+    marginBottom: 10,
+    borderRadius: 40,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    elevation: 10,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
+    paddingHorizontal: 30,
+    marginTop: -80,
+    width: '90%',
+    padding: 20,
+    flexDirection: 'column',
+  },
+  input: {
+    marginBottom: 10,
+    backgroundColor: 'transparent',
+    flex: 4,
+  },
+  guardar: {
+    justifyContent: 'flex-end',
+    backgroundColor: '#FFAD00',
     padding: 3,
-    borderRadius: 50,
+    flex: 3,
+    borderRadius: 5,
     shadowColor: '#000000',
     shadowOpacity: 0.8,
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 40,
-    marginVertical: 10,
-    marginTop: 10,
+    marginTop: 80,
+    marginBottom: 10,
   },
 });
 export default Cuenta;

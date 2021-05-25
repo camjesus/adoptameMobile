@@ -1,205 +1,120 @@
-
-import constantes from '../context/Constantes'; 
+import constantes from '../context/Constantes';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Image, Text,Alert} from 'react-native';
+import {StyleSheet, View, Image, Text, Dimensions} from 'react-native';
 import {Card, Button} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import {IconButton} from 'react-native-paper';
 
-const CardMascota = ({mascota}) => {
+const CardMascota = ({mascota, navigation, route}) => {
+  console.log(mascota + 'en CardMascota');
+  console.log(route);
   const [image, gFotoURL] = useState('../../img/default.jpg');
-  const {id,foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
   const [nombreSexo, gNombreSexo] = useState('gender-male');
-
- 
 
   useEffect(() => {
     tomoNombreIcon();
-  }, [sexo]);
-
+  }, [mascota?.sexo]);
 
   const tomoNombreIcon = () => {
-    if (sexo.toUpperCase() === 'MACHO') {
+    if (mascota?.sexo.toUpperCase() === 'MACHO') {
       gNombreSexo('gender-male');
     } else {
       gNombreSexo('gender-female');
     }
   };
 
-
-  const enviaMail = async (id) => {
-    try {
-      
-      console.log('request');
-      console.log(request);
-
-     const value= await AsyncStorage.getItem('email');
-
-      var request = {
-        "idMascota":id,
-        "senderName":value
-      };
-      const url = constantes.BASE_URL+'enviarMailMascota'
-      const resultado = await axios.post(
-       // 'https://adoptameapp.herokuapp.com/adoptame/mobile/enviarMailMascota',
-       url,
-        request
-      );
-      console.log('Mande email');
-      console.log(resultado.data);
-      Alert.alert(
-        'Contacto Hecho!',
-        'El rescatista se comunicara con vos en breve!',
-        [{text: 'OK'}],
-        {cancelable: false}
-      );
-
-    } catch (error) {
-      console.log(error);
-      Alert.alert(
-        'Error',
-        'Ha ocurrido un error intente nuevamente',
-        [{text: 'OK'}],
-        {cancelable: false}
-      );
-    }
-  };
-
-  
-
-
   return (
-    <Card>
-      <View style={style.viewContainer}>
+    <View style={style.cardNew}>
         <View style={style.viewMascota}>
           <Image
             style={style.imgMascota}
             source={{
-              uri: foto_url,
+              uri: mascota?.foto_url,
             }}
           />
         </View>
-        <View style={style.containerH1}>
-          <Text style={style.nombre}>{nombre}</Text>
-          <Maticons
-            style={style.iconSexo}
-            name={nombreSexo}
-            size={30}
-            color="grey"
-          />
-        </View>
-
-        <View style={style.containerH2}>
-          <View>
-            <Text style={style.tamanio}>{tamanio}</Text>
+        <View style={style.infoMascota}>
+          <View style={style.containerH1}>
+            <Text style={style.nombre}>{mascota?.nombre}</Text>
+            <Text style={style.edad}>,{mascota?.edad} años</Text>
+            <Maticons
+              style={style.iconSexo}
+              name={nombreSexo}
+              size={30}
+              color="#FFAD00"
+            />
           </View>
-          <Text style={style.edad}>{edad} años</Text>
         </View>
-        <View style={style.decContainer}>
-          <Text style={style.descripcion}>{descripcion}</Text>
-        </View>
-        <View style={style.botonesGroup}>
-          <Button
-            mode="contained"
-            style={style.mensaje}
-            type="clear"
-            icon={
-              <Maticons
-                style={style.iconContact}
-                name="email"
-                size={40}
-                color="#FF9D4E"
-              />
-            }
-            onPress={() => enviaMail(id)}
-          />
-        </View>
-      </View>
-    </Card>
+        <IconButton
+          icon="information-variant"
+          style={style.masInfo}
+          color="white"
+          size={40}
+          onPress={() => {
+            navigation.navigate('crearMascota', {mascotaItem: mascota});
+          }}
+          animated="true"
+        />
+    </View>
   );
 };
 
 const style = StyleSheet.create({
-  viewMascota: {
+  masInfo: {
+    position: 'absolute',
+    margin: 10,
+    borderRadius: 100,
+    marginBottom: 24,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#FFAD00',
+    shadowColor: '#000000',
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
+  },
+  infoMascota: {
+    flex: 2,
+    margin: 10,
     flexDirection: 'row',
-    margin: 15,
-    alignContent: 'center',
   },
-  viewMascotaImg: {
-    marginRight: 15,
-  },
-  imgMascota: {
-    height: 290,
+  cardNew: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 25,
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
+    flexDirection: 'column',
     flex: 1,
   },
-  nombreText: {
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
-  },
-  descripcionText: {
-    fontSize: 10,
-  },
-  container: {
-    paddingTop: 50,
-  },
-  tinyLogo: {
-    width: 50,
-    height: 50,
-  },
-  decContainer: {
-    flexWrap: 'nowrap',
-  },
-  logo: {
-    width: 66,
-    height: 58,
-  },
-  botonesGroup: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  descripcion: {
-    fontSize: 18,
-    color: 'grey',
+  imgMascota: {
+    height: 500,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    borderRadius: 10,
   },
   nombre: {
-    paddingTop: 5,
     fontSize: 30,
-    fontWeight: 'bold',
+    marginTop: 'auto',
   },
   edad: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginRight: 15,
-  },
-  tamanio: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
-  },
-  flecha: {
-    margin: 10,
+    fontSize: 30,
+    marginTop: 'auto',
   },
   iconSexo: {
-    marginTop: 15,
     marginStart: 10,
+    marginRight: 'auto',
   },
   containerH1: {
     flexDirection: 'row',
-  },
-  containerH2: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  iconContact: {
-    backgroundColor: '#252932',
-    padding: 8,
-    borderRadius: 50,
-    shadowColor: '#000000',
-    shadowOpacity: 0.8,
-    elevation: 6,
-    shadowRadius: 15,
-    shadowOffset: {width: 1, height: 13},
+    flex: 3,
+    alignItems: 'center',
+    marginStart: 10,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
 });
 export default CardMascota;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Button} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
   LoginManager,
   AccessToken,
@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
-import {FAB} from 'react-native-paper';
+import {FAB, Text} from 'react-native-paper';
 import globalStyles from '../styles/global';
 
 import GetLocation from 'react-native-get-location';
@@ -92,10 +92,14 @@ export default class VerMapa extends Component {
           }
         </MapView>
         <View style={styles.container}>
+          <Text style={styles.textInfo}>
+            Selecciona un punto de cercanía. {'\n'} Nadie podrá ver tu
+            dirección.
+          </Text>
           <FAB
             icon="map-marker-radius"
             style={styles.fab}
-            color="#252932"
+            color="#FFFFFF"
             onPress={() => this.goback()}
             animated="true"
           />
@@ -114,7 +118,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FF9D4E',
+    backgroundColor: '#FFAD00',
   },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
@@ -137,4 +141,22 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: 'transparent',
   },
+  container: {
+    flexDirection: 'row',
+  },
+  textInfo: {
+    position: 'absolute',
+    margin: 30,
+    marginRight: 10,
+    right: 0,
+    bottom: 50,
+    padding: 7,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    borderColor: '#FFAD00',
+    borderStyle: 'solid',
+    textAlign: 'center',
+    borderWidth: 1,
+    elevation: 10,
+  }
 });

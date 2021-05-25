@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import FacebookLoginBtn from '../components/ui/FacebookLoginManager';
 import constantes from '../components/context/Constantes'; 
 import {
@@ -13,7 +13,10 @@ import {
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 
 const Login = (props) => {
   const {navigation} = props;
@@ -25,7 +28,9 @@ const Login = (props) => {
   const [mensaje, guardaMensaje] = useState('');
   const [alerta, ingresarAlerta] = useState(false);
   const isFirstTime = useRef(true);
-
+  const userRef = useRef();
+  const passRef = useRef();
+  
   useEffect(() => {
     userLoggedGoToDisponibles();
   }, []);
@@ -41,7 +46,11 @@ const Login = (props) => {
   }, [user]);
 
   const crearUsuario = () => {
-    navigation.navigate('crearUsuario');
+    navigation.navigate('BuscarStack', {screen: 'CrearUsuario'});
+  };
+
+  const focusedTextInput = (ref) => {
+    ref.current.focus();
   };
 
   const logIn = async () => {
@@ -87,8 +96,8 @@ const Login = (props) => {
 
       await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then(
         (value) => {
-          //navigation.navigate('buscar', {screen: 'Disponibles'});
-          navigation.navigate('Menu');
+          navigation.navigate('BuscarStack', {screen: 'Disponibles'});
+          //navigation.navigate('Disponibles');
         },
       );
     } catch (error) {
@@ -108,8 +117,8 @@ const Login = (props) => {
             'Hay un id guardado me voy a la pantalla de Masc Dis' + value,
           );
 
-          //navigation.navigate('buscar', {screen: 'Disponibles'});
-          navigation.navigate('Menu');
+          navigation.navigate('BuscarStack', {screen: 'Disponibles'});
+          //navigation.navigate('Disponibles');
         }
       });
     } catch (error) {
@@ -119,60 +128,102 @@ const Login = (props) => {
 
   return (
     <View style={globalStyles.base}>
-      <View style={globalStyles.contenedor}>
-        <Text style={globalStyles.titulo}> Adopta.Me!</Text>
-        <TextInput
-          label="E-Mail"
-          value={usuario}
-          onChangeText={(texto) => guardarEmail(texto)}
-          style={style.input}
-        />
-        <TextInput
-          label="Contraseña"
-          value={password}
-          onChangeText={(texto) => guardarPass(texto)}
-          style={style.input}
-          secureTextEntry={true}
-        />
-
-        <Button style={style.ingresar} mode="contained" onPress={() => logIn()}>
-          Ingresar
-        </Button>
-        <FacebookLoginBtn {...props} />
-        <View style={style.viewNuevaCuenta}>
-          <Text style={style.registrate}>Registrate acá</Text>
-          <Button
-            style={style.nuevaCuenta}
-            mode="text"
-            color="#FFFFFF"
-            onPress={() => crearUsuario()}>
-            Nueva Cuenta
-          </Button>
+      <View style={style.viewLogo}>
+        <Image source={require('../img/casita.png')} style={style.imglogo} /> 
+      </View>
+      <View style={style.cardLogin}>
+        <View style={style.viewBienvenido}>
+          <Text style={style.bienvenido}>Bienvenido a </Text>
+          <Text style={style.adoptaMe}>Adopta.Me</Text>
         </View>
-        <Portal>
-          <Dialog visible={alerta} >
-            <Dialog.Title>Error</Dialog.Title>
+        <KeyboardAwareScrollView>
+          <TextInput
+            label="E-Mail"
+            value={usuario}
+            onChangeText={(texto) => guardarEmail(texto)}
+            style={style.input}
+            ref={userRef}
+            onSubmitEditing={(event) => {
+              focusedTextInput(passRef);
+            }}
+            left={<TextInput.Icon name="email" color="#FFAD00" />}
+          />
+          <TextInput
+            label="Contraseña"
+            value={password}
+            onChangeText={(texto) => guardarPass(texto)}
+            style={style.input}
+            ref={passRef}
+            left={<TextInput.Icon name="key" color="#FFAD00" />}
+            secureTextEntry={true}
+          />
+
+          <Button
+            style={style.ingresar}
+            mode="contained"
+            onPress={() => logIn()}>
+            Ingresar
+          </Button>
+          <FacebookLoginBtn {...props} />
+          <View style={style.viewNuevaCuenta}>
+            <Text style={style.registrate}></Text>
+            <Button
+              style={style.nuevaCuenta}
+              mode="outlined"
+              color="#252932"
+              onPress={() => crearUsuario()}>
+              Registrate acá
+            </Button>
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+      
+      <Portal>
+          <Dialog visible={alerta} style={style.dialog} >
+              <Dialog.Title style={style.dialogTitle}>Error</Dialog.Title>
             <Dialog.Content>
-              <Paragraph>{mensaje}</Paragraph>
+              <Paragraph style={style.dialogMsj}>{mensaje}</Paragraph>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
+                <Button
+                  mode="contained"
+                  onPress={() => ingresarAlerta(false)}>
+                  Ok
+                </Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </View>
     </View>
+
   );
 };
 const style = StyleSheet.create({
+  dialog: {
+    color: '#FFAD00',
+    borderRadius: 5,
+  },
+  dialogTitle: {
+    color: '#FFAD00',
+    fontSize: 20,
+  },
+  dialogMsj: {
+    color: '#FFAD00',
+    fontSize: 17,
+  },
   input: {
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: 'transparent',
   },
+  scroll: {
+    padding: 0,
+    margin: 0,
+    flex: 1,
+    backgroundColor: 'transparent'
+  },
   ingresar: {
-    backgroundColor: '#FF9D4E',
+    backgroundColor: '#FFAD00',
     padding: 3,
-    borderRadius: 50,
+    borderRadius: 5,
     shadowColor: '#000000',
     shadowOpacity: 0.8,
     elevation: 6,
@@ -180,18 +231,71 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 40,
     marginVertical: 10,
-    marginTop: 10,
+    marginTop: 20,
   },
   viewNuevaCuenta: {
-    marginVertical: 50,
+    marginVertical: 10,
+  },
+  nuevaCuenta: {
+    padding: 0,
+    borderColor: '#FFFFFF',
   },
   registrate: {
-    color: '#FFFFFF',
+    color: '#252932',
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
   dialogBack: {
     backgroundColor: '#ffffff',
-  }
+  },
+  viewLogo: {
+    alignItems: 'center',
+    margin: 0,
+    padding: 0,
+    backgroundColor: '#FFAD00',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
+  },
+  imglogo: {
+    marginTop: 30,
+    marginBottom: 150,
+    width: 160,
+    height: 160,
+  },
+  cardLogin: {
+    backgroundColor: '#ffffff',
+    marginHorizontal: 30,
+    justifyContent: 'center',
+    padding: 20,
+    paddingBottom: 0,
+    borderRadius: 30,
+    marginTop: '-40%',
+    shadowColor: '#000000',
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 15,
+    shadowOffset: {width: 1, height: 13},
+    marginBottom: 10,
+  },
+  bienvenido: {
+    fontSize: 18,
+    color: '#252932',
+    fontFamily: 'MostWazted',
+  },
+  viewBienvenido: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  adoptaMe: {
+    fontSize: 20,
+    color: '#252932',
+    fontFamily: 'ArchitectsDaughter-Regular',
+  },
 });
 export default Login;

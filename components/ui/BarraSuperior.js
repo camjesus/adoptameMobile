@@ -1,20 +1,29 @@
 import React, {useState, useEffect} from 'react';
-import {Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {IconButton} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
 
 const BarraSuperior = ({navigation, route}) => {
-  const user = route.params;
-
   const heandlePress = () => {
-    navigation.navigate('Menu', {user});
+    navigation.toggleDrawer();
   };
   return (
-    <Button
-      type="clear"
-      onPress={() => heandlePress()}
-      icon={<Icon name="home" size={30} color="white" />}
-    />
+    <View>
+      <IconButton
+        icon="menu"
+        color="#FFFFFF"
+        style={styles.button}
+        onPress={() => heandlePress()}
+        size={30}
+      />
+    </View>
   );
 };
-
+const styles = StyleSheet.create({
+  button: {
+    flex: 2,
+    marginStart: 10,
+    marginTop: 20,
+    marginBottom: 0,
+  },
+});
 export default BarraSuperior;

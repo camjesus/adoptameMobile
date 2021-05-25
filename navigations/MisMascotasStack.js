@@ -10,34 +10,27 @@ const theme = {
   ...DefaultTheme,
   roundness: 2,
   colors: {
-    accent: '#ff9d4e',
-    backdrop: 'rgba(192,192,192,0.3)',
-    background: '#252932',
+    accent: 'transparent',
+    backdrop: 'transparent',
+    background: '#FFAD00',
     disabled: 'rgba(0, 0, 0, 0.26)',
     error: '#B00020',
-    notification: '#f50057',
+    notification: '#FFAD00',
     onBackground: '#252932',
-    onSurface: '#ffffff',
-    placeholder: '#ffffff',
-    primary: '#ff9d4e',
+    onSurface: '#252932',
+    placeholder: '#252932',
+    primary: '#D0800A',
     surface: '#252932',
-    text: '#ffffff',
+    text: '#252932',
+  },
+  animation: {
+    scale: 'transparent',
   },
 };
 export default function MisMascotasStack() {
   return (
     <PaperProvider theme={theme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.colors.text,
-          },
-          headerTintColor: theme.colors.surface,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerTitleAlign: 'center',
-        }}>
+      <Stack.Navigator>
         <Stack.Screen
           name="misMascotas"
           component={MisMascotas}
@@ -47,7 +40,7 @@ export default function MisMascotasStack() {
         <Stack.Screen
           name="crearMascota"
           component={CrearMascota}
-          options={{title: 'Nueva Mascota'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="verMapa"

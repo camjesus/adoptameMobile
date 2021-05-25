@@ -5,7 +5,7 @@ import axios from 'axios';
 import globalStyles from '../styles/global';
 import MascotaItem from '../components/ui/MascotaItem';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Text, Card} from 'react-native-paper';
+import {Text, Card, IconButton} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
@@ -58,29 +58,35 @@ const MisMascotas = (props) => {
 
   return (
     <View style={globalStyles.base}>
-      <Card style={styles.titulo}>
-        <View style={styles.viewTitulo}>
-          <Maticons
-            style={styles.tituloIcon}
-            name="paw"
-            size={30}
-            color="#252932"
-          />
-          <Text style={styles.tituloTxt}>Mis Mascotas</Text>
-        </View>
-      </Card>
-      <View >
-          <View>
+      <View style={globalStyles.header}>
+        <IconButton
+          icon="arrow-left"
+          color="#FFFFFF"
+          style={globalStyles.iconBack}
+          onPress={() => navigation.goBack()}
+          size={30}
+        />
+        <Text style={globalStyles.title}>Mis mascotas</Text>
+        <View style={globalStyles.viewR}></View>
+      </View>
+      <View>
+        <View>
           {mascotas.length === 0  && (
-              <Text style={globalStyles.msjAdvertencia} >Aún no cargaste mascotas</Text>
-            )}
-          </View>
+            <Text style={globalStyles.msjAdvertencia}>
+              Aún no cargaste mascotas
+            </Text>
+          )}
         </View>
+      </View>
 
       <FlatList
         data={mascotas}
         renderItem={({item}) => (
-          <MascotaItem mascota={item} consultarMascotas={gConsMascotaApi} />
+          <MascotaItem
+            mascota={item}
+            consultarMascotas={gConsMascotaApi}
+            navigation={navigation}
+          />
         )}
         keyExtractor={(item) => JSON.stringify(item.id)}
       />
@@ -88,9 +94,10 @@ const MisMascotas = (props) => {
         <FAB
           icon="plus"
           style={styles.fab}
-          color="#252932"
+          color="white"
+          mascota={mascotas}
           onPress={() => {
-            navigation.navigate('crearMascota');
+            navigation.navigate('crearMascota', {mascota: mascotas});
           }}
           animated="true"
         />
@@ -104,7 +111,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FF9D4E',
+    backgroundColor: '#FFAD00',
   },
   titulo: {
     margin: 10,

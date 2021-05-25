@@ -2,7 +2,9 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Filtros from '../views/Filtros';
 import Disponibles from '../views/Disponibles';
-import BarraFiltro from '../components/ui/BarraFiltro';
+import Login from '../views/Login';
+import Cuenta from '../views/Cuenta';
+import CrearUsuario from '../views/CrearUsuario';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
 const Stack = createStackNavigator();
@@ -10,50 +12,49 @@ const theme = {
   ...DefaultTheme,
   roundness: 2,
   colors: {
-    accent: '#ff9d4e',
-    backdrop: 'rgba(192,192,192,0.3)',
-    background: '#252932',
-    disabled: 'rgba(0, 0, 0, 0.26)',
+    accent: '#252932',
+    backdrop: 'transparent',
+    background: '#FFAD00',
+    disabled: 'rgba(0, 0, 0, 0.90)',
     error: '#B00020',
     notification: '#f50057',
     onBackground: '#252932',
-    onSurface: '#ffffff',
-    placeholder: '#ffffff',
-    primary: '#ff9d4e',
+    onSurface: '#252932',
+    placeholder: '#252932',
+    primary: '#252932',
     surface: '#252932',
-    text: '#ffffff',
+    text: '#252932',
   },
 };
+
 export default function BuscarStack() {
   return (
     <PaperProvider theme={theme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.colors.text,
-          },
-          headerTintColor: theme.colors.surface,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerTitleAlign: 'center',
-        }}>
+      <Stack.Navigator>
         <Stack.Screen
           name="Disponibles"
           component={Disponibles}
-          options={({navigation, route}) => ({
-            title: 'Adopta.Me',
-            headerTitleAlign: 'center',
-            headerRight: (props) => (
-              <BarraFiltro {...props} navigation={navigation} route={route} />
-            ),
-            headerLeft: false,
-          })}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="filtros"
           component={Filtros}
-          options={{title: 'Filtros'}}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false, swipeEnabled: false}}
+        />
+        <Stack.Screen
+          name="cuenta"
+          component={Cuenta}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CrearUsuario"
+          component={CrearUsuario}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </PaperProvider>

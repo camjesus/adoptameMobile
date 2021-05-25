@@ -1,16 +1,20 @@
-import React, {useEffect, useState,useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import axios from 'axios';
 import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
 import {ScrollView} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
-import {Text} from 'react-native-paper';
+import {Text, IconButton} from 'react-native-paper';
 import globalStyles from '../styles/global';
-import constantes from '../components/context/Constantes'; 
+import constantes from '../components/context/Constantes';
+import BarraFiltro from '../components/ui/BarraFiltro';
+import BarraSuperior from '../components/ui/BarraSuperior';
+import Swiper from 'react-native-deck-swiper';
+import { Transitioning, Transition } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-community/async-storage';
 
-
-const Disponibles = ({navigation, route}) => {
+const Disponibles = ({navigation, route, props}) => {
   const data = route.params;
   console.log('params');
   console.log(data);
@@ -21,21 +25,52 @@ const Disponibles = ({navigation, route}) => {
   const isFirstTime = useRef(true);
   const [distancia, gDistancia] = useState(100);
   const paramsDefault = new URLSearchParams();
+  const [index, setIndex] = useState(0);
+  const [email, gEmail] = useState('none');
+  const swiperRef = React.createRef();
+  const transitionRef = React.createRef();
+  const ANIMATION_DURATION = 200;
 
+  const transition = (
+    <Transition.Sequence>
+      <Transition.Out
+        type='slide-bottom'
+        durationMs={ANIMATION_DURATION}
+        interpolation='easeIn'
+      />
+      <Transition.Together>
+        <Transition.In
+          type='fade'
+          durationMs={ANIMATION_DURATION}
+          delayMs={ANIMATION_DURATION / 2}
+        />
+        <Transition.In
+          type='slide-bottom'
+          durationMs={ANIMATION_DURATION}
+          delayMs={ANIMATION_DURATION / 2}
+          interpolation='easeOut'
+        />
+      </Transition.Together>
+    </Transition.Sequence>
+  );
 
- 
+  const colors = {
+    red: '#EC2379',
+    blue: '#0070FF',
+    gray: '#777777',
+    white: '#ffffff',
+    black: '#000000',
+    transparent: 'transparent',
+  };
 
-
-  const obtenerMasDisponilbes = async (latitud,longitud) => {
-
-
+  const obtenerMasDisponilbes = async (latitud, longitud) => {
     paramsDefault.append('tamanio', 'CHICO');
     paramsDefault.append('tamanio', 'MEDIANO');
     paramsDefault.append('tamanio', 'GRANDE');
-  
+
     paramsDefault.append('sexo', 'MACHO');
     paramsDefault.append('sexo', 'HEMBRA');
-  
+    
     paramsDefault.append('edad', 30);
     paramsDefault.append("latitud",latitud);
     paramsDefault.append("longitud",longitud);
@@ -49,7 +84,7 @@ const Disponibles = ({navigation, route}) => {
       };
       console.log('request');
       console.log(request.params);
-      const url=constantes.BASE_URL+'listaMascotasDisponible';
+      const url= constantes.BASE_URL + 'listaMascotasDisponible';
       const resultado = await axios.get(
       //  'https://adoptameapp.herokuapp.com/adoptame/mobile/listaMascotasDisponible',
       url,
@@ -64,40 +99,31 @@ const Disponibles = ({navigation, route}) => {
     }
   };
 
-
-  const   getCurrentPosition = async () =>{
+  const getCurrentPosition = async () => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: true,
       timeout: 15000,
     })
       .then((location) => {
         console.log(location);
-
-       
-          console.log(location);
-         
-          obtenerMasDisponilbes(location.latitude,location.longitude); 
+        obtenerMasDisponilbes(location.latitude, location.longitude);
       })
       .catch((error) => {
         const {code, message} = error;
         console.warn(code, message);
       });
-
-      
-  }
-
+  };
 
   useEffect(() => {
-     
-
+    obtenerDatosStorage();
+    setIndex(0);
     if (consultarDisponibles) {
-      console.log('entra a consultar');
-   //   obtenerMasDisponilbes();
-     getCurrentPosition();
+      console.log('entra a disponi');
+      //   obtenerMasDisponilbes();
+      getCurrentPosition();
       gConsDisponibles(false);
     }
   }, [consultarDisponibles]);
-
 
   useEffect(() => {
 
@@ -105,24 +131,119 @@ const Disponibles = ({navigation, route}) => {
       isFirstTime.current = false;
     } else {
       gConsDisponibles(true);
-    }    
+    }
+    obtenerDatosStorage();
   //  obtenerMasDisponilbes();
   }, [data]);
 
+  const obtenerDatosStorage = async () => {
+    try {
+      gEmail('none');
+      await AsyncStorage.getItem('email').then((value) => {
+        gEmail(value);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    console.log('email' + email);
+    if (email == 'none') {
+      navigation.navigate('BuscarStack', {screen: 'Login'});
+    }
+  };
+
+  const onSwiped = () => {
+    console.log(index);
+    transitionRef.current.animateNextTransition();
+    setIndex(index + 1);
+  };
+
+  useEffect(() => {
+    console.log(index);
+    if (index === 2) {
+      setIndex(0);
+    }
+  }, [index]);
+
   return (
     <View style={globalStyle.base}>
-       <View>
-          {mascotasDisp.length === 0  && (
-              <Text style={globalStyles.msjDisponibles} >No hay mascotas disponibles para los filtros aplicados</Text>
-            )}
-          </View>
-          <View style={styles.flatStyle}>
-      <FlatList
-        data={mascotasDisp}
-        renderItem={({item}) => <CardMascota mascota={item} />}
-        keyExtractor={(item) => JSON.stringify(item.id)}
-      />
+      <View style={styles.header}>
+        <BarraSuperior
+          {...props}
+          navigation={navigation}
+          route={route}
+          style={styles.barraSup}
+        />
+        <Text style={styles.title}>Adopta.Me</Text>
+        <BarraFiltro {...props} navigation={navigation} route={route} />
       </View>
+      {mascotasDisp.length === 0 && (
+        <View>
+          <Text style={globalStyles.msjAdvertencia}>
+            No hay mascotas disponibles para los filtros aplicados
+          </Text>
+        </View>
+      )}
+      {mascotasDisp.length > 0 && (
+        <View style={styles.containerSwiper}>
+          <Swiper
+            cards={mascotasDisp}
+            cardIndex={index}
+            renderCard={(card) => <CardMascota mascota={card} navigation={navigation} />}
+            onSwiper={onSwiped}
+            infinite
+            backgroundColor={'transparent'}
+            onTapCard={() => swiperRef.current.swipeLeft()}
+            cardVerticalMargin={50}
+            stackSize={3}
+            stackScale={10}
+            stackSeparation={14}
+            animateOverlayLabelsOpacity
+            animateCardOpacity
+            disableTopSwipe
+            disableBottomSwipe
+            overlayLabels={{
+              left: {
+                title: 'NOPE',
+                style: {
+                  label: {
+                    backgroundColor: colors.red,
+                    borderColor: colors.red,
+                    color: colors.transparent,
+                    borderWidth: 1,
+                    fontSize: 24
+                  },
+                  wrapper: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    justifyContent: 'flex-start',
+                    marginTop: 20,
+                    marginLeft: -20
+                  }
+                }
+              },
+              right: {
+                title: 'LIKE',
+                style: {
+                  label: {
+                    backgroundColor: colors.blue,
+                    borderColor: colors.blue,
+                    color: colors.transparent,
+                    borderWidth: 1,
+                    fontSize: 24
+                  },
+                  wrapper: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    marginTop: 20,
+                    marginLeft: 20
+                  }
+                }
+              }
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -133,8 +254,42 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  container: {
-    flex: 1,
+  title: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: 30,
+    marginTop: 20,
+    padding: 0,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    flex: 5,
+    marginBottom: 0,
   },
+  text: {
+    textAlign: "center",
+    fontSize: 50,
+    backgroundColor: "transparent"
+  },
+  header: {
+    paddingBottom: 20,
+    backgroundColor: '#FFAD00',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
+    flexDirection: 'row',
+    flex: 1,
+    margin: 0,
+  },
+   containerSwiper: {
+    flex: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    margin: 0,
+    padding: 0,
+   }
 });
 export default Disponibles;

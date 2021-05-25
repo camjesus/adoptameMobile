@@ -68,7 +68,7 @@ const style = StyleSheet.create({
     textTransform: 'uppercase',
   },
   viewHeader: {
-    backgroundColor: '#FF9D4E',
+    backgroundColor: '#FFAD00',
     flexDirection: 'row',
     borderBottomColor: '#252932',
     borderBottomWidth: 1,
@@ -119,7 +119,7 @@ const style = StyleSheet.create({
   },
   iconContact: {
     marginHorizontal: 100,
-    backgroundColor: '#FF9D4E',
+    backgroundColor: '#FFAD00',
     padding: 8,
     borderRadius: 50,
     shadowColor: '#000000',

@@ -1,18 +1,30 @@
 import React from 'react';
-import {Button} from 'react-native-elements';
-import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {IconButton} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
 
 const BarraFiltro = ({navigation, route}) => {
   const heandlePress = () => {
     navigation.navigate('filtros', {navigation, route});
   };
   return (
-    <Button
-      type="clear"
-      onPress={() => heandlePress()}
-      icon={<MatIcon name="filter" size={30} color="#252932" />}
-    />
+    <View>
+      <IconButton
+        icon="filter"
+        color="#FFFFFF"
+        style={styles.button}
+        onPress={() => heandlePress()}
+        size={30}
+      />
+    </View>
   );
 };
 
+const styles = StyleSheet.create({
+  button: {
+    flex: 2,
+    marginEnd: 10,
+    marginTop: 20,
+    marginBottom: 0,
+    },
+});
 export default BarraFiltro;

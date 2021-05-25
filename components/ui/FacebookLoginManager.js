@@ -116,10 +116,12 @@ export default class LoginFBKMgr extends Component {
   render() {
     return (
       <View>
-         <Button style={style.ingresar} mode="contained"
+         <Button 
+          style={style.ingresar}
+          mode="contained"
           onPress={this.facebookAuth.bind(this, 'Menu')}
-          >
-          Ingresar con Facebook
+          icon="facebook">
+          Facebook
         </Button>
       </View>
     );
@@ -130,14 +132,13 @@ const style = StyleSheet.create({
   ingresar: {
     backgroundColor: '#3b5998',
     padding: 3,
-    borderRadius: 50,
+    borderRadius: 5,
     shadowColor: '#000000',
     shadowOpacity: 0.8,
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 40,
-    marginVertical: 10,
     marginTop: 10,
-  },
+    },
 });
