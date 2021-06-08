@@ -61,7 +61,7 @@ const Login = (props) => {
     }
     const postUsuarios = {usuario, password};
     
-    const url=constantes.BASE_URL+'ingresarMobile';
+    const url = constantes.BASE_URL + 'ingresarMobile';
     console.log(url);
     try {
       const resultado = await axios.post(
@@ -79,7 +79,7 @@ const Login = (props) => {
       console.log('me logueo bien , guardo el user');
       guardoUsuario(resultado.data);
     } catch (error) {
-      guardaMensaje('Ha ocurrido un error intente nuevamente' + error);
+      guardaMensaje('Ha ocurrido un error intente nuevamente');
       ingresarAlerta(true);
       console.log('erro buscanbdo usuario' + error);
     }
@@ -91,7 +91,7 @@ const Login = (props) => {
       await AsyncStorage.setItem('userId', JSON.stringify(user.id));
       await AsyncStorage.setItem('nombre', user.nombre);
       await AsyncStorage.setItem('apellido', user.apellido);
-      //  await AsyncStorage.setItem('telefono', user.telefono);
+      await AsyncStorage.setItem('telefono', user.telefono == null ? "1122334455" : user.telefono);
       await AsyncStorage.setItem('email', user.email);
 
       await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then(
@@ -179,10 +179,10 @@ const Login = (props) => {
       </View>
       
       <Portal>
-          <Dialog visible={alerta} style={style.dialog} >
-              <Dialog.Title style={style.dialogTitle}>Error</Dialog.Title>
+          <Dialog visible={alerta} style={globalStyles.dialog} >
+              <Dialog.Title style={globalStyles.dialogTitle}>Error</Dialog.Title>
             <Dialog.Content>
-              <Paragraph style={style.dialogMsj}>{mensaje}</Paragraph>
+              <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
             </Dialog.Content>
             <Dialog.Actions>
                 <Button
@@ -198,18 +198,6 @@ const Login = (props) => {
   );
 };
 const style = StyleSheet.create({
-  dialog: {
-    color: '#FFAD00',
-    borderRadius: 5,
-  },
-  dialogTitle: {
-    color: '#FFAD00',
-    fontSize: 20,
-  },
-  dialogMsj: {
-    color: '#FFAD00',
-    fontSize: 17,
-  },
   input: {
     marginBottom: 10,
     backgroundColor: 'transparent',

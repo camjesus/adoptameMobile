@@ -5,6 +5,7 @@ import Disponibles from '../views/Disponibles';
 import Login from '../views/Login';
 import Cuenta from '../views/Cuenta';
 import CrearUsuario from '../views/CrearUsuario';
+import DetalleMascota from '../views/DetalleMascota';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
 const Stack = createStackNavigator();
@@ -54,6 +55,11 @@ export default function BuscarStack() {
         <Stack.Screen
           name="CrearUsuario"
           component={CrearUsuario}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetalleMascota"
+          component={DetalleMascota}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

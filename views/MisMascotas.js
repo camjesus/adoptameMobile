@@ -94,7 +94,7 @@ const MisMascotas = (props) => {
         <FAB
           icon="plus"
           style={styles.fab}
-          color="white"
+          color="#FFFFFF"
           mascota={mascotas}
           onPress={() => {
             navigation.navigate('crearMascota', {mascota: mascotas});

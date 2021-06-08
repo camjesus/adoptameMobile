@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View,Alert} from 'react-native';
 import {
   TextInput,
@@ -14,22 +14,30 @@ import Slider from 'react-native-slider';
 import globalStyles from '../styles/global';
 import axios from 'axios';
 import GetLocation from 'react-native-get-location';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Filtros = ({navigation, route}) => {
-  console.log(route.params);
+  console.log('filtros route');
+  console.log(route);
+
   const [edad, gEdad] = useState(30);
   const [distancia, gDistancia] = useState(100);
-
   const [checkedMacho, setCheckedMacho] = React.useState(true);
   const [checkedHembra, setCheckedHembra] = React.useState(true);
   const [checkedPeque, setCheckedPeque] = React.useState(true);
   const [checkedMediano, setCheckedMediano] = React.useState(true);
   const [checkedGrande, setCheckedGrande] = React.useState(true);
+  const [checkedPerro, setCheckedPerro] = React.useState(true);
+  const [checkedGato, setCheckedGato] = React.useState(true);
+  const isFirstTime = useRef(true);
   const km = ' km';
   const anios = ' años';
   const params = new URLSearchParams();
+  const filtrosAnteriores = route.params.filtros._searchParams;
 
   const aplicarFiltros = (latitud, longitud) => {
+    params.append('estado', filtrosAnteriores[0][1]);
+
     if (checkedPeque) {
       params.append('tamanio', 'CHICO');
     }
@@ -38,6 +46,13 @@ const Filtros = ({navigation, route}) => {
     }
     if (checkedGrande) {
       params.append('tamanio', 'GRANDE');
+    }
+
+    if (checkedPerro) {
+      //params.append('tipoMascota', 'PERRO');
+    }
+    if (checkedGato) {
+      //params.append('tipoMascota', 'GATO');
     }
 
     if (checkedMacho) {
@@ -52,7 +67,11 @@ const Filtros = ({navigation, route}) => {
     params.append("longitud",longitud);
     params.append("distancia",distancia);
 
+    console.log('filtrosAnteriores');
+    console.log(filtrosAnteriores);
+
     console.log(params);
+    guardarFiltros();
     navigation.navigate('Disponibles', {data: params});
   };
 
@@ -71,6 +90,75 @@ const Filtros = ({navigation, route}) => {
         console.warn(code, message);
       });
   };
+
+  const guardarFiltros = async () => {
+    try {
+      await AsyncStorage.setItem('checkedMacho', JSON.stringify(checkedMacho));
+      await AsyncStorage.setItem('checkedHembra', JSON.stringify(checkedHembra));
+      await AsyncStorage.setItem('checkedPeque', JSON.stringify(checkedPeque));
+      await AsyncStorage.setItem('checkedGrande', JSON.stringify(checkedGrande));
+      await AsyncStorage.setItem('checkedPerro', JSON.stringify(checkedPerro));
+      await AsyncStorage.setItem('checkedGato', JSON.stringify(checkedGato));
+      await AsyncStorage.setItem('distancia', JSON.stringify(distancia));
+      await AsyncStorage.setItem('edad', JSON.stringify(edad));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const validoStorage = async () => {
+    try {
+      await AsyncStorage.getItem('checkedMacho').then((value) => {
+        if (value != null) {
+          setValores();
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setValores = async () => {
+    try {
+      await AsyncStorage.getItem('checkedMacho').then((value) => {
+        setCheckedMacho(value == 'true' ? true : false);
+      });
+
+      await AsyncStorage.getItem('checkedHembra').then((value) => {
+        setCheckedHembra(value == 'true' ? true : false);
+      });
+
+      await AsyncStorage.getItem('checkedPeque').then((value) => {
+        setCheckedPeque(value == 'true' ? true : false);
+      });
+
+      await AsyncStorage.getItem('checkedGrande').then((value) => {
+        setCheckedGrande(value == 'true' ? true : false);
+      });
+
+      await AsyncStorage.getItem('checkedPerro').then((value) => {
+        setCheckedPerro(value == 'true' ? true : false);
+      });
+
+      await AsyncStorage.getItem('checkedGato').then((value) => {
+        setCheckedGato(value == 'true' ? true : false);
+      });
+
+      await AsyncStorage.getItem('distancia').then((value) => {
+        gDistancia(parseInt(value));
+      });
+
+      await AsyncStorage.getItem('edad').then((value) => {
+        gEdad(parseInt(value));
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    validoStorage();
+  }, [filtrosAnteriores]);
 
   return (
     <View style={globalStyles.base}>
@@ -95,20 +183,20 @@ const Filtros = ({navigation, route}) => {
           <View style={style.mascotaCol}>
             <Text style={style.textCheck}>Perro</Text>
             <Switch
-              value={checkedMacho}
+              value={checkedPerro}
               color="#FFAD00"
               onValueChange={() => {
-                setCheckedMacho(!checkedMacho);
+                setCheckedPerro(!checkedPerro);
               }}
             />
             </View>
             <View style={style.mascotaCol}>
               <Text style={style.textCheck}>Gato</Text>
               <Switch
-                value={checkedHembra}
+                value={checkedGato}
                 color="#FFAD00"
                 onValueChange={() => {
-                  setCheckedHembra(!checkedHembra);
+                  setCheckedGato(!checkedGato);
                 }}
               />
             </View>
@@ -238,7 +326,7 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 50,
     marginTop: 'auto',
-    marginBottom: 20,
+    marginBottom: 0,
   },
   contenedor: {
     flex: 1,

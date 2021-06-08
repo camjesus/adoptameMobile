@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {useWindowDimensions, Image} from 'react-native';
+import {Image} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -8,19 +8,12 @@ import {
   createDrawerNavigator,
   DrawerItemList,
   DrawerItem,
-  DrawerContent,
 } from '@react-navigation/drawer';
-import Login from './views/Login';
 import MisMascotasStack from './navigations/MisMascotasStack';
-import AccountStack from './navigations/AccountStack';
-import {Cuenta} from './views/Cuenta';
 import BuscarStack from './navigations/BuscarStack';
-import BarraFiltro from './components/ui/BarraFiltro';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import Navigation from './navigations/Navigation';
 import {View, StyleSheet, Text} from 'react-native';
-import {Animeted} from 'react-native-reanimated';
 
 const Drawer = createDrawerNavigator();
 //Defino el tema

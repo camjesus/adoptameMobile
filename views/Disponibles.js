@@ -5,7 +5,7 @@ import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
 import {ScrollView} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
-import {Text, IconButton} from 'react-native-paper';
+import {Text, Button, IconButton} from 'react-native-paper';
 import globalStyles from '../styles/global';
 import constantes from '../components/context/Constantes';
 import BarraFiltro from '../components/ui/BarraFiltro';
@@ -17,11 +17,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 const Disponibles = ({navigation, route, props}) => {
   const data = route.params;
   console.log('params');
-  console.log(data);
+  console.log(data?.data);
   const [mascotasDisp, gDisponibles] = useState([]);
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
-  const [parametros, gParametros] = useState('');
+  const [estado, setEstado] = useState('DISPONIBLE');
   const isFirstTime = useRef(true);
   const [distancia, gDistancia] = useState(100);
   const paramsDefault = new URLSearchParams();
@@ -30,6 +30,11 @@ const Disponibles = ({navigation, route, props}) => {
   const swiperRef = React.createRef();
   const transitionRef = React.createRef();
   const ANIMATION_DURATION = 200;
+
+  //Botones accion mascota
+  const [colorBL, setColorBL] = useState('#D0800A');
+  const [colorBR, setColorBR] = useState('#FFAD00');
+  const [colorBC, setColorBC] = useState('#FFAD00');
 
   const transition = (
     <Transition.Sequence>
@@ -53,6 +58,20 @@ const Disponibles = ({navigation, route, props}) => {
       </Transition.Together>
     </Transition.Sequence>
   );
+  //paramsDefault.append('estado', estado);
+  paramsDefault.append('sexo', 'MACHO');
+  paramsDefault.append('sexo', 'HEMBRA');
+
+  paramsDefault.append('edad', 30);
+
+  paramsDefault.append('tamanio', 'CHICO');
+  paramsDefault.append('tamanio', 'MEDIANO');
+  paramsDefault.append('tamanio', 'GRANDE');
+  //paramsDefault.append('activa', true);
+  paramsDefault.append('tipoMascota', 'PERRO');
+  paramsDefault.append('tipoMascota', 'GATO');
+
+  paramsDefault.append('distancia', distancia);
 
   const colors = {
     red: '#EC2379',
@@ -60,40 +79,29 @@ const Disponibles = ({navigation, route, props}) => {
     gray: '#777777',
     white: '#ffffff',
     black: '#000000',
-    transparent: 'transparent',
   };
 
+  useEffect(() => {
+    gConsDisponibles(true);
+  }, [estado]);
+
   const obtenerMasDisponilbes = async (latitud, longitud) => {
-    paramsDefault.append('tamanio', 'CHICO');
-    paramsDefault.append('tamanio', 'MEDIANO');
-    paramsDefault.append('tamanio', 'GRANDE');
-
-    paramsDefault.append('sexo', 'MACHO');
-    paramsDefault.append('sexo', 'HEMBRA');
-    
-    paramsDefault.append('edad', 30);
-    paramsDefault.append("latitud",latitud);
-    paramsDefault.append("longitud",longitud);
-    paramsDefault.append("distancia",distancia);
-
+    paramsDefault.append('latitud', latitud);
+    paramsDefault.append('longitud', longitud);
+    paramsDefault.append('estado', estado);
 
     try {
-      
+      console.log();
       var request = {
         params: primerCarga === true ? paramsDefault : data.data,
       };
       console.log('request');
       console.log(request.params);
-      const url= constantes.BASE_URL + 'listaMascotasDisponible';
-      const resultado = await axios.get(
-      //  'https://adoptameapp.herokuapp.com/adoptame/mobile/listaMascotasDisponible',
-      url,
-      request,
-      );
+      const url = constantes.BASE_URL + 'mascotasPorFiltro';
+      const resultado = await axios.get(url, request);
       console.log(resultado.data);
       console.log('paso por obetener mascotas Disponibles');
       gDisponibles(resultado.data);
-      gPrimerCarga(false);
     } catch (error) {
       console.log(error);
     }
@@ -126,14 +134,15 @@ const Disponibles = ({navigation, route, props}) => {
   }, [consultarDisponibles]);
 
   useEffect(() => {
-
+    console.log('entro por la data');
+    console.log(data);
     if (isFirstTime.current) {
       isFirstTime.current = false;
     } else {
       gConsDisponibles(true);
     }
     obtenerDatosStorage();
-  //  obtenerMasDisponilbes();
+    //obtenerMasDisponilbes();
   }, [data]);
 
   const obtenerDatosStorage = async () => {
@@ -164,6 +173,28 @@ const Disponibles = ({navigation, route, props}) => {
     }
   }, [index]);
 
+  const tipoBusqueda = (accion) => {
+    switch (accion) {
+      case 'ADOPCION':
+        setColorBL('#D0800A');
+        setColorBC('#FFAD00');
+        setColorBR('#FFAD00');
+        break;
+      case 'ENCONTRADO':
+        setColorBL('#FFAD00');
+        setColorBC('#D0800A');
+        setColorBR('#FFAD00');
+        break;
+      case 'BUSCADO':
+        setColorBL('#FFAD00');
+        setColorBC('#FFAD00');
+        setColorBR('#D0800A');
+        break;
+    }
+
+    setEstado(accion);
+  };
+
   return (
     <View style={globalStyle.base}>
       <View style={styles.header}>
@@ -174,7 +205,42 @@ const Disponibles = ({navigation, route, props}) => {
           style={styles.barraSup}
         />
         <Text style={styles.title}>Adopta.Me</Text>
-        <BarraFiltro {...props} navigation={navigation} route={route} />
+        <IconButton
+          icon="filter"
+          color="#FFFFFF"
+          style={styles.iconEdit}
+          onPress={() =>{
+            gPrimerCarga(false);
+            navigation.navigate('filtros', {filtros: paramsDefault});
+          }}
+          size={30}
+         />
+      </View>
+      <View style={styles.tipoBusqueda}>
+      <Button
+          style={styles.buttonGL}
+          mode="contained"
+          color={colorBL}
+          labelStyle={styles.labelStyleGroup}
+          onPress={() => tipoBusqueda('ADOPCION')}>
+          Adopción
+        </Button>
+        <Button
+          style={styles.buttonG}
+          mode="contained"
+          color={colorBC}
+          labelStyle={styles.labelStyleGroup}
+          onPress={() => tipoBusqueda('ENCONTRADO')}>
+          Encontrados
+        </Button>
+        <Button
+          style={styles.buttonGR}
+          mode="contained"
+          color={colorBR}
+          labelStyle={styles.labelStyleGroup}
+          onPress={() => tipoBusqueda('BUSCADO')}>
+          Buscados
+        </Button>
       </View>
       {mascotasDisp.length === 0 && (
         <View>
@@ -188,11 +254,13 @@ const Disponibles = ({navigation, route, props}) => {
           <Swiper
             cards={mascotasDisp}
             cardIndex={index}
-            renderCard={(card) => <CardMascota mascota={card} navigation={navigation} />}
+            renderCard={(card) => (
+              <CardMascota mascota={card} navigation={navigation} />
+            )}
             onSwiper={onSwiped}
             infinite
-            backgroundColor={'transparent'}
-            onTapCard={() => swiperRef.current.swipeLeft()}
+            backgroundColor="#FFFFFF"
+            //onTapCard={() => onSwiped()}
             cardVerticalMargin={50}
             stackSize={3}
             stackScale={10}
@@ -208,7 +276,7 @@ const Disponibles = ({navigation, route, props}) => {
                   label: {
                     backgroundColor: colors.red,
                     borderColor: colors.red,
-                    color: colors.transparent,
+                    color: colors.red,
                     borderWidth: 1,
                     fontSize: 24
                   },
@@ -227,7 +295,7 @@ const Disponibles = ({navigation, route, props}) => {
                   label: {
                     backgroundColor: colors.blue,
                     borderColor: colors.blue,
-                    color: colors.transparent,
+                    color: colors.blue,
                     borderWidth: 1,
                     fontSize: 24
                   },
@@ -248,6 +316,10 @@ const Disponibles = ({navigation, route, props}) => {
   );
 };
 const styles = StyleSheet.create({
+  tipoBusqueda: {
+    flexDirection: 'row',
+    margin: 0,
+  },
   fab: {
     position: 'absolute',
     margin: 16,
@@ -267,29 +339,42 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 50,
-    backgroundColor: "transparent"
   },
   header: {
-    paddingBottom: 20,
     backgroundColor: '#FFAD00',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-    shadowColor: '#000000',
-    shadowOpacity: 1,
-    shadowRadius: 30,
-    elevation: 10,
-    shadowOffset: {width: 1, height: 13},
     flexDirection: 'row',
-    flex: 1,
     margin: 0,
+    paddingBottom: 5,
+    marginBottom: 1,
   },
    containerSwiper: {
-    flex: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 11,
     backgroundColor: '#FFFFFF',
     margin: 0,
     padding: 0,
-   }
+   },
+   labelStyleGroup: {
+    fontSize: 15,
+    color: '#FFFFFF',
+    padding: 0,
+    margin: 0,
+  },
+  buttonGL: {
+    borderBottomLeftRadius: 30,
+    flex: 2,
+  },
+  buttonGR: {
+    borderBottomRightRadius: 30,
+    flex: 2,
+  },
+  buttonG: {
+    marginHorizontal: 1,
+  },
+  iconEdit: {
+    marginTop: 'auto',
+    alignItems: 'baseline',
+    alignContent: 'center',
+    justifyContent: 'flex-end'
+  },
 });
 export default Disponibles;

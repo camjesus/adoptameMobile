@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 
 import {StyleSheet, View, Image, Text, Alert} from 'react-native';
 import axios from 'axios';
-import {IconButton} from 'react-native-paper';
+import {IconButton, TouchableRipple} from 'react-native-paper';
 import {Card} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import constantes from '../context/Constantes'; 
@@ -55,6 +55,9 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
 
   return (
     <View>
+    <TouchableRipple
+     RippleonPress={() => console.log('Pressed')}
+      rippleColor="rgba(0, 0, 0, .32)">
       <View style={style.viewContainer}>
         <View style={style.viewMascota}>
           <Image
@@ -92,6 +95,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
          <Text style={style.textEstado}>Adopción</Text>
         </View>
       </View>
+    </TouchableRipple>
     </View>
   );
 };
@@ -113,7 +117,7 @@ const style = StyleSheet.create({
     padding: 10,
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
-    color: 'white',
+    color: '#FFFFFF',
   },
   infoMascota: {
     flex: 2,
@@ -184,7 +188,7 @@ const style = StyleSheet.create({
   },
   descripcion: {
     fontSize: 18,
-    color: 'grey',
+    color: '#D5D8DC',
   },
   decContainer: {
     flexWrap: 'nowrap',

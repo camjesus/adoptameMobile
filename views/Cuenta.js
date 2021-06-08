@@ -1,26 +1,43 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
-import {Text, IconButton, TextInput, Button} from 'react-native-paper';
+import {
+  Text,
+  IconButton,
+  TextInput,
+  Button,
+  Portal,
+  Dialog,
+  Paragraph,
+} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-import {LoginManager} from 'react-native-fbsdk';
+import axios from 'axios';
+import constantes from '../components/context/Constantes';
 import globalStyles from '../styles/global';
-import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
 
 const Cuenta = ({navigation}) => {
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
-  const [telefono, gTelefono] = useState('1122551093');
+  const [telefono, gTelefono] = useState('');
   const [camposEdit, gCamposEdit] = useState(true);
-  const [disabledEdit, setdesabledEdit] = useState(true);
   const [iconoRight, setIconoRight] = useState('pencil');
+  const [alerta, ingresarAlerta] = useState(false);
+  const [mensaje, guardaMensaje] = useState('');
+  const [editoCampos, setEditoCampos] = useState(false);
+
+  const usuario = {
+    nombre,
+    apellido,
+    email,
+    password: null,
+    ubicacion: null,
+    telefono
+  };
 
   useEffect(() => {
     console.log('entre a cuena');
     obtenerDatosStorage();
-    setdesabledEdit(true);
+    setEditoCampos(false);
     setIconoRight('pencil');
     gCamposEdit(true);
   }, []);
@@ -30,26 +47,69 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.getItem('email').then((value) => {
         gEmail(value);
       });
+
+      await AsyncStorage.getItem('nombre').then((value) => {
+        gNombre(
+          value.substring(0, 1).toUpperCase() +
+          value.substr(1, value.length - 1),
+        );
+      });
+
+      await AsyncStorage.getItem('apellido').then((value) => {
+        gApellido(
+          value.substring(0, 1).toUpperCase() +
+            value.substr(1, value.length - 1),
+        );
+      });
+
+      await AsyncStorage.getItem('telefono').then((value) => {
+        gTelefono(value);
+      });
     } catch (error) {
       console.log(error);
     }
-
-    await AsyncStorage.getItem('nombre').then((value) => {
-      gNombre(
-        value.substring(0, 1).toUpperCase() + value.substr(1, value.length - 1),
-      );
-    });
-
-    await AsyncStorage.getItem('apellido').then((value) => {
-      gApellido(
-        value.substring(0, 1).toUpperCase() + value.substr(1, value.length - 1),
-      );
-    });
   };
 
-  const editarUsuario = (icono) => {
-    if (icono == 'check') {
-      console.log('Edito usuario');
+  const editarStorage = async () => {
+    try {
+      await AsyncStorage.setItem('nombre', usuario.nombre);
+      await AsyncStorage.setItem('apellido', usuario.apellido);
+      await AsyncStorage.setItem('telefono', usuario.telefono);
+      await AsyncStorage.setItem('email', usuario.email);
+      console.log('se guardo el storage');
+      await AsyncStorage.getItem('nombre').then((value) => {
+        console.log('valor de userId ' + value);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editarUsuario = async (icono) => {
+    if (editoCampos && icono === 'check') {
+      if (telefono.length !== 10) {
+        guardaMensaje('El número de teléfono es inválido, verifique los datos');
+        ingresarAlerta(true);
+        return;
+      }
+      try {
+        const url = constantes.BASE_URL + 'modifyUser';
+        console.log(usuario);
+        const resultado = await axios.post(url, usuario);
+        console.log(resultado.data.status);
+        if (resultado.data.status === 'SUCESS') {
+          guardaMensaje('El usuario se editó con éxito');
+          ingresarAlerta(true);
+          editarStorage();
+          setEditoCampos(false);
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+        guardaMensaje('Error al editar el usuario');
+        ingresarAlerta(true);
+        return;
+      }
     }
   };
 
@@ -60,7 +120,9 @@ const Cuenta = ({navigation}) => {
           icon="arrow-left"
           color="#FFFFFF"
           style={style.iconBack}
-          onPress={() => navigation.navigate('BuscarStack', {screen: 'Disponibles'})}
+          onPress={() =>
+            navigation.navigate('BuscarStack', {screen: 'Disponibles'})
+          }
           size={30}
         />
         <Text style={style.title}>Mis Datos</Text>
@@ -70,14 +132,12 @@ const Cuenta = ({navigation}) => {
           style={style.iconEdit}
           onPress={() => {
             gCamposEdit(!camposEdit);
-            setdesabledEdit(false);
-            if (iconoRight == 'check') {
+            if (iconoRight === 'check') {
               setIconoRight('pencil');
             } else {
               setIconoRight('check');
             }
-            editarUsuario('check');
-            setdesabledEdit(!disabledEdit);
+            editarUsuario(iconoRight);
           }}
           size={30}
          />
@@ -88,21 +148,21 @@ const Cuenta = ({navigation}) => {
             <TextInput
                 label="Nombre"
                 value={nombre}
-                onChangeText={(texto) => gNombre(texto)}
+                onChangeText={(texto) => {gNombre(texto); setEditoCampos(true);}}
                 style={style.input}
                 disabled={camposEdit}
             />
             <TextInput
                 label="Apellido"
                 value={apellido}
-                onChangeText={(texto) => gApellido(texto)}
+                onChangeText={(texto) => {gApellido(texto); setEditoCampos(true);}}
                 style={style.input}
                 disabled={camposEdit}
             />
             <TextInput
                 label="Teléfono"
                 value={telefono}
-                onChangeText={(texto) => gTelefono(texto)}
+                onChangeText={(texto) => {gTelefono(texto); setEditoCampos(true);}}
                 style={style.input}
                 disabled={camposEdit}
             />
@@ -118,13 +178,28 @@ const Cuenta = ({navigation}) => {
             style={style.guardar}
             mode="contained"
             compact={true}
-            disabled={disabledEdit}
+            disabled={!editoCampos}
             onPress={() => editarUsuario()}>
             Editar
           </Button>
           </View>
         </ScrollView>
       </View>
+      <Portal>
+          <Dialog visible={alerta} style={globalStyles.dialog} >
+              <Dialog.Title style={globalStyles.dialogTitle}>Error</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+                <Button
+                  mode="contained"
+                  onPress={() => ingresarAlerta(false)}>
+                  Ok
+                </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {
   TextInput,
@@ -24,6 +24,7 @@ const CrearUsuario = ({navigation}) => {
   const [passwordRep, gPasswordRep] = useState('');
   const [alerta, ingresarAlerta] = useState(false);
   const [mensaje, guardaMensaje] = useState('');
+  const [resultadoCrear, setResultadoCrear] = useState('');
   const apellidoImp = useRef();
   const emailRef = useRef();
   const RpassRef = useRef();
@@ -65,28 +66,34 @@ const CrearUsuario = ({navigation}) => {
       telefono
     };
     console.log(nuevoUsuario);
-    const url=constantes.BASE_URL+'signInUser/';
+    const url = constantes.BASE_URL + 'signInUser/';
     const resultado = await axios.post(
      // 'https://adoptameapp.herokuapp.com/adoptame/mobile/signInUser/',
-       url,
+      url,
       nuevoUsuario,
     );
     console.log(resultado.data.result);
-    
     if (resultado.data.status === 'SUCESS') {
-      navigation.navigate('Login');
-    }else{
+      guardaMensaje('Usuario creado con éxito');
+      setResultadoCrear('SUCESS');
+      ingresarAlerta(true);
+    } else {
       guardaMensaje(resultado.data.result);
-    ingresarAlerta(true);
+      setResultadoCrear('ERROR');
+      ingresarAlerta(true);
     }
-  };
-  const backPage = () => {
-    navigation.navigate('Login');
   };
 
   const focusedTextInput = (ref) => {
     ref.current.focus();
-  }
+  };
+
+  useEffect(() => {
+    if (!alerta && resultadoCrear === 'SUCESS') {
+      navigation.navigate('BuscarStack', {screen: 'Login'});
+    }
+  }, [alerta])
+
   return (
     <View style={globalStyles.base}>
       <View style={style.header}>
@@ -129,10 +136,9 @@ const CrearUsuario = ({navigation}) => {
           />
           <TextInput
             label="Teléfono"
-            onChangeText={(texto) => gPassword(texto)}
+            onChangeText={(texto) => gTelefono(texto)}
             style={style.input}
-            value={password}
-            secureTextEntry={true}
+            value={telefono}
             ref={teleRef}
             onSubmitEditing={(event) => { focusedTextInput(passRef) }}
           />
@@ -163,10 +169,24 @@ const CrearUsuario = ({navigation}) => {
                 Crear
               </Button>
           </View>
-            
 		</View>
         </ScrollView>
       </View>
+      <Portal>
+          <Dialog visible={alerta} style={globalStyles.dialog} >
+              <Dialog.Title style={globalStyles.dialogTitle}>Error</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+                <Button
+                  mode="contained"
+                  onPress={() => {ingresarAlerta(false);}}>
+                  Ok
+                </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
     </View>
   );
 };

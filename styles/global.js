@@ -13,16 +13,17 @@ const globalStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   base: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     flex: 1,
   },
   msjAdvertencia: {
     textAlign: 'center',
     fontSize: 20,
-    color: 'grey',
+    color: '#ABB2B9',
     marginVertical: '50%',
     flexDirection: 'column',
     justifyContent: 'center',
+    marginHorizontal: 20
   },
   msjDisponibles: {
     textAlign: 'center',
@@ -38,6 +39,7 @@ const globalStyles = StyleSheet.create({
     padding: 0,
     flex: 5,
     marginBottom: 0,
+    textTransform: 'capitalize',
   },
   header: {
     paddingBottom: 10,
@@ -62,6 +64,18 @@ const globalStyles = StyleSheet.create({
     marginEnd: 10,
     marginTop: 20,
     marginBottom: 0,
+  },
+  dialog: {
+    color: '#FFAD00',
+    borderRadius: 5,
+  },
+  dialogTitle: {
+    color: '#FFAD00',
+    fontSize: 20,
+  },
+  dialogMsj: {
+    color: '#FFAD00',
+    fontSize: 17,
   },
 });
 

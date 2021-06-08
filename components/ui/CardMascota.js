@@ -1,17 +1,20 @@
 import constantes from '../context/Constantes';
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Image, Text, Dimensions} from 'react-native';
-import {Card, Button} from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import {IconButton} from 'react-native-paper';
+import {IconButton, Button} from 'react-native-paper';
 
 const CardMascota = ({mascota, navigation, route}) => {
   console.log(mascota + 'en CardMascota');
   console.log(route);
   const [image, gFotoURL] = useState('../../img/default.jpg');
   const [nombreSexo, gNombreSexo] = useState('gender-male');
+  const [colorChico, setColorChico] = useState('#FFFFFF');
+  const [colorMediano, setColorMediano] = useState('#FFFFFF');
+  const [colorGrande, setColorGrande] = useState('#FFFFFF');
 
   useEffect(() => {
     tomoNombreIcon();
@@ -25,6 +28,26 @@ const CardMascota = ({mascota, navigation, route}) => {
     }
   };
 
+  useEffect(() => {
+    switch (mascota?.tamanio) {
+      case 'CHICO':
+        setColorChico('#FFAD00');
+        setColorMediano('#FFFFFF');
+        setColorGrande('#FFFFFF');
+        break;
+      case 'MEDIANO':
+        setColorChico('#FFFFFF');
+        setColorMediano('#FFAD00');
+        setColorGrande('#FFFFFF');
+        break;
+      case 'GRANDE':
+        setColorChico('#FFFFFF');
+        setColorMediano('#FFFFFF');
+        setColorGrande('#FFAD00');
+        break;
+    }
+  }, []);
+
   return (
     <View style={style.cardNew}>
         <View style={style.viewMascota}>
@@ -34,6 +57,26 @@ const CardMascota = ({mascota, navigation, route}) => {
               uri: mascota?.foto_url,
             }}
           />
+        </View>
+        <View style={style.pawRow}>
+        <Maticons
+              style={style.paw}
+              name="paw"
+              size={45}
+              color={colorGrande}
+            />
+             <Maticons
+              style={style.paw}
+              name="paw"
+              size={35}
+              color={colorMediano}
+            />
+             <Maticons
+              style={style.paw}
+              name="paw"
+              size={25}
+              color={colorChico}
+            />
         </View>
         <View style={style.infoMascota}>
           <View style={style.containerH1}>
@@ -47,28 +90,43 @@ const CardMascota = ({mascota, navigation, route}) => {
             />
           </View>
         </View>
-        <IconButton
-          icon="information-variant"
-          style={style.masInfo}
-          color="white"
-          size={40}
-          onPress={() => {
-            navigation.navigate('crearMascota', {mascotaItem: mascota});
-          }}
-          animated="true"
-        />
+
+        <Button
+            style={style.masInfo}
+            mode="contained"
+            onPress={() => {
+              navigation.navigate('DetalleMascota', {mascotaItem: mascota});
+            }}
+            animated="true"
+            icon="plus"
+            >
+            Más Info
+          </Button>
     </View>
   );
 };
 
 const style = StyleSheet.create({
+  paw: {
+    //backgroundColor: 'transparent',
+  },
+  pawRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    alignContent: 'center',
+    position: 'absolute',
+    marginStart: 10,
+    margin: 10,
+    bottom: 80,
+    left: 0,
+  },
   masInfo: {
     position: 'absolute',
-    margin: 10,
-    borderRadius: 100,
-    marginBottom: 24,
+    margin: 20,
+    borderRadius: 5,
+    marginBottom: 45,
     right: 0,
-    bottom: 0,
+    bottom: 30,
     backgroundColor: '#FFAD00',
     shadowColor: '#000000',
     elevation: 10,
@@ -88,7 +146,11 @@ const style = StyleSheet.create({
     elevation: 10,
     shadowOffset: {width: 1, height: 13},
     flexDirection: 'column',
-    flex: 1,
+    flex: 5,
+    margin: 0,
+    padding: 0,
+    marginTop: -30,
+    marginBottom: 30,
   },
   imgMascota: {
     height: 500,

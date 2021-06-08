@@ -38,6 +38,7 @@ const CrearMascota = ({navigation, route, props}) => {
   const [rescatista, gRescatista] = useState('');
   const [accion, setAccion] = useState('adopcion');
   const [imagen, gImagen] = useState(null);
+  const [cambioFoto, setCambioFoto] = React.useState(false);
   const [imagenCargada, gImagenCargada] = useState('none');
   const [checkedPerro, setCheckedPerro] = React.useState(true);
   const [checkedGato, setCheckedGato] = React.useState(false);
@@ -46,7 +47,9 @@ const CrearMascota = ({navigation, route, props}) => {
   const [checkedChico, setCheckedChico] = React.useState(true);
   const [checkedMediano, setCheckedMediano] = React.useState(false);
   const [checkedGrande, setCheckedGrande] = React.useState(false);
+  const [checkedAdefinir, setCheckedAdefinir] = React.useState(false);
   const [coordenadas, setCoordenadas] = React.useState(null);
+  
   const [alerta, ingresarAlerta] = useState(false);
   const [mensaje, guardaMensaje] = useState('');
   const {params} = route;
@@ -77,6 +80,9 @@ const CrearMascota = ({navigation, route, props}) => {
   const [colorBCT, setColorBCT] = useState('#FFAD00');
 
   const guardarMascota = async () => {
+    if (checkedAdefinir) {
+      gNombre('A definir');
+    }
     try {
       if (
         nombre === '' ||
@@ -138,6 +144,7 @@ const CrearMascota = ({navigation, route, props}) => {
       bodyFormData.append('latitud', latitud);
       bodyFormData.append('longitud', longitud);
 
+      bodyFormData.append('cambioFoto', cambioFoto);
       bodyFormData.append('rescatista', rescatista);
 
       bodyFormData.append('image', {
@@ -212,6 +219,8 @@ const CrearMascota = ({navigation, route, props}) => {
       //setAccion()
       gLatitud(mascotaItem.latitud);
       gLongitud(mascotaItem.longitud);
+      gColorUbicacion("#FFFFFF");
+      gColorCamara("#FFFFFF");
      }
   }, []);
 
@@ -286,6 +295,7 @@ const CrearMascota = ({navigation, route, props}) => {
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
         gImagen(response);
+        setCambioFoto(true);
         gColorCamara("#FFFFFF");
       }
     });
@@ -361,7 +371,7 @@ const CrearMascota = ({navigation, route, props}) => {
   
 
   return (
-    <View >
+    <View style={{backgroundColor: "#FFFFFF"}}>
         <KeyboardAwareScrollView style={style.scroll}>
     <View style={globalStyles.header}>
     <IconButton
@@ -431,7 +441,7 @@ const CrearMascota = ({navigation, route, props}) => {
               compact={true}
               color={colorBL}
               labelStyle={style.labelStyleGroup}
-              onPress={() => accionMascota('adopcion')}>
+              onPress={() => accionMascota('ADOPCION')}>
               Adopción
             </Button>
             <Button
@@ -440,7 +450,7 @@ const CrearMascota = ({navigation, route, props}) => {
               color={colorBC}
               compact={true}
               labelStyle={style.labelStyleGroup}
-              onPress={() => accionMascota('encontrado')}>
+              onPress={() => accionMascota('ENCONTRADO')}>
               Encontrado
             </Button>
             <Button
@@ -449,24 +459,42 @@ const CrearMascota = ({navigation, route, props}) => {
               color={colorBR}
               compact={true}
               labelStyle={style.labelStyleGroup}
-              onPress={() => accionMascota('perdido')}>
-              Perdido
+              onPress={() => accionMascota('BUSCADO')}>
+              Buscado
             </Button>
           </View>
           <View style={{paddingHorizontal: 20}}>
+            <View style={style.rowNombre}>
+            <TextInput
+              label="Nombre"
+              value={nombre}
+              onChangeText={(texto) => gNombre(texto)}
+              style={style.inputNombre}
+              disabled={checkedAdefinir}
+              onSubmitEditing={(event) => { focusedTextInput(descRef) }}
+            />
+             <View style={style.rowadefinir}>
+            <Checkbox
+                    status={checkedAdefinir ? 'checked' : 'unchecked'}
+                    style={style.checkStyle}
+                    uncheckedColor="#FFAD00"
+                    color="#FFAD00"
+                    onPress={() => {
+                      setCheckedAdefinir(!checkedAdefinir);
+                      gNombre('');
+                    }}
+            />
+            <Text style={style.adefinir}>A definir</Text>
+            </View>
+          </View>
           <TextInput
-            label="Nombre"
-            value={nombre}
-            onChangeText={(texto) => gNombre(texto)}
-            style={style.input}
-            onSubmitEditing={(event) => { focusedTextInput(descRef) }}
-          />
-          <TextInput
-            label="Descripción"
+            label={'Descripción (' + (200 - descripcion.length) + ')'}
             value={descripcion}
-            onChangeText={(texto) => gDescripcion(texto)}
+                onChangeText={(texto) => gDescripcion(texto)}
             style={style.input}
             ref={descRef}
+            maxLength={200}
+            multiline={true}
             onSubmitEditing={(event) => { focusedTextInput(edadRef) }}
           />
 
@@ -566,7 +594,7 @@ const CrearMascota = ({navigation, route, props}) => {
             <Button
               style={style.ingresar}
               mode="contained"
-              labelStyle={{color: '#252932'}}
+              labelStyle={{color: '#FFFFFF'}}
               compact={true}
               onPress={() => guardarMascota()}>
               Guardar
@@ -590,6 +618,25 @@ const CrearMascota = ({navigation, route, props}) => {
 };
 
 const style = StyleSheet.create({
+  rowadefinir: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginStart: 5,
+    marginTop: 'auto'
+  },
+  adefinir: {
+    fontSize: 14,
+    alignItems: 'baseline',
+  },
+  rowNombre: {
+    flexDirection: 'row',
+    marginBottom:  0,
+  },
+  checkStyle:{
+    alignItems: 'baseline'
+  },
   buttonGL: {
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
@@ -678,6 +725,12 @@ const style = StyleSheet.create({
     backgroundColor: 'transparent',
     fontSize: 13,
   },
+  inputNombre: {
+    marginBottom: 3,
+    backgroundColor: 'transparent',
+    fontSize: 13,
+    flex: 2,
+  },
   tituloright: {
     fontSize: 16,
     flex: 6,
@@ -727,6 +780,7 @@ const style = StyleSheet.create({
     borderColor: '#252932',
     height: 190,
     width: 190,
+    elevation: 10,
     borderRadius: 100,
   },
   viewRow: {
@@ -750,7 +804,7 @@ const style = StyleSheet.create({
   },
   labelStyleGroup: {
     fontSize: 11,
-    color: '#252932',
+    color: '#FFFFFF',
     padding: 0,
     margin: 0,
   }
