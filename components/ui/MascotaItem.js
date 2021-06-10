@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 
-import {StyleSheet, View, Image, Text, Alert} from 'react-native';
+import {StyleSheet, View, Image, Text, Alert, TouchableOpacity} from 'react-native';
 import axios from 'axios';
-import {IconButton, TouchableRipple} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 import {Card} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import constantes from '../context/Constantes'; 
@@ -15,26 +15,6 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
   const {foto_url, nombre, descripcion, sexo, edad, tamanio} = mascota;
   const [nombreSexo, gNombreSexo] = useState('gender-male');
   const [postText, setPostText] = React.useState('');
-
-  const cambiarEstadoMascota = async (id) => {
-    const postEstado = {id, estado: 'ADOPTADA'};
-    const url = constantes.BASE_URL + 'estadoMascota';
-
-    const resultado = await axios.post(
-     // 'https://adoptameapp.herokuapp.com/adoptame/mobile/estadoMascota',
-     url,
-      postEstado,
-    );
-    consultarMascotas(true);
-
-    Alert.alert(
-      'Felicitaciones',
-      'Diste una mascota en adopción',
-      [{text: 'OK'}],
-      {cancelable: false},
-    );
-  };
- 
 
   useEffect(() => {
     console.log('entro a useEffec con la mascota ' + mascota);
@@ -53,12 +33,19 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
     }
   };
 
+  const mascotaEstado = () => {
+   console.log("Entro por mascota estado");
+   navigation.navigate('EstadosAdopcion', {mascotaItem: mascota});
+  };
+
   return (
+    <TouchableOpacity
+    onPress={mascotaEstado}>
     <View>
-    <TouchableRipple
-     RippleonPress={() => console.log('Pressed')}
-      rippleColor="rgba(0, 0, 0, .32)">
+  
       <View style={style.viewContainer}>
+      
+         
         <View style={style.viewMascota}>
           <Image
             style={style.imgMascota}
@@ -66,17 +53,17 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
               uri: foto_url,
             }}
           />
-        <View style={style.container}>
-        <IconButton
-              icon="pencil"
-              color="#FFFFFF"
-              style={style.fab}
-              onPress={() => {
-                navigation.navigate('crearMascota', {mascotaItem: mascota});
-              }}
-              size={30}
-        />
-      </View>
+            <View style={style.container}>
+            <IconButton
+                  icon="pencil"
+                  color="#FFFFFF"
+                  style={style.fab}
+                  onPress={() => {
+                    navigation.navigate('crearMascota', {mascotaItem: mascota});
+                  }}
+                  size={30}
+            />
+          </View>
         </View>
 
         <View style={style.infoMascota}>
@@ -95,8 +82,10 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
          <Text style={style.textEstado}>Adopción</Text>
         </View>
       </View>
-    </TouchableRipple>
+
     </View>
+    </TouchableOpacity>
+
   );
 };
 
@@ -123,14 +112,13 @@ const style = StyleSheet.create({
     flex: 2,
     flexDirection: 'row',
     marginBottom: 10,
+    alignItems: 'baseline',
   },
   containerH1: {
     flexDirection: 'row',
     flex: 3,
     alignItems: 'center',
     marginStart: 10,
-    marginTop: 'auto',
-    marginBottom: 'auto',
   },
   containerH2: {
     flexDirection: 'row',

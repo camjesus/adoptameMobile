@@ -103,13 +103,28 @@ export default class VerMapa extends Component {
             onPress={() => this.goback()}
             animated="true"
           />
+          
         </View>
+        <FAB
+            icon="arrow-left"
+            style={styles.fabBack}
+            color="#FFFFFF"
+            onPress={() => this.goback()}
+            animated="true"
+          />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  fabBack: {
+    position: 'absolute',
+    backgroundColor: '#FFAD00',
+    left: 0,
+    top: 0,
+    margin: 15,
+  },
   map: {
     ...StyleSheet.absoluteFillObject,
   },

@@ -1,11 +1,11 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import axios from 'axios';
 import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
 import {ScrollView} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
-import {Text, Button, IconButton} from 'react-native-paper';
+import {Text, Button, IconButton, Modal, Portal, ActivityIndicator} from 'react-native-paper';
 import globalStyles from '../styles/global';
 import constantes from '../components/context/Constantes';
 import BarraFiltro from '../components/ui/BarraFiltro';
@@ -30,6 +30,11 @@ const Disponibles = ({navigation, route, props}) => {
   const swiperRef = React.createRef();
   const transitionRef = React.createRef();
   const ANIMATION_DURATION = 200;
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const [count, setCount] = useState(0);
+  const [counter, setCounter] = useState(0);
 
   //Botones accion mascota
   const [colorBL, setColorBL] = useState('#D0800A');
@@ -122,7 +127,25 @@ const Disponibles = ({navigation, route, props}) => {
       });
   };
 
+ 
+  useEffect(
+    () => {
+      const id = setTimeout(() => {
+        setCounter(counter + 1); 
+        console.log(counter);
+        
+      }, 1000);
+      if(counter > 1){
+        hideModal();
+        clearTimeout(id);
+      }
+    },
+    [counter],
+  );
+
   useEffect(() => {
+    setCounter(0);
+    showModal();
     obtenerDatosStorage();
     setIndex(0);
     if (consultarDisponibles) {
@@ -142,6 +165,7 @@ const Disponibles = ({navigation, route, props}) => {
       gConsDisponibles(true);
     }
     obtenerDatosStorage();
+    
     //obtenerMasDisponilbes();
   }, [data]);
 
@@ -312,10 +336,41 @@ const Disponibles = ({navigation, route, props}) => {
           />
         </View>
       )}
+       <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={styles.modal}>
+          <View style={styles.viewLogo}>
+            <Image source={require('../img/casita.png')} style={styles.imglogo} /> 
+            <Text style={styles.cargarText}>Cargando Mascotas</Text>
+          </View>
+          <ActivityIndicator animating={true} color="#FFAD00" size={50} />
+        </Modal>
+      </Portal>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  cargarText: {
+    textAlign: 'center',
+    fontSize: 16, 
+    marginVertical: 5,
+    marginBottom: 10,
+  },
+  viewLogo: {
+    alignItems: 'center',
+   justifyContent: 'center',
+  },
+  imglogo: {
+    width: 120,
+    height: 120,
+  },
+  modal: {
+    backgroundColor: '#FFFFFF', 
+    padding: 20,
+    flex: 1,
+  },
   tipoBusqueda: {
     flexDirection: 'row',
     margin: 0,

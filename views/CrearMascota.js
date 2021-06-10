@@ -780,7 +780,6 @@ const style = StyleSheet.create({
     borderColor: '#252932',
     height: 190,
     width: 190,
-    elevation: 10,
     borderRadius: 100,
   },
   viewRow: {

@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mdi/js": "^5.9.55",
+    "@mdi/react": "^1.5.0",
     "@react-native-community/async-storage": "^1.12.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.3",
@@ -31,6 +33,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-maps": "0.27.1",
     "react-native-paper": "^4.0.1",
+    "react-native-progress-circle": "^2.1.0",
     "react-native-reanimated": "^1.13.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.10.1",

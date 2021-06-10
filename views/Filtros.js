@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View,Alert} from 'react-native';
 import {
-  TextInput,
-  Headline,
   Button,
   Checkbox,
   Text,
