@@ -16,6 +16,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import * as firebase from 'firebase';
 
 
 const Login = (props) => {
@@ -65,8 +66,6 @@ const Login = (props) => {
     console.log(url);
     try {
       const resultado = await axios.post(
-      //  'http://10.0.2.2:8090/adoptame/mobile/ingresarMobile
-    //  'https://adoptameapp.herokuapp.com/adoptame/mobile/ingresarMobile',
          url,
         postUsuarios,
       );
@@ -78,6 +77,18 @@ const Login = (props) => {
       }
       console.log('me logueo bien , guardo el user');
       guardoUsuario(resultado.data);
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(usuario, password)
+      .then((response) => {
+        console.log("correctamente");
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log("ERROR");
+        console.log(err);
+      })
+      
     } catch (error) {
       guardaMensaje('Ha ocurrido un error intente nuevamente');
       ingresarAlerta(true);
@@ -91,7 +102,7 @@ const Login = (props) => {
       await AsyncStorage.setItem('userId', JSON.stringify(user.id));
       await AsyncStorage.setItem('nombre', user.nombre);
       await AsyncStorage.setItem('apellido', user.apellido);
-      await AsyncStorage.setItem('telefono', user.telefono == null ? "1122334455" : user.telefono);
+      await AsyncStorage.setItem('telefono', user.telefono);
       await AsyncStorage.setItem('email', user.email);
 
       await AsyncStorage.setItem('userId', JSON.stringify(user.id)).then(

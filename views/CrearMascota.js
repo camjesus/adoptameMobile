@@ -5,7 +5,6 @@ import {
   TextInput,
   Headline,
   Button,
-  Checkbox,
   Text,
   ToggleButton,
   Avatar,
@@ -15,6 +14,7 @@ import {
   IconButton,
   FAB,
 } from 'react-native-paper';
+import {CheckBox} from 'react-native-elements';
 import globalStyles from '../styles/global';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
@@ -25,152 +25,119 @@ import constantes from '../components/context/Constantes';
 
 
 const CrearMascota = ({navigation, route, props}) => {
-  const [nombre, gNombre] = useState('');
-  const [sexo, gSexo] = useState('');
-  const [tamanio, gTamanio] = useState('');
-  const [descripcion, gDescripcion] = useState('');
-  const [edad, gEdad] = useState('');
+  const {params} = route;
+  const {mascotaItem} = params;
+  const [edit, setEdit] = useState(mascotaItem.id != null ? true : false)
+  const [nombre, gNombre] = useState(mascotaItem.nombre);
+  const [sexo, gSexo] = useState(mascotaItem.sexo);
+  const [tamanio, gTamanio] = useState(mascotaItem.tamanio);
+  const [descripcion, gDescripcion] = useState(mascotaItem.descripcion);
+  const [edad, gEdad] = useState(mascotaItem.edad.toString());
   const [raza, gRaza] = useState('Mestizo');
-  const [tipoMascota, gTipoMascota] = useState('');
-  const [longitud, gLongitud] = useState('');
-  const [latitud, gLatitud] = useState('');
-  const [mascota, setMascota] = useState('');
-  const [rescatista, gRescatista] = useState('');
-  const [accion, setAccion] = useState('adopcion');
+  const [tipoMascota, gTipoMascota] = useState(mascotaItem.tipoMascota);
+  const [longitud, gLongitud] = useState(mascotaItem.longitud);
+  const [latitud, gLatitud] = useState(mascotaItem.latitud);
+  const [rescatista, gRescatista] = useState(mascotaItem.rescatista);
+  const [accion, setAccion] = useState(mascotaItem.estado);
   const [imagen, gImagen] = useState(null);
-  const [cambioFoto, setCambioFoto] = React.useState(false);
-  const [imagenCargada, gImagenCargada] = useState('none');
-  const [checkedPerro, setCheckedPerro] = React.useState(true);
-  const [checkedGato, setCheckedGato] = React.useState(false);
-  const [checkedMacho, setCheckedMacho] = React.useState(true);
-  const [checkedHembra, setCheckedHembra] = React.useState(false);
-  const [checkedChico, setCheckedChico] = React.useState(true);
-  const [checkedMediano, setCheckedMediano] = React.useState(false);
-  const [checkedGrande, setCheckedGrande] = React.useState(false);
+  const [cambioFoto, setCambioFoto] = React.useState(mascotaItem.cambioFoto === null ? false : mascotaItem.cambioFoto);
+  console.log('mascotaItem');
+  console.log(mascotaItem);
   const [checkedAdefinir, setCheckedAdefinir] = React.useState(false);
-  const [coordenadas, setCoordenadas] = React.useState(null);
   
   const [alerta, ingresarAlerta] = useState(false);
   const [mensaje, guardaMensaje] = useState('');
-  const {params} = route;
-  const {mascotaItem} = params;
   const [titulo, gTitulo] = useState('');
   const [colorCamara, gColorCamara] = useState('#252932');
   const [colorUbicacion, gColorUbicacion] = useState('#252932');
   const descRef = useRef();
-  const edadRef = useRef();
-  
-
-  //Botones accion mascota
-  const [colorBL, setColorBL] = useState('#D0800A');
-  const [colorBR, setColorBR] = useState('#FFAD00');
-  const [colorBC, setColorBC] = useState('#FFAD00');
-
-  //Botones tipo Mascota
-  const [colorBLP, setColorBLP] = useState('#D0800A');
-  const [colorBRG, setColorBRG] = useState('#FFAD00');
-  
-  //Botones Sexo
-  const [colorBLS, setColorBLS] = useState('#D0800A');
-  const [colorBRS, setColorBRS] = useState('#FFAD00');
-
-  //Botones Tamano
-  const [colorBLT, setColorBLT] = useState('#D0800A');
-  const [colorBRT, setColorBRT] = useState('#FFAD00');
-  const [colorBCT, setColorBCT] = useState('#FFAD00');
+  const edadRef = useRef(mascotaItem.edad);
+  const mascotaItemRef = useRef(mascotaItem);
+  const colorSelect = '#D0800A';
+  const colorNoSelect = '#FFAD00';
 
   const guardarMascota = async () => {
     if (checkedAdefinir) {
       gNombre('A definir');
     }
     try {
-      if (
-        nombre === '' ||
-        raza === '' ||
-        edad === '' ||
-        descripcion === '' ||
-        !imagen
-      ) {
-        gTitulo('Advertencia');
-        guardaMensaje('Todos los campos son requeridos');
-        ingresarAlerta(true);
-        return;
-      }
+        if (nombre === '' || edad === '' || descripcion === '') {
+          gTitulo('Advertencia');
+          guardaMensaje('Todos los campos son requeridos');
+          ingresarAlerta(true);
+          return;
+        }
 
-      if (edad > 30) {
-        gTitulo('Advertencia');
-        guardaMensaje('La mascota no puede ser mayor a 30 años');
-        ingresarAlerta(true);
-        return;
-      }
+        if(imagen === null && mascotaItem.foto_url === null)
+        {
+          gTitulo('Advertencia');
+          guardaMensaje('Es necesario cargar una foto para subir la mascota');
+          ingresarAlerta(true);
+        }
 
-      if (latitud === '' || longitud === '') {
-        gTitulo('Advertencia');
-        guardaMensaje('Por favor indique en el mapa una dirección');
-        ingresarAlerta(true);
-        return;
-      }
+        if (edad > 30) {
+          gTitulo('Advertencia');
+          guardaMensaje('La mascota no puede ser mayor a 30 años');
+          ingresarAlerta(true);
+          return;
+        }
 
+        if (latitud === '' || longitud === '') {
+          gTitulo('Advertencia');
+          guardaMensaje('Por favor indique en el mapa una dirección');
+          ingresarAlerta(true);
+          return;
+        }
       var bodyFormData = new FormData();
+      if(imagen !== null)
+      {
+        bodyFormData.append('image', {
+          name: imagen.fileName,
+          type: imagen.type,
+          uri:
+            Platform.OS === 'android'
+              ? imagen.uri
+              : imagen.uri.replace('file://', ''),
+        });
+      }
       bodyFormData.append('nombre', nombre);
-      bodyFormData.append('estado', 'DISPONIBLE');
-
-      if (checkedMacho) {
-        bodyFormData.append('sexo', 'MACHO');
-      } else {
-        bodyFormData.append('sexo', 'HEMBRA');
-      }
-
-      if (checkedChico) {
-        bodyFormData.append('tamanio', 'CHICO');
-      }
-      if (checkedMediano) {
-        bodyFormData.append('tamanio', 'MEDIANO');
-      }
-      if (checkedGrande) {
-        bodyFormData.append('tamanio', 'GRANDE');
-      }
-
+      bodyFormData.append('estado', accion);
+      bodyFormData.append('sexo', sexo);
+      bodyFormData.append('tamanio', tamanio);
       bodyFormData.append('raza', raza);
-
-      if (checkedPerro) {
-        bodyFormData.append('tipoMascota', 'PERRO');
-      } else {
-        bodyFormData.append('tipoMascota', 'GATO');
-      }
-
-      bodyFormData.append('edad', edad);
+      bodyFormData.append('tipoMascota', tipoMascota);
+      bodyFormData.append('edad', parseInt(edad));
       bodyFormData.append('descripcion', descripcion);
       bodyFormData.append('latitud', latitud);
       bodyFormData.append('longitud', longitud);
-
       bodyFormData.append('cambioFoto', cambioFoto);
-      bodyFormData.append('rescatista', rescatista);
+      bodyFormData.append('rescatista', parseInt(rescatista));
+      if(mascotaItem.id !== null)
+      {
+        bodyFormData.append('id', parseInt(mascotaItem.id));
+        bodyFormData.append('foto_url', mascotaItem.foto_url);
+      }
 
-      bodyFormData.append('image', {
-        name: imagen.fileName,
-        type: imagen.type,
-        uri:
-          Platform.OS === 'android'
-            ? imagen.uri
-            : imagen.uri.replace('file://', ''),
-      });
-
-      const urlUpload =constantes.BASE_URL+'uploadPet';
-      axios
-        .request({
+      console.log('bodyFormData');
+      console.log(bodyFormData);
+      const urlUpload = constantes.BASE_URL + 'uploadPet';
+      axios.request({
           method: 'post',
-         //url: 'http://10.0.2.2:8090/adoptame/mobile/uploadPet',
-        //  url: 'https://adoptameapp.herokuapp.com/adoptame/mobile/uploadPet',
           url:urlUpload,
           data: bodyFormData,
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        })
+        })  
         .then(function (response) {
-          gTitulo('Nueva Mascota');
-          guardaMensaje('Agregaste una nueva mascota');
+          if (edit) {
+            gTitulo('Editar Mascota');
+            guardaMensaje('La mascota se editó con éxito!');
+          }else{
+            gTitulo('Nueva Mascota');
+            guardaMensaje('La nueva mascota se creó con éxito!');
+          }
+         
           ingresarAlerta(true);
         })
         .catch(function (response) {
@@ -208,22 +175,14 @@ const CrearMascota = ({navigation, route, props}) => {
   }, [route.params?.coordinates]);
 
   useEffect(() => {
-    if (mascotaItem) {
-      gNombre(mascotaItem.nombre);
-      gImagenCargada(mascotaItem.foto_url);
-      gDescripcion(mascotaItem.descripcion);
-      gEdad(mascotaItem.edad.toString());
-      setTipoMascota(mascotaItem.tipoMascota);
-      setSexo(mascotaItem.sexo);
-      setTamanio(mascotaItem.tamanio);
-      //setAccion()
-      gLatitud(mascotaItem.latitud);
-      gLongitud(mascotaItem.longitud);
+    if (mascotaItem.id !== null) {
+      if (mascotaItem.nombre == 'A definir') {
+        setCheckedAdefinir(true);
+      }
       gColorUbicacion("#FFFFFF");
       gColorCamara("#FFFFFF");
      }
   }, []);
-
   const focusedTextInput = (ref) => {
     ref.current.focus();
   };
@@ -295,80 +254,12 @@ const CrearMascota = ({navigation, route, props}) => {
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
         gImagen(response);
+        mascotaItem.foto_url = null;
         setCambioFoto(true);
         gColorCamara("#FFFFFF");
       }
     });
   };
-
-  const accionMascota = (accion) => {
-    setAccion(accion);
-    switch (accion) {
-      case 'adopcion':
-        setColorBL('#D0800A');
-        setColorBC('#FFAD00');
-        setColorBR('#FFAD00');
-        break;
-      case 'encontrado':
-        setColorBL('#FFAD00');
-        setColorBC('#D0800A');
-        setColorBR('#FFAD00');
-        break;
-      case 'perdido':
-        setColorBL('#FFAD00');
-        setColorBC('#FFAD00');
-        setColorBR('#D0800A');
-        break;
-    }
-  };
-
-  const setTamanio = (tamanio) => {
-    setAccion(tamanio);
-    switch (tamanio) {
-      case 'CHICO':
-        setColorBLT('#D0800A');
-        setColorBCT('#FFAD00');
-        setColorBRT('#FFAD00');
-        break;
-      case 'MEDIANO':
-        setColorBLT('#FFAD00');
-        setColorBCT('#D0800A');
-        setColorBRT('#FFAD00');
-        break;
-      case 'GRANDE':
-        setColorBLT('#FFAD00');
-        setColorBCT('#FFAD00');
-        setColorBRT('#D0800A');
-        break;
-    }
-  };
-
-  const setTipoMascota = (Tmascota) => {
-    console.log(Tmascota);
-    gTipoMascota(Tmascota);
-
-    if (Tmascota === 'PERRO') {
-      setColorBLP('#D0800A');
-      setColorBRG('#FFAD00');
-    } else {
-      setColorBLP('#FFAD00');
-      setColorBRG('#D0800A');
-    }
-  };
-
-  const setSexo = (sexo) => {
-    gSexo(sexo);
-
-    if (sexo == 'MACHO') {
-      setColorBLS('#D0800A');
-      setColorBRS('#FFAD00');
-    } else {
-      setColorBLS('#FFAD00');
-      setColorBRS('#D0800A');
-    }
-  };
-
-  
 
   return (
     <View style={{backgroundColor: "#FFFFFF"}}>
@@ -381,41 +272,40 @@ const CrearMascota = ({navigation, route, props}) => {
       onPress={() => navigation.goBack()}
       size={30}
     />
-    {imagenCargada == 'none' && (
+    {mascotaItem.id === null && (
       <Text style={globalStyles.title}>Nueva mascota</Text>
     )}
-     {imagenCargada != 'none' && (
+     {mascotaItem.id !== null && (
       <Text style={globalStyles.title}>Editar mascota</Text>
     )}
       <IconButton
         icon="check"
         color="#FFFFFF"
         style={globalStyles.iconBack}
-        onPress={() => navigation.goBack()}
+        onPress={() => guardarMascota()}
         size={30}
       />
   </View>
           <View style={globalStyles.base}>
         <View style={globalStyles.contenedor}>
-            {imagenCargada == 'none' && (
-              <View style={style.avatar}>
-                <Avatar.Image
-                  size={160}
-                  source={imagen}
-                  style={style.avatarImage}
-                />
-              </View>
-            )}
-          {imagenCargada != 'none' && (
-             <View style={style.avatar}>
-            <Image
+          <View style={style.avatar}>
+          {cambioFoto === true &&(
+            <Avatar.Image
+            size={190}
+            source={imagen}
             style={style.avatarImage}
-            source={{
-              uri: imagenCargada,
-            }}
           />
-           </View>
           )}
+               
+        {cambioFoto === false && (
+                <Image
+                style={style.avatarImage}
+                source={{
+                  uri: mascotaItem.foto_url,
+                }}
+              />
+             )}
+            </View>
           <View style={style.viewRowIcon}>
             <FAB
           icon="camera"
@@ -439,27 +329,27 @@ const CrearMascota = ({navigation, route, props}) => {
               style={style.buttonGL}
               mode="contained"
               compact={true}
-              color={colorBL}
+              color={accion === "ADOPCION" ? colorSelect : colorNoSelect}
               labelStyle={style.labelStyleGroup}
-              onPress={() => accionMascota('ADOPCION')}>
+              onPress={() => setAccion('ADOPCION')}>
               Adopción
             </Button>
             <Button
               style={style.buttonG}
               mode="contained"
-              color={colorBC}
+              color={accion === "ENCONTRADO" ? colorSelect : colorNoSelect}
               compact={true}
               labelStyle={style.labelStyleGroup}
-              onPress={() => accionMascota('ENCONTRADO')}>
+              onPress={() => setAccion('ENCONTRADO')}>
               Encontrado
             </Button>
             <Button
               style={style.buttonGR}
               mode="contained"
-              color={colorBR}
+              color={accion === "BUSCADO" ? colorSelect : colorNoSelect}
               compact={true}
               labelStyle={style.labelStyleGroup}
-              onPress={() => accionMascota('BUSCADO')}>
+              onPress={() => setAccion('BUSCADO')}>
               Buscado
             </Button>
           </View>
@@ -474,17 +364,19 @@ const CrearMascota = ({navigation, route, props}) => {
               onSubmitEditing={(event) => { focusedTextInput(descRef) }}
             />
              <View style={style.rowadefinir}>
-            <Checkbox
-                    status={checkedAdefinir ? 'checked' : 'unchecked'}
-                    style={style.checkStyle}
-                    uncheckedColor="#FFAD00"
-                    color="#FFAD00"
-                    onPress={() => {
-                      setCheckedAdefinir(!checkedAdefinir);
-                      gNombre('');
-                    }}
-            />
-            <Text style={style.adefinir}>A definir</Text>
+            <CheckBox
+                right
+                title='A definir'
+                containerStyle={style.checkStyle}
+                checkedIcon='dot-circle-o'
+                uncheckedIcon='circle-o'
+                checkedColor='#FFAD00'
+                checked={checkedAdefinir}
+                onPress={() => {
+                  setCheckedAdefinir(!checkedAdefinir);
+                  gNombre('');
+                }}
+              />
             </View>
           </View>
           <TextInput
@@ -519,10 +411,10 @@ const CrearMascota = ({navigation, route, props}) => {
           <Button
               style={style.buttonGLS}
               mode="contained"
-              color={colorBLP}
+              color={tipoMascota === "PERRO" ? colorSelect : colorNoSelect}
               compact={true}
               labelStyle={style.labelStyleGroup}
-              onPress={() => setTipoMascota('PERRO')}>
+              onPress={() => gTipoMascota('PERRO')}>
               Perro
             </Button>
             <Button
@@ -530,8 +422,8 @@ const CrearMascota = ({navigation, route, props}) => {
               mode="contained"
               compact={true}
               labelStyle={style.labelStyleGroup}
-              color={colorBRG}
-              onPress={() => setTipoMascota('GATO')}>
+              color={tipoMascota === "GATO" ? colorSelect : colorNoSelect}
+              onPress={() => gTipoMascota('GATO')}>
               Gato
             </Button>
           </View>
@@ -540,9 +432,9 @@ const CrearMascota = ({navigation, route, props}) => {
                   style={style.buttonGLS}
                   mode="contained"
                   compact={true}
-                  color={colorBLS}
+                  color={sexo === "MACHO" ? colorSelect : colorNoSelect}
                   labelStyle={style.labelStyleGroup}
-                  onPress={() => setSexo('MACHO')}>
+                  onPress={() => gSexo('MACHO')}>
                   MACHO
                 </Button>
                 <Button
@@ -550,8 +442,8 @@ const CrearMascota = ({navigation, route, props}) => {
                   compact={true}
                   mode="contained"
                   labelStyle={style.labelStyleGroup}
-                  color={colorBRS}
-                  onPress={() => setSexo('hembra')}>
+                  color={sexo === "HEMBRA" ? colorSelect : colorNoSelect}
+                  onPress={() => gSexo('HEMBRA')}>
                   Hembra
                 </Button>
               </View>
@@ -564,10 +456,10 @@ const CrearMascota = ({navigation, route, props}) => {
                 <Button
                   style={style.buttonGL}
                   mode="contained"
-                  color={colorBLT}
+                  color={tamanio === "CHICO" ? colorSelect : colorNoSelect}
                   compact={true}
                   labelStyle={style.labelStyleGroup}
-                  onPress={() => setTamanio('CHICO')}>
+                  onPress={() => gTamanio('CHICO')}>
                   chico
                 </Button>
                 <Button
@@ -575,8 +467,8 @@ const CrearMascota = ({navigation, route, props}) => {
                   mode="contained"
                   compact={true}
                   labelStyle={style.labelStyleGroup}
-                  color={colorBCT}
-                  onPress={() => setTamanio('MEDIANO')}>
+                  color={tamanio === "MEDIANO" ? colorSelect : colorNoSelect}
+                  onPress={() => gTamanio('MEDIANO')}>
                   Mediano
                 </Button>
                 <Button
@@ -584,9 +476,9 @@ const CrearMascota = ({navigation, route, props}) => {
                   mode="contained"
                   compact={true}
                   labelStyle={style.labelStyleGroup}
-                  color={colorBRT}
+                  color={tamanio === "GRANDE" ? colorSelect : colorNoSelect}
                   animated={false}
-                  onPress={() => setTamanio('GRANDE')}>
+                  onPress={() => gTamanio('GRANDE')}>
                   grande
                 </Button>
             </View>
@@ -600,13 +492,19 @@ const CrearMascota = ({navigation, route, props}) => {
               Guardar
             </Button>
           <Portal>
-            <Dialog visible={alerta}>
-              <Dialog.Title>{titulo}</Dialog.Title>
-              <Dialog.Content>
+            <Dialog visible={alerta} style={globalStyles.dialog}>
+              <Dialog.Title style={globalStyles.dialogTitle}>{titulo}</Dialog.Title>
+              <Dialog.Content style={globalStyles.dialogMsj}>
                 <Paragraph>{mensaje}</Paragraph>
               </Dialog.Content>
               <Dialog.Actions>
-                <Button onPress={() => ingresarAlerta(false)}>Ok</Button>
+                <Button onPress={() => {
+                  ingresarAlerta(false);
+                  if(titulo !== 'Advertencia'){
+                    navigation.navigate('misMascotas', {consultarMascotas: true});
+                  }
+                }
+              }>Ok</Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>
@@ -634,8 +532,11 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     marginBottom:  0,
   },
-  checkStyle:{
-    alignItems: 'baseline'
+  checkStyle: {
+    alignItems: 'baseline',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0,
+    padding: 0,
   },
   buttonGL: {
     borderTopLeftRadius: 10,

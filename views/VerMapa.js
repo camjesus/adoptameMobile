@@ -93,7 +93,7 @@ export default class VerMapa extends Component {
         </MapView>
         <View style={styles.container}>
           <Text style={styles.textInfo}>
-            Selecciona un punto de cercanía. {'\n'} Nadie podrá ver tu
+            Selecciona un punto de cercanía{'\n'} en el que se encuentra la mascota. {'\n'} Nadie podrá ver la
             dirección.
           </Text>
           <FAB

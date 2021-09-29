@@ -4,6 +4,9 @@ import MisMascotas from '../views/MisMascotas';
 import VerMapa from '../views/VerMapa';
 import CrearMascota from '../views/CrearMascota';
 import EstadosAdopcion from '../views/EstadosAdopcion';
+import EstadosBuscado from '../views/EstadosBuscado';
+import EstadosEncontrado from '../views/EstadosEncontrado';
+
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
 const Stack = createStackNavigator();
@@ -48,9 +51,19 @@ export default function MisMascotasStack() {
           component={VerMapa}
           options={{headerShown: false}}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="EstadosAdopcion"
           component={EstadosAdopcion}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EstadosBuscado"
+          component={EstadosBuscado}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EstadosEncontrado"
+          component={EstadosEncontrado}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

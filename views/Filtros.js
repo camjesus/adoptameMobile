@@ -323,8 +323,6 @@ const style = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 50,
-    marginTop: 'auto',
-    marginBottom: 0,
   },
   contenedor: {
     flex: 1,

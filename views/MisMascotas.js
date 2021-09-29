@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Headline, FAB} from 'react-native-paper';
 import axios from 'axios';
@@ -15,6 +15,7 @@ const MisMascotas = (props) => {
   const {navigation} = props;
   const [mascotas, guardarMascotas] = useState([]);
   const [userId, gUserId] = useState('');
+  const mascotasRef = useRef(null);
 
   const [consultarMascotas, gConsMascotaApi] = useState(false); //si adopto una mascota es para saber si recargo la pagina
   const isFocused = useIsFocused(); //devuelve true si la pantalla tiene foco
@@ -22,10 +23,8 @@ const MisMascotas = (props) => {
   //const id = route.params;
   useEffect(() => {
     console.log('pase por el effect');
-    if (isFocused) {
       obtenerDatosStorage();
       gConsMascotaApi(false);
-    }
   }, [isFocused, consultarMascotas]); //cuando la pantalla tiene el foco
 
   const obtenerDatosStorage = async () => {
@@ -67,7 +66,37 @@ const MisMascotas = (props) => {
           size={30}
         />
         <Text style={globalStyles.title}>Mis mascotas</Text>
-        <View style={globalStyles.viewR}></View>
+        <IconButton
+          icon="plus"
+          color="#FFFFFF"
+          style={styles.iconEdit}
+          onPress={() => {
+            navigation.navigate('crearMascota', {mascotaItem: {
+            activa: true,
+            cambioFoto: true,
+            descripcion: "",
+            edad: "",
+            estado: "ADOPCION",
+            fechaCalculo: null,
+            fechaFin: null,
+            fechaInicio: null,
+            fechaInicioS: null,
+            foto_url: null,
+            id: null,
+            idAdoptante: null,
+            image: null,
+            latitud: null,
+            longitud: null,
+            nombre: null,
+            raza: null,
+            rescatista: null,
+            rescatistaId: null,
+            sexo: "MACHO",
+            tamanio: "CHICO"
+            }});
+          }}
+          size={30}
+         />
       </View>
       <View>
         <View>
@@ -95,9 +124,30 @@ const MisMascotas = (props) => {
           icon="plus"
           style={styles.fab}
           color="#FFFFFF"
-          mascota={mascotas}
           onPress={() => {
-            navigation.navigate('crearMascota', {mascota: mascotas});
+            navigation.navigate('crearMascota', {mascotaItem: {
+            activa: true,
+            cambioFoto: true,
+            descripcion: "",
+            edad: "",
+            estado: "ADOPCION",
+            fechaCalculo: null,
+            fechaFin: null,
+            fechaInicio: null,
+            fechaInicioS: null,
+            foto_url: null,
+            id: null,
+            idAdoptante: null,
+            image: null,
+            latitud: null,
+            longitud: null,
+            nombre: null,
+            raza: null,
+            rescatista: null,
+            rescatistaId: null,
+            sexo: "MACHO",
+            tamanio: "CHICO"
+            }});
           }}
           animated="true"
         />
@@ -131,6 +181,13 @@ const styles = StyleSheet.create({
   },
   tituloIcon: {
     margin: 10,
+  },
+  iconEdit: {
+    alignItems: 'baseline',
+    alignContent: 'center',
+    justifyContent: 'flex-end',
+    marginEnd: 20,
+    marginTop: 10
   },
 });
 

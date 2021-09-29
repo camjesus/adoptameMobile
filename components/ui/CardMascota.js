@@ -1,6 +1,6 @@
 import constantes from '../context/Constantes';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Image, Text, Dimensions} from 'react-native';
+import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import {Card} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -49,7 +49,16 @@ const CardMascota = ({mascota, navigation, route}) => {
   }, []);
 
   return (
+   
     <View style={style.cardNew}>
+       <TouchableOpacity 
+    onPress={() => {
+          navigation.navigate('DetalleMascota', {
+            mascotaItem: mascota,
+            idMascota: mascota.id,
+          });
+    }}
+    >
         <View style={style.viewMascota}>
           <Image
             style={style.imgMascota}
@@ -58,6 +67,7 @@ const CardMascota = ({mascota, navigation, route}) => {
             }}
           />
         </View>
+        </TouchableOpacity>
         <View style={style.pawRow}>
         <Maticons
               style={style.paw}
@@ -79,15 +89,30 @@ const CardMascota = ({mascota, navigation, route}) => {
             />
         </View>
         <View style={style.infoMascota}>
-          <View style={style.containerH1}>
-            <Text style={style.nombre}>{mascota?.nombre}</Text>
-            <Text style={style.edad}>,{mascota?.edad} años</Text>
-            <Maticons
-              style={style.iconSexo}
-              name={nombreSexo}
-              size={30}
-              color="#FFAD00"
-            />
+        <View style={style.infoMascota}>
+        {mascota?.estado === 'ENCONTRADO' && (
+            <View style={style.containerH1}>
+              <Text style={style.nombre}>{mascota?.fechaInicioS}</Text>
+              <Maticons
+                style={style.iconSexo}
+                name={nombreSexo}
+                size={30}
+                color="#FFAD00"
+              />
+            </View>
+          )}
+          {mascota?.estado !== 'ENCONTRADO' && (
+              <View style={style.containerH1}>
+                  <Text style={style.nombre}>{mascota?.nombre}</Text>
+                  <Text style={style.edad}>, {mascota?.edad} años</Text>
+                  <Maticons
+                style={style.iconSexo}
+                name={nombreSexo}
+                size={30}
+                color="#FFAD00"
+              />
+              </View>
+          )}
           </View>
         </View>
 
@@ -95,7 +120,7 @@ const CardMascota = ({mascota, navigation, route}) => {
             style={style.masInfo}
             mode="contained"
             onPress={() => {
-              navigation.navigate('DetalleMascota', {mascotaItem: mascota});
+              navigation.navigate('DetalleMascota', {mascotaItem: mascota, idMascota: mascota.id})
             }}
             animated="true"
             icon="plus"
@@ -108,7 +133,6 @@ const CardMascota = ({mascota, navigation, route}) => {
 
 const style = StyleSheet.create({
   paw: {
-    //backgroundColor: 'transparent',
   },
   pawRow: {
     flexDirection: 'row',

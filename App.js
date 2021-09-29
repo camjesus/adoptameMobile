@@ -11,9 +11,11 @@ import {
 } from '@react-navigation/drawer';
 import MisMascotasStack from './navigations/MisMascotasStack';
 import BuscarStack from './navigations/BuscarStack';
+import ChatsStack from './navigations/ChatsStack';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {View, StyleSheet, Text} from 'react-native';
+import * as firebase from 'firebase';
 
 const Drawer = createDrawerNavigator();
 //Defino el tema
@@ -55,6 +57,7 @@ function CustomDrawerContent(props) {
     } catch (error) {
       console.log('error eliminando del storage' + error);
     }
+    firebase.auth().signOut();
   };
 
   return (
@@ -163,6 +166,22 @@ const App = (props, navigation) => {
                     reverse
                     size={22}
                     name="paw"
+                    type="material-community"
+                    color="#FFAD00"
+                  />
+                ),
+              }}
+            />
+             <Drawer.Screen
+              name="ChatsStack"
+              component={ChatsStack}
+              options={{
+                drawerLabel: 'Chats',
+                drawerIcon: ({focused, size}) => (
+                  <Icon
+                    reverse
+                    size={22}
+                    name="forum"
                     type="material-community"
                     color="#FFAD00"
                   />

@@ -66,16 +66,34 @@ const globalStyles = StyleSheet.create({
     marginBottom: 0,
   },
   dialog: {
+    borderRadius: 10,
     color: '#FFAD00',
-    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000000',
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
   },
   dialogTitle: {
     color: '#FFAD00',
     fontSize: 20,
   },
   dialogMsj: {
-    color: '#FFAD00',
+    color: '#000000',
     fontSize: 17,
+  },
+  dropdown: {
+    paddingTop: 50,
+    paddingRight: 30,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  input: {
+    marginBottom: 3,
+    backgroundColor: 'transparent',
+    fontSize: 13,
   },
 });
 

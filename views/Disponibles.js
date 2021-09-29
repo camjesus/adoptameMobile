@@ -21,7 +21,7 @@ const Disponibles = ({navigation, route, props}) => {
   const [mascotasDisp, gDisponibles] = useState([]);
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
-  const [estado, setEstado] = useState('DISPONIBLE');
+  const [estado, setEstado] = useState('ADOPCION');
   const isFirstTime = useRef(true);
   const [distancia, gDistancia] = useState(100);
   const paramsDefault = new URLSearchParams();
@@ -33,8 +33,9 @@ const Disponibles = ({navigation, route, props}) => {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const [count, setCount] = useState(0);
-  const [counter, setCounter] = useState(0);
+  //const [count, setCount] = useState(0);
+  //const [counter, setCounter] = useState(0);
+  //const idTime = useRef();
 
   //Botones accion mascota
   const [colorBL, setColorBL] = useState('#D0800A');
@@ -95,7 +96,7 @@ const Disponibles = ({navigation, route, props}) => {
     paramsDefault.append('longitud', longitud);
     paramsDefault.append('estado', estado);
 
-    try {
+    
       console.log();
       var request = {
         params: primerCarga === true ? paramsDefault : data.data,
@@ -103,13 +104,19 @@ const Disponibles = ({navigation, route, props}) => {
       console.log('request');
       console.log(request.params);
       const url = constantes.BASE_URL + 'mascotasPorFiltro';
-      const resultado = await axios.get(url, request);
-      console.log(resultado.data);
-      console.log('paso por obetener mascotas Disponibles');
-      gDisponibles(resultado.data);
-    } catch (error) {
-      console.log(error);
-    }
+    axios
+      .get(url, request)
+      .then((response) => {
+        const resultado = response.data;
+        console.log(resultado.data);
+        console.log('paso por obetener mascotas Disponibles');
+        gDisponibles(response.data);
+        hideModal();
+      })
+    .catch((error) => {
+        console.log(error);
+        hideModal();
+    });
   };
 
   const getCurrentPosition = async () => {
@@ -127,24 +134,7 @@ const Disponibles = ({navigation, route, props}) => {
       });
   };
 
- 
-  useEffect(
-    () => {
-      const id = setTimeout(() => {
-        setCounter(counter + 1); 
-        console.log(counter);
-        
-      }, 1000);
-      if(counter > 1){
-        hideModal();
-        clearTimeout(id);
-      }
-    },
-    [counter],
-  );
-
   useEffect(() => {
-    setCounter(0);
     showModal();
     obtenerDatosStorage();
     setIndex(0);
@@ -228,7 +218,7 @@ const Disponibles = ({navigation, route, props}) => {
           route={route}
           style={styles.barraSup}
         />
-        <Text style={styles.title}>Adopta.Me</Text>
+        <Text style={styles.title}>Portal Pet</Text>
         <IconButton
           icon="filter"
           color="#FFFFFF"
@@ -343,7 +333,7 @@ const Disponibles = ({navigation, route, props}) => {
           contentContainerStyle={styles.modal}>
           <View style={styles.viewLogo}>
             <Image source={require('../img/casita.png')} style={styles.imglogo} /> 
-            <Text style={styles.cargarText}>Cargando Mascotas</Text>
+            <Text style={styles.cargarText}>Buscando Mascotas</Text>
           </View>
           <ActivityIndicator animating={true} color="#FFAD00" size={50} />
         </Modal>

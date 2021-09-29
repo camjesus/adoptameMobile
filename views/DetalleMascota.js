@@ -1,21 +1,37 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, PermissionsAndroid, Image, Alert} from 'react-native';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button, Text, ToggleButton, IconButton, FAB} from 'react-native-paper';
+import {Button, Text, ToggleButton, IconButton, Menu} from 'react-native-paper';
 import globalStyles from '../styles/global';
-
+import * as firebase from 'firebase';
+import AsyncStorage from '@react-native-community/async-storage';
+import firebaseApp from '../database/firebaseDB';
+import axios from 'axios';
 
 
 const DetalleMascota = ({navigation, route, props}) => {
     const {params} = route;
     const {mascotaItem} = params;
+    const {idMascota} = params;
     const [nombreSexo, gNombreSexo] = useState('gender-male');
     const [colorChico, setColorChico] = useState('');
     const [colorMediano, setColorMediano] = useState('');
     const [colorGrande, setColorGrande] = useState('');
-
+    const [visible, setVisible] = React.useState(false);
+    const openMenu = () => setVisible(true);
+    const closeMenu = () => setVisible(false);
+    const [idUsuario, setIdUsuario] = useState(null);
+    const [idChat, setIdChat] = useState(null);
+    const [nombre, gNombre] = useState('');
+    const db = firebase.firestore(firebaseApp);
+    const [solicitado, setsolicitado] = useState(false);
+    const mascotaItemRef = useRef(mascotaItem);
+    
+   
     useEffect(() => {
+      //setsolicitado()
         tomoNombreIcon();
+        obtenerDatosStorage();
       }, [mascotaItem.sexo]);
     
       const tomoNombreIcon = () => {
@@ -45,7 +61,27 @@ const DetalleMascota = ({navigation, route, props}) => {
             break;
         }
       }, []);
+      useEffect(() => {
+       
+      }, [params]);
 
+
+      const obtenerDatosStorage = async () => {
+        console.log('storage pasooo');
+      try {
+        await AsyncStorage.getItem('userId').then((value) => {
+          setIdUsuario(parseInt(value));
+        });
+        await AsyncStorage.getItem('nombre').then((value) => {
+          gNombre(
+            value.substring(0, 1).toUpperCase() +
+            value.substr(1, value.length - 1),
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
       <View>
@@ -58,7 +94,28 @@ const DetalleMascota = ({navigation, route, props}) => {
         size={30}
     />
     <Text style={globalStyles.title}>{mascotaItem.nombre}</Text>
-    <View style={globalStyles.viewR}></View>
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          style={globalStyles.dropdown}
+          anchor={<IconButton
+            icon="dots-vertical"
+            style={globalStyles.viewR}
+            color="#FFFFFF"
+            onPress={openMenu}
+            size={30}
+            />}>
+          <Menu.Item
+            icon="bullhorn"
+            onPress={() => {
+              setVisible(false);
+              navigation.navigate('Denunciar', {
+                mascotaItem: mascotaItem,
+              });
+            }}
+            title="Denunciar"
+          />
+        </Menu>
     </View>
     <View style={style.cardNew}>
         <View style={style.viewMascota}>
@@ -138,8 +195,29 @@ const DetalleMascota = ({navigation, route, props}) => {
           color="#FFFFFF"
           size={50}
           onPress={() => {
-            navigation.navigate('DetalleMascota');
-          }}
+            obtenerDatosStorage();
+            navigation.navigate('ChatScreen', {
+              navigation: navigation,
+              mascotaItem: mascotaItem,
+              idChat: null,
+              chat: {
+                idChat: null,
+                fecha: null,
+                idMascota: mascotaItem.id,
+                imagenMascota: mascotaItem.foto_url,
+                nombreMascota: mascotaItem.nombre,
+                nombreUsr1: mascotaItem.rescatista,
+                nombreUsr2: nombre,
+                usuario1: mascotaItem.rescatistaId,
+                usuario2: idUsuario,
+                solicitado: solicitado,
+          },
+              user: {_id: idUsuario,
+                name: nombre
+              }
+            })
+          }
+        }
           animated="true"
         />
     </View>
@@ -166,8 +244,12 @@ const style = StyleSheet.create({
     textTransform: 'capitalize',
   },
   paw: {
-    backgroundColor: 'transparent',
     bottom: 0,
+  },
+  iconEdit: {
+    right: 10,
+    top: 10,
+    flex: 2,
   },
   pawRow: {
     flexDirection: 'row',
@@ -184,7 +266,6 @@ const style = StyleSheet.create({
     marginTop: 0,
     marginBottom: 20,
     marginHorizontal: 10,
-    color: '#D5D8DC',
   },
   tituloDes: {
     fontSize: 18,

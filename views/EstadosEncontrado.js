@@ -9,7 +9,7 @@ import {
   Portal,
   Dialog,
   Paragraph,
-  Modal,
+  Modal
 } from 'react-native-paper';
 import {Icon} from 'react-native-elements';
 import globalStyles from '../styles/global';
@@ -18,25 +18,26 @@ import constantes from '../components/context/Constantes';
 import axios from 'axios';
 
 
-const EstadosAdopcion = ({navigation, route, props}) => {
+const EstadosEncontrado = ({navigation, route, props}) => {
   const {params} = route;
   const {mascotaItem} = params;
   const [nombreSexo, gNombreSexo] = useState('gender-male');
-  const [diasAdaptacion, setDiasAdaptacion] = useState(0);
-  const [porcentajeDias, setPorcentajeDias] = useState(0);
-  const [porcentajeAnima, setPorcentajeAnima] = useState(100);
-  const [visible, setVisible] = React.useState(false);
+  const [porcentajeAnima, setPorcentajeAnima] = useState();
+  
   const [adoptado, setAdoptado] = useState(0);
   const [botonLabel, setBotonLabel] = useState('');
   const setInfo = useRef(false);
   const [msjModal, setmsjModal] = useState(false);
+  const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+
 
 
   useEffect(() => {
     tomoNombreIcon();
     aplicoEstados();
+    setPorcentajeAnima(100);
   }, []);
 
   const tomoNombreIcon = () => {
@@ -48,57 +49,26 @@ const EstadosAdopcion = ({navigation, route, props}) => {
   };
 
   const aplicoEstados = () => {
-    var date = new Date(mascotaItem.fechaCalculo);
+    //var date = new Date('05/31/2021');
+    var date = new Date(mascotaItem.fechaInicio);
     var now = new Date();
     console.log('date' + date);
-    if (mascotaItem.estado == 'ADOPCION') {
-      setBotonLabel('Comenzar adaptación');
+    if (mascotaItem.estado == 'ENCONTRADO') {
+      setBotonLabel('Entregado');
     }
-    if (mascotaItem.estado == 'ADOPTADA') {
-      setBotonLabel('ADOPTADA!');
-      setPorcentajeDias(100);
+    if (mascotaItem.estado == 'ENTREGADO') {
+      setBotonLabel('ENTREGADO!');
       setAdoptado(100);
-    }
-
-    if (mascotaItem.estado == 'SEGUIMIENTO') {
-      var dias = Math.round(Math.abs(date - now) / (1000 * 60 * 60 * 24));
-      setDiasAdaptacion(dias === 0 ? 1 : dias);
-      setPorcentajeDias(
-        dias === 0 ? Math.round((1 * 100) / 15) : Math.round((dias * 100) / 15),
-      );
-      console.log(diasAdaptacion);
-      setBotonLabel('CAMBIAR A ADOPTADO');
     }
   };
 
 
   const cambiarEstado = async (id, estado, finSeguimiento) => {
-    if (estado == 'ADOPCION') {
-      mascotaItem.fechaCalculo = new Date();
-      estado = 'SEGUIMIENTO';
-    } else if (estado == 'SEGUIMIENTO') {
-      estado = 'ADOPTADA';
-      if (finSeguimiento) {
-        estado = 'ADOPCION';
-        setPorcentajeDias(0);
-        setDiasAdaptacion(0);
-      } else {
-        if (diasAdaptacion < 15) {
-          setmsjModal(true);
-          return;
-        } else {
-          setAdoptado(100);
-          setBotonLabel('Comenzar adaptación');
-        }
-      }
-    }
-
     const postEstado = {id, estado: estado};
     mascotaItem.estado = estado;
     const url = constantes.BASE_URL + 'estadoMascota';
 
     const resultado = await axios.post(url, postEstado);
-    console.log('DATA ' + resultado.data);
     mascotaItem.current = resultado.data;
     aplicoEstados();
   };
@@ -110,10 +80,12 @@ const EstadosAdopcion = ({navigation, route, props}) => {
         icon="arrow-left"
         color="#FFFFFF"
         style={globalStyles.iconBack}
-        onPress={() => navigation.navigate('misMascotas', {consultarMascotas: true})}
+        onPress={() =>
+          navigation.navigate('misMascotas', {consultarMascotas: true})
+        }
         size={30}
     />
-    <Text style={globalStyles.title}>{mascotaItem.nombre}</Text>
+    <Text style={globalStyles.title}>Encontrado</Text>
     <IconButton
           icon="information-outline"
           color="#FFFFFF"
@@ -134,18 +106,15 @@ const EstadosAdopcion = ({navigation, route, props}) => {
           <View style={style.viewDetalle}>
          <View style={style.infoMascota}>
           <View style={style.containerH1}>
-            <Text style={style.nombre}>{mascotaItem.nombre}</Text>
-            <Text style={style.edad}>, {mascotaItem.edad} años</Text>
+            <Text style={style.nombre}>{mascotaItem.fechaInicioS}</Text>
             <Maticons
               style={style.iconSexo}
               name={nombreSexo}
               size={30}
-              color="#FFAD00"
+              color="#40BF8B"
             />
           </View>
         </View>
-        </View>
-        <View style={style.viewDes}>
             <Text style={style.tituloDes}>
                 Descripción:
             </Text>
@@ -157,7 +126,7 @@ const EstadosAdopcion = ({navigation, route, props}) => {
             percent={porcentajeAnima}
             radius={40}
             borderWidth={8}
-            color="#FFAD00"
+            color="#40BF8B"
             shadowColor="#999"
             bgColor="#fff"
             >
@@ -165,44 +134,31 @@ const EstadosAdopcion = ({navigation, route, props}) => {
         </ProgressCircle>
         <Text style={style.textEstado}>Búsqueda</Text>
         </View>
-        <View style={style.columnEstadoCen}>
-        <ProgressCircle
-            percent={porcentajeDias}
-            radius={40}
-            borderWidth={8}
-            color="#FFAD00"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/dots-horizontal.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Adaptación</Text>
-        </View>
         <View style={style.columnEstado}>
         <ProgressCircle
             percent={adoptado}
             radius={40}
             borderWidth={8}
-            color="#FFAD00"
+            color="#40BF8B"
             shadowColor="#999"
             bgColor="#fff"
             >
             <Image source={require('../img/home-heart.png')} style={style.imglogo} /> 
         </ProgressCircle>
-        <Text style={style.textEstado}>Adoptado</Text>
+        <Text style={style.textEstado}>Entregado</Text>
         </View>
+        
         </View>
         <View style={style.rowDias}>
         <View style={style.colDia}>
-            <Text style={style.textDia}>Día:</Text>
+            <Text style={style.textDia}>Info</Text>
             <Maticons
-            style={style.icoCal}
-              name="calendar"
+              name="information-variant"
               size={24}
               color="#000000"
             />
             </View>
-            <Text style={style.textNumber}>{diasAdaptacion}</Text>
+            <Text style={style.textNumber}>Guarda información característica de la mascota que solo podría saber su familia</Text>
         </View>
         {mascotaItem.estado == 'SEGUIMIENTO' && (
             <Button
@@ -221,7 +177,7 @@ const EstadosAdopcion = ({navigation, route, props}) => {
           <Button
             labelStyle={style.label}
             style={style.guardar}
-            color="#FFAD00"
+            color="#40BF8B"
             mode="contained"
             compact={true}
             onPress={() =>
@@ -234,7 +190,7 @@ const EstadosAdopcion = ({navigation, route, props}) => {
           <Dialog visible={msjModal} style={globalStyles.dialog} >
               <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
             <Dialog.Content>
-              <Paragraph style={globalStyles.dialogMsj}>Se deben cumplir al menos 15 días del periodo de adaptación.</Paragraph>
+              <Paragraph style={globalStyles.dialogMsj}>Se debe cumplir el plazo de 15 días de adaptación.</Paragraph>
             </Dialog.Content>
             <Dialog.Actions>
                 <Button
@@ -259,35 +215,25 @@ const EstadosAdopcion = ({navigation, route, props}) => {
               <View>
 
               <Text style={style.sub}>Búsqueda</Text>
-              <Text style={style.texto}>La mascota esta en bùsqueda de su nueva familia</Text>
+              <Text style={style.texto}>En la espera de que lo encuentre su familia. Acordate de revisar si lo estan buscando en "Buscados"</Text>
               </View>
 
             </View>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/dots-horizontal.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-
-              <Text style={style.sub}>Adaptación</Text>
-              <Text style={style.texto}>Es un periodo de mínimo 15 días para que la mascota y su nueva familia se conozcan y que sean compatibles</Text>
-              </View>
-
-            </View>
+            
             <View style={style.rowinfo}>
             <View style={style.columncenter}>
             <Image source={require('../img/home-heart.png')} style={style.imglogoInfo} /> 
               </View>
               <View>
-              <Text style={style.sub}>Adoptado</Text>
-              <Text style={style.texto}>Tu mascota consiguió su nuevo hogar!</Text>
+              <Text style={style.sub}>Entregado</Text>
+              <Text style={style.texto}>Comparte con nosotros si encontraste a su familia</Text>
               </View>
               </View>
                 </View>
                 <Button
                 labelStyle={style.label}
                 style={style.guardar}
-                color="#FFAD00"
+                color="#40BF8B"
                   mode="contained"
                   onPress={() => hideModal()}>
                   Entendido
@@ -300,6 +246,26 @@ const EstadosAdopcion = ({navigation, route, props}) => {
 };
 
 const style = StyleSheet.create({
+  columncenter:{
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  modal: {
+    backgroundColor: '#FFFFFF', 
+    padding: 20,
+    marginHorizontal: '10%',
+    marginVertical: '12%',
+    elevation: 10,
+    borderRadius: 10,
+    justifyContent: 'center'
+  },
+  imglogoInfo: {
+      height: 60,
+      width: 60,
+      opacity: 0.3,
+  },
   InfoContent: {
     flexDirection: 'column',
     padding: 20
@@ -314,20 +280,24 @@ const style = StyleSheet.create({
     marginStart: 10,
     padding: 0,
     marginTop: 10,
-    color: '#D0800A'
+    color: '#40BF8B'
   },
   texto: {
     alignItems: 'flex-start',
     paddingHorizontal: 5,
   },
-  modal: {
-    backgroundColor: '#FFFFFF', 
-    padding: 20,
-    marginHorizontal: '10%',
-    marginVertical: '12%',
-    elevation: 10,
-    borderRadius: 10,
-    justifyContent: 'center'
+  rowDias: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginHorizontal: "10%",
+    alignContent: 'center',
+    alignItems: 'center',
+    borderWidth: 4,
+    padding: 10,
+    paddingVertical: 5,
+    borderColor: "#40BF8B",
+    borderRadius: 20,
+    marginTop: '5%',
   },
   descripcion: {
     fontSize: 15,
@@ -339,25 +309,9 @@ const style = StyleSheet.create({
     marginStart: 5,
     fontWeight: 'bold',
   },
-  viewDetalle: {
-    marginHorizontal: 10,
-    padding: 0,
-    paddingTop: 0,
-  },
-  viewDes: {
-    marginVertical: 'auto',
-    marginHorizontal: 20,
-    marginBottom: 0,
-  },
   columnEstadoCen: {
     flexDirection: 'column',
     marginHorizontal: 10,
-  },
-  columncenter:{
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
   },
   icoCal: {
     marginStart: 5,
@@ -365,33 +319,20 @@ const style = StyleSheet.create({
   colDia: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'baseline'
   },
   textDia: {
     fontSize: 19,
     justifyContent: 'flex-start',
     textAlign: 'right'
   },
-  rowDias: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginHorizontal: "30%",
-    alignContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-    borderWidth: 4,
-    padding: 'auto',
-    paddingVertical: 5,
-    borderColor: "#FFAD00",
-    borderRadius: 20,
-    marginTop: '5%',
-  },
   textNumber: {
-    fontSize: 30,
-  },
+    fontSize: 16,
+    textAlign: 'center'
+    },
   label: {
     color: "#FFFFFF"
-    },
+  },
   guardar: {
     justifyContent: 'flex-end',
     padding: 3,
@@ -405,7 +346,7 @@ const style = StyleSheet.create({
     marginTop: '5%',
     marginBottom: '10%',
   },
-  cancelar: {
+  cancelar: { 
     padding: 3,
     borderRadius: 5,
     shadowColor: '#000000',
@@ -423,7 +364,7 @@ const style = StyleSheet.create({
   textEstado: {
     textAlign: 'center',
     marginTop: 5,
-    color: "#D0800A",
+    color: "#208A8B",
   },
   columnEstado: {
     flexDirection: 'column',
@@ -431,24 +372,28 @@ const style = StyleSheet.create({
   rowEstado: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: "10%",
+    marginHorizontal: "20%",
     alignContent: 'center',
     alignItems: 'center',
     marginTop: '5%'
     },
-    imglogoInfo: {
-      height: 50,
-      width: 50,
-      opacity: 0.3,
+  imglogo: {
+    height: 40,
+    width: 40,
+    opacity: 0.3,
     },
-    imglogo: {
-      height: 40,
-      width: 40,
-      opacity: 0.3,
-      },
+  viewDetalle: {
+    marginHorizontal: 10,
+    padding: 10,
+    paddingTop: 0,
+  },
+  viewDes: {
+    marginHorizontal: 20,
+    marginBottom: 0,
+  },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#40BF8B',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -460,6 +405,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
   },
   infoMascota: {
+    marginTop: 10,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'baseline'
@@ -494,8 +440,8 @@ const style = StyleSheet.create({
   edad: {
     fontSize: 25,
     marginBottom: 'auto',
-    },
-    iconSexo: {
+  },
+  iconSexo: {
     marginRight: 'auto',
     marginStart: 5,
     },
@@ -506,4 +452,4 @@ const style = StyleSheet.create({
     alignContent: 'flex-start'
     },
 });
-export default EstadosAdopcion;
+export default EstadosEncontrado;

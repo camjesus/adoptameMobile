@@ -13,7 +13,7 @@ import axios from 'axios';
 import {ScrollView} from 'react-native-gesture-handler';
 import constantes from '../components/context/Constantes'; 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import * as firebase from 'firebase'; 
 
 const CrearUsuario = ({navigation}) => {
   const [nombre, gNombre] = useState('');
@@ -77,6 +77,15 @@ const CrearUsuario = ({navigation}) => {
       guardaMensaje('Usuario creado con éxito');
       setResultadoCrear('SUCESS');
       ingresarAlerta(true);
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((response) => {
+          console.log(response);
+        })
+      .cath((err) => {
+        console.log(err);
+      })
     } else {
       guardaMensaje(resultado.data.result);
       setResultadoCrear('ERROR');
@@ -297,17 +306,17 @@ const style = StyleSheet.create({
   cardNew: {
     backgroundColor: '#FFFFFF',
     marginHorizontal: 20,
-    marginBottom: 40,
+    marginBottom: 5,
     borderRadius: 25,
     shadowColor: '#000000',
     shadowOpacity: 0.8,
     elevation: 10,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
-    paddingHorizontal: 30,
+    paddingTop: 30,
+    paddingHorizontal: 20,
     paddingBottom: 0,
     marginTop: -50,
-    padding: 20,
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -328,7 +337,7 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 10,
+    //marginBottom: 10,
   },
 });
 
