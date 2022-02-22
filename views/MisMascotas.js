@@ -42,9 +42,7 @@ const MisMascotas = (props) => {
 
   const obtenerMascotas = async (value) => {
     try {
-     // const url = `http://10.0.2.2:8090/adoptame/mobile/mascotasUsuario/${value}`;
-    // const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/mascotasUsuario/${value}`;
-     const url = constantes.BASE_URL+`mascotasUsuario/${value}`;
+      const url = constantes.BASE_URL + `mascotasUsuario/${value}`;
       console.log(url);
       const resultado = await axios.get(url);
       console.log(resultado.data);
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
   },
   titulo: {
     margin: 10,

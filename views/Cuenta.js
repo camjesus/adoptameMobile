@@ -262,7 +262,7 @@ const style = StyleSheet.create({
   },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -311,7 +311,7 @@ const style = StyleSheet.create({
   },
   guardar: {
     justifyContent: 'flex-end',
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     padding: 3,
     flex: 3,
     borderRadius: 5,

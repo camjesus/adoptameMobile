@@ -140,12 +140,12 @@ const Login = (props) => {
   return (
     <View style={globalStyles.base}>
       <View style={style.viewLogo}>
-        <Image source={require('../img/casita.png')} style={style.imglogo} /> 
+        <Image source={require('../img/casita_b.png')} style={style.imglogo} /> 
       </View>
       <View style={style.cardLogin}>
         <View style={style.viewBienvenido}>
           <Text style={style.bienvenido}>Bienvenido a </Text>
-          <Text style={style.adoptaMe}>Adopta.Me</Text>
+          <Text style={style.adoptaMe}>Portal Pet</Text>
         </View>
         <KeyboardAwareScrollView>
           <TextInput
@@ -157,7 +157,7 @@ const Login = (props) => {
             onSubmitEditing={(event) => {
               focusedTextInput(passRef);
             }}
-            left={<TextInput.Icon name="email" color="#FFAD00" />}
+            left={<TextInput.Icon name="email" color="#9575cd" />}
           />
           <TextInput
             label="Contraseña"
@@ -165,7 +165,7 @@ const Login = (props) => {
             onChangeText={(texto) => guardarPass(texto)}
             style={style.input}
             ref={passRef}
-            left={<TextInput.Icon name="key" color="#FFAD00" />}
+            left={<TextInput.Icon name="key" color="#9575cd" />}
             secureTextEntry={true}
           />
 
@@ -175,7 +175,9 @@ const Login = (props) => {
             onPress={() => logIn()}>
             Ingresar
           </Button>
+          <View style={style.viewRow}>
           <FacebookLoginBtn {...props} />
+          </View>
           <View style={style.viewNuevaCuenta}>
             <Text style={style.registrate}></Text>
             <Button
@@ -209,6 +211,11 @@ const Login = (props) => {
   );
 };
 const style = StyleSheet.create({
+  viewRow: {
+    flexDirection:  'row',
+    alignContent: 'space-between',
+    justifyContent: 'center'
+    },
   input: {
     marginBottom: 10,
     backgroundColor: 'transparent',
@@ -220,7 +227,7 @@ const style = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   ingresar: {
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     padding: 3,
     borderRadius: 5,
     shadowColor: '#000000',
@@ -251,7 +258,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     margin: 0,
     padding: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -261,10 +268,10 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
   },
   imglogo: {
-    marginTop: 30,
-    marginBottom: 150,
-    width: 160,
-    height: 160,
+    marginTop: "10%",
+    marginBottom: 160,
+    width: 150,
+    height: 150,
   },
   cardLogin: {
     backgroundColor: '#ffffff',
@@ -273,7 +280,7 @@ const style = StyleSheet.create({
     padding: 20,
     paddingBottom: 0,
     borderRadius: 30,
-    marginTop: '-40%',
+    marginTop: '-30%',
     shadowColor: '#000000',
     shadowOpacity: 1,
     shadowRadius: 30,
@@ -292,7 +299,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   adoptaMe: {
-    fontSize: 20,
+    fontSize: 23,
     color: '#252932',
     fontFamily: 'ArchitectsDaughter-Regular',
   },

@@ -26,7 +26,7 @@ const theme = {
   colors: {
     accent: '#252932',
     backdrop: 'transparent',
-    background: '#FFAD00',
+    background: '#9575cd',
     disabled: 'rgba(0, 0, 0, 0.26)',
     error: '#B00020',
     notification: '#f50057',
@@ -63,13 +63,13 @@ function CustomDrawerContent(props) {
   return (
     <View>
       <View style={styles.viewLogo}>
-        <Image source={require('./img/casita.png')} style={styles.imglogo} />
-        <Text style={styles.adoptaMe}>Adopta.Me</Text>
+        <Image source={require('./img/casita_b.png')} style={styles.imglogo} />
+        <Text style={styles.adoptaMe}>Portal Pet</Text>
       </View>
       <DrawerItemList {...props} />
       <DrawerItem
         label="Mis Datos"
-        activeTintColor="#FFAD00"
+        activeTintColor="#9575cd"
         labelStyle={{
           margin: 0,
           padding: 0,
@@ -80,7 +80,7 @@ function CustomDrawerContent(props) {
             size={22}
             name="account"
             type="material-community"
-            color="#FFAD00"
+            color="#9575cd"
           />}
         onPress={() =>
           props.navigation.navigate('BuscarStack', {screen: 'cuenta'})
@@ -88,7 +88,7 @@ function CustomDrawerContent(props) {
       />
       <DrawerItem
         label="Cerrar Sesión"
-        activeTintColor="#FFAD00"
+        activeTintColor="#9575cd"
         labelStyle={{
           margin: 0,
           padding: 0,
@@ -99,7 +99,7 @@ function CustomDrawerContent(props) {
             size={22}
             name="power"
             type="material-community"
-            color="#FFAD00"/>}
+            color="#9575cd"/>}
         onPress={() => logOut()}
       />
       </View>
@@ -126,7 +126,7 @@ const App = (props, navigation) => {
               style: {
                 marginVertical: 100,
               },
-              activeTintColor: '#FFAD00',
+              activeTintColor: '#9575cd',
               labelStyle: {
                 margin: 0,
                 padding: 0,
@@ -151,7 +151,7 @@ const App = (props, navigation) => {
                     size={22}
                     name="magnify"
                     type="material-community"
-                    color="#FFAD00"
+                    color="#9575cd"
                   />
                 ),
             }}
@@ -167,7 +167,7 @@ const App = (props, navigation) => {
                     size={22}
                     name="paw"
                     type="material-community"
-                    color="#FFAD00"
+                    color="#9575cd"
                   />
                 ),
               }}
@@ -183,7 +183,7 @@ const App = (props, navigation) => {
                     size={22}
                     name="forum"
                     type="material-community"
-                    color="#FFAD00"
+                    color="#9575cd"
                   />
                 ),
               }}
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   cardMenu: {
     padding: 0,
     margin: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   viewLogo: {
     margin: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -220,14 +220,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 200,
     padding: 15,
+    alignItems: 'baseline',
+    paddingTop: 30
   },
   imglogo: {
-    width: '100%',
-    height: '100%',
+    width: '50%',
+    height: '50%',
     flex: 2,
   },
   adoptaMe: {
-    fontSize: 30,
+    fontSize: 35,
     color: '#252932',
     fontFamily: 'ArchitectsDaughter-Regular',
     flex: 4,

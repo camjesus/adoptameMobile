@@ -43,7 +43,7 @@ const globalStyles = StyleSheet.create({
   },
   header: {
     paddingBottom: 10,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -67,7 +67,7 @@ const globalStyles = StyleSheet.create({
   },
   dialog: {
     borderRadius: 10,
-    color: '#FFAD00',
+    color: '#9575cd',
     backgroundColor: '#FFFFFF',
     shadowColor: '#000000',
     shadowOpacity: 1,
@@ -76,7 +76,7 @@ const globalStyles = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
   },
   dialogTitle: {
-    color: '#FFAD00',
+    color: '#9575cd',
     fontSize: 20,
   },
   dialogMsj: {

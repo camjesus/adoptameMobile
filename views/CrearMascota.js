@@ -22,6 +22,10 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import constantes from '../components/context/Constantes'; 
+import * as firebase from 'firebase';
+import firebaseApp from '../database/firebaseDB';
+const db = firebase.firestore(firebaseApp);
+
 
 
 const CrearMascota = ({navigation, route, props}) => {
@@ -53,10 +57,11 @@ const CrearMascota = ({navigation, route, props}) => {
   const descRef = useRef();
   const edadRef = useRef(mascotaItem.edad);
   const mascotaItemRef = useRef(mascotaItem);
-  const colorSelect = '#D0800A';
-  const colorNoSelect = '#FFAD00';
+  const colorSelect = '#f5bb05';
+  const colorNoSelect = '#9575cd';
 
   const guardarMascota = async () => {
+
     if (checkedAdefinir) {
       gNombre('A definir');
     }
@@ -130,7 +135,13 @@ const CrearMascota = ({navigation, route, props}) => {
           },
         })  
         .then(function (response) {
+          console.log("response");
+          console.log(response);
           if (edit) {
+            if(cambioFoto)
+            {
+              updateFotoFirebase(response.data.foto_url, response.data.id);
+            }
             gTitulo('Editar Mascota');
             guardaMensaje('La mascota se editó con éxito!');
           }else{
@@ -155,6 +166,25 @@ const CrearMascota = ({navigation, route, props}) => {
     }
     
   };
+
+  const updateFotoFirebase = (newFoto, mascotaId) => {
+    
+    db.collection("chats")
+    .where("idMascota", "==", mascotaId)
+    .onSnapshot((snapshot) => {
+      console.log('snapshot');
+      console.log(snapshot);
+      console.log("encontre chats");
+        snapshot.docs.map((doc) => (
+          db.collection("chats")
+          .doc(doc.id)
+          .update({
+            imagenMascota: newFoto
+          })
+          ));
+  
+  });
+}
 
   const abrirMapa = () => {
     console.log('abrir Mapa ');
@@ -370,7 +400,7 @@ const CrearMascota = ({navigation, route, props}) => {
                 containerStyle={style.checkStyle}
                 checkedIcon='dot-circle-o'
                 uncheckedIcon='circle-o'
-                checkedColor='#FFAD00'
+                checkedColor='#9575cd'
                 checked={checkedAdefinir}
                 onPress={() => {
                   setCheckedAdefinir(!checkedAdefinir);
@@ -590,13 +620,13 @@ const style = StyleSheet.create({
   },
   fabLeft: {
     bottom: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     elevation: 10,
     shadowOffset: {width: 1, height: 13},
   },
   fabRight: {
     bottom: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     elevation: 10,
     shadowOffset: {width: 1, height: 13},
   },
@@ -604,7 +634,7 @@ const style = StyleSheet.create({
     flex: 1,
   },
   ingresar: {
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     padding: 3,
     borderRadius: 5,
     shadowColor: '#000000',

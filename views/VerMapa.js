@@ -120,7 +120,7 @@ export default class VerMapa extends Component {
 const styles = StyleSheet.create({
   fabBack: {
     position: 'absolute',
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     left: 0,
     top: 0,
     margin: 15,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
   },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     padding: 7,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    borderColor: '#FFAD00',
+    borderColor: '#9575cd',
     borderStyle: 'solid',
     textAlign: 'center',
     borderWidth: 1,

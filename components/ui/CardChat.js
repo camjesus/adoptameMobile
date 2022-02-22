@@ -153,10 +153,11 @@ const style = StyleSheet.create({
     textAlign: 'center',
     marginStart: 20,
     fontSize: 20,
-    backgroundColor: "#FFAD00",
+    backgroundColor: "#9575cd",
     color: '#FFFFFF',
     padding: 5,
-    borderRadius: 5
+    borderRadius: 5,
+    marginBottom: 5,
   },
   viewRow: {
     marginTop: 5
@@ -176,7 +177,7 @@ const style = StyleSheet.create({
     marginVertical: 10,
   },
   text: {
-    color: "#FFAD00",
+    color: "#9575cd",
     fontSize: 20,
   },
   textlabel: {

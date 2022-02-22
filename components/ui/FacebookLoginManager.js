@@ -6,7 +6,7 @@ import {
   GraphRequestManager,
   GraphRequest,
 } from 'react-native-fbsdk';
-import {Button} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import constantes from '../context/Constantes'; 
@@ -115,30 +115,32 @@ export default class LoginFBKMgr extends Component {
 
   render() {
     return (
-      <View>
-         <Button 
+      <View style={style.viewRow}>
+        <IconButton
+          icon="facebook"
+          color="#FFFFFF"
           style={style.ingresar}
-          mode="contained"
           onPress={this.facebookAuth.bind(this, 'Menu')}
-          icon="facebook">
-          Facebook
-        </Button>
+          size={30}
+        />
       </View>
     );
   }
 }
 
 const style = StyleSheet.create({
+  viewRow: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
   ingresar: {
-    backgroundColor: '#3b5998',
-    padding: 3,
-    borderRadius: 5,
+    backgroundColor: '#3B5998',
     shadowColor: '#000000',
     shadowOpacity: 0.8,
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
-    marginHorizontal: 40,
     marginTop: 10,
     },
 });

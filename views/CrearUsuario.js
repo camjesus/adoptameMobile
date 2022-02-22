@@ -24,6 +24,7 @@ const CrearUsuario = ({navigation}) => {
   const [passwordRep, gPasswordRep] = useState('');
   const [alerta, ingresarAlerta] = useState(false);
   const [mensaje, guardaMensaje] = useState('');
+  const [titulo, setTitulo] = useState('');
   const [resultadoCrear, setResultadoCrear] = useState('');
   const apellidoImp = useRef();
   const emailRef = useRef();
@@ -40,6 +41,7 @@ const CrearUsuario = ({navigation}) => {
       password === ''||
       telefono === '' 
     ) {
+      setTitulo('Validación');
       guardaMensaje('Todos los campos son requeridos');
       ingresarAlerta(true);
       return;
@@ -48,11 +50,13 @@ const CrearUsuario = ({navigation}) => {
     let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
     if (reg.test(password) === false) { 
+      setTitulo('Validación');
       guardaMensaje('Las contraseñas deben tener 8 caracteres una mayúscula y un número');
       ingresarAlerta(true);
       return;
     }
     if (password !== passwordRep) {
+      setTitulo('Validación');
       guardaMensaje('Las contraseñas no coinciden');
       ingresarAlerta(true);
       return;
@@ -74,6 +78,7 @@ const CrearUsuario = ({navigation}) => {
     );
     console.log(resultado.data.result);
     if (resultado.data.status === 'SUCESS') {
+      setTitulo('Bienvenid@');
       guardaMensaje('Usuario creado con éxito');
       setResultadoCrear('SUCESS');
       ingresarAlerta(true);
@@ -87,6 +92,7 @@ const CrearUsuario = ({navigation}) => {
         console.log(err);
       })
     } else {
+      setTitulo('Error');
       guardaMensaje(resultado.data.result);
       setResultadoCrear('ERROR');
       ingresarAlerta(true);
@@ -183,7 +189,7 @@ const CrearUsuario = ({navigation}) => {
       </View>
       <Portal>
           <Dialog visible={alerta} style={globalStyles.dialog} >
-              <Dialog.Title style={globalStyles.dialogTitle}>Error</Dialog.Title>
+              <Dialog.Title style={globalStyles.dialogTitle}>{titulo}</Dialog.Title>
             <Dialog.Content>
               <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
             </Dialog.Content>
@@ -262,7 +268,7 @@ const style = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   cerrarSesion: {
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     padding: 3,
     borderRadius: 50,
     shadowColor: '#000000',
@@ -276,7 +282,7 @@ const style = StyleSheet.create({
   },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -327,7 +333,7 @@ const style = StyleSheet.create({
   },
   guardar: {
     justifyContent: 'flex-end',
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     padding: 3,
     borderRadius: 5,
     shadowColor: '#000000',

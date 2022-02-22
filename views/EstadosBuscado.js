@@ -1,4 +1,3 @@
-
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,14 +8,13 @@ import {
   Portal,
   Dialog,
   Paragraph,
-  Modal
 } from 'react-native-paper';
 import {Icon} from 'react-native-elements';
 import globalStyles from '../styles/global';
 import ProgressCircle from 'react-native-progress-circle';
 import constantes from '../components/context/Constantes';
 import axios from 'axios';
-
+import InfoBuscado from '../components/ui/InfoBuscado';
 
 const EstadosBuscado = ({navigation, route, props}) => {
   const {params} = route;
@@ -25,7 +23,7 @@ const EstadosBuscado = ({navigation, route, props}) => {
   const [diasAdaptacion, setDiasAdaptacion] = useState(0);
   const [porcentajeDias, setPorcentajeDias] = useState(0);
   const [porcentajeAnima, setPorcentajeAnima] = useState(100);
-  
+
   const [adoptado, setAdoptado] = useState(0);
   const [botonLabel, setBotonLabel] = useState('');
   const setInfo = useRef(false);
@@ -33,7 +31,6 @@ const EstadosBuscado = ({navigation, route, props}) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const [visible, setVisible] = React.useState(false);
-
 
   useEffect(() => {
     tomoNombreIcon();
@@ -52,17 +49,16 @@ const EstadosBuscado = ({navigation, route, props}) => {
     if (mascotaItem.estado == 'BUSCADO') {
       setBotonLabel('Lo Encontramos');
     }
-    if (mascotaItem.estado == 'FINBUSCADO') {
+    if (mascotaItem.estado == 'ENCASA') {
       setBotonLabel('EN CASA');
       setAdoptado(100);
     }
   };
 
-
   const cambiarEstado = async (id, estado) => {
     if (estado == 'BUSCADO') {
-      estado = 'FINBUSCADO';
-    } 
+      estado = 'ENCASA';
+    }
 
     const postEstado = {id, estado: estado};
     mascotaItem.estado = estado;
@@ -74,27 +70,27 @@ const EstadosBuscado = ({navigation, route, props}) => {
   };
 
   return (
-      <View>
-    <View style={style.header}>
-    <IconButton
-        icon="arrow-left"
-        color="#FFFFFF"
-        style={globalStyles.iconBack}
-        onPress={() =>
-          navigation.navigate('misMascotas', {consultarMascotas: true})
-        }
-        size={30}
-    />
-    <Text style={globalStyles.title}>{mascotaItem.nombre}</Text>
-    <IconButton
+    <View>
+      <View style={style.header}>
+        <IconButton
+          icon="arrow-left"
+          color="#FFFFFF"
+          style={globalStyles.iconBack}
+          onPress={() =>
+            navigation.navigate('misMascotas', {consultarMascotas: true})
+          }
+          size={30}
+        />
+        <Text style={globalStyles.title}>{mascotaItem.nombre}</Text>
+        <IconButton
           icon="information-outline"
           color="#FFFFFF"
           style={style.iconEdit}
           onPress={() => showModal()}
           size={30}
-         />
-    </View>
-    <View style={style.cardNew}>
+        />
+      </View>
+      <View style={style.cardNew}>
         <View style={style.viewMascota}>
           <Image
             style={style.imgMascota}
@@ -103,67 +99,68 @@ const EstadosBuscado = ({navigation, route, props}) => {
             }}
           />
         </View>
-          <View style={style.viewDetalle}>
-         <View style={style.infoMascota}>
-          <View style={style.containerH1}>
-            <Text style={style.nombre}>{mascotaItem.nombre}</Text>
-            <Text style={style.edad}>, {mascotaItem.edad} años</Text>
-            <Maticons
-              style={style.iconSexo}
-              name={nombreSexo}
-              size={30}
-              color="#56ABDF"
-            />
+        <View style={style.viewDetalle}>
+          <View style={style.infoMascota}>
+            <View style={style.containerH1}>
+              <Text style={style.nombre}>{mascotaItem.nombre}</Text>
+              <Text style={style.edad}>, {mascotaItem.edad} años</Text>
+              <Maticons
+                style={style.iconSexo}
+                name={nombreSexo}
+                size={30}
+                color="#FFC936"
+              />
+            </View>
           </View>
         </View>
-        </View>
         <View style={style.viewDes}>
-            <Text style={style.tituloDes}>
-                Descripción:
-            </Text>
+          <Text style={style.tituloDes}>Descripción:</Text>
           <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
         </View>
         <View style={style.rowEstado}>
-        <View style={style.columnEstado}>
-        <ProgressCircle
-            percent={porcentajeAnima}
-            radius={40}
-            borderWidth={8}
-            color="#56ABDF"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/magnify.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Búsqueda</Text>
-        </View>
-        <View style={style.columnEstado}>
-        <ProgressCircle
-            percent={adoptado}
-            radius={40}
-            borderWidth={8}
-            color="#56ABDF"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/home-heart.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Encontrado</Text>
-        </View>
+          <View style={style.columnEstado}>
+            <ProgressCircle
+              percent={porcentajeAnima}
+              radius={40}
+              borderWidth={8}
+              color="#FFC936"
+              shadowColor="#999"
+              bgColor="#fff">
+              <Image
+                source={require('../img/magnify.png')}
+                style={style.imglogo}
+              />
+            </ProgressCircle>
+            <Text style={style.textEstado}>Búsqueda</Text>
+          </View>
+          <View style={style.columnEstado}>
+            <ProgressCircle
+              percent={adoptado}
+              radius={40}
+              borderWidth={8}
+              color="#FFC936"
+              shadowColor="#999"
+              bgColor="#fff">
+              <Image
+                source={require('../img/home-heart.png')}
+                style={style.imglogo}
+              />
+            </ProgressCircle>
+            <Text style={style.textEstado}>Encontrado</Text>
+          </View>
         </View>
         <View style={style.rowDias}>
-        <View style={style.colDia}>
+          <View style={style.colDia}>
             <Text style={style.textDia}>Info</Text>
-            <Maticons
-              name="information-variant"
-              size={24}
-              color="#000000"
-            />
-            </View>
-            <Text style={style.textNumber}>Adopta.Me es una sociedad en crecimiento, recuerda consultar por las mascotas encontradas. {"\n"} Entre todxs lo encontraremos!</Text>
+            <Maticons name="information-variant" size={24} color="#000000" />
+          </View>
+          <Text style={style.textNumber}>
+            Adopta.Me es una sociedad en crecimiento, recuerda consultar por las
+            mascotas encontradas. {'\n'} Entre todxs lo encontraremos!
+          </Text>
         </View>
         {mascotaItem.estado == 'SEGUIMIENTO' && (
-            <Button
+          <Button
             labelStyle={style.label}
             style={style.cancelar}
             color="#BE0238"
@@ -171,96 +168,62 @@ const EstadosBuscado = ({navigation, route, props}) => {
             icon="close"
             compact={true}
             onPress={() =>
+              //preguntar antes de cambiar el estado
               cambiarEstado(mascotaItem.id, mascotaItem.estado, true)
             }>
             CANCELAR adaptación
           </Button>
         )}
-          <Button
-            labelStyle={style.label}
-            style={style.guardar}
-            color="#56ABDF"
-            mode="contained"
-            compact={true}
-            onPress={() =>
-              cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
-            }>
-            {botonLabel}
-          </Button>
-        </View>
-        <Portal>
-          <Dialog visible={msjModal} style={globalStyles.dialog} >
-              <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph style={globalStyles.dialogMsj}>Se debe cumplir el plazo de 15 días de adaptación.</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button
-                color="#FFAD00"
-                  mode="contained"
-                  onPress={() => setmsjModal(false)}>
-                  Ok
-                </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-        <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={style.modal}>
-            <View style={style.InfoContent}>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/magnify.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-
-              <Text style={style.sub}>Búsqueda</Text>
-              <Text style={style.texto}>Estamos en busqueda de noticias. Entre todxs lo encontraremos</Text>
-              </View>
-
-            </View>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/home-heart.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-              <Text style={style.sub}>Encontrado</Text>
-              <Text style={style.texto}>Comparte con nosotros que has encontrado tu mascota!</Text>
-              </View>
-              </View>
-                </View>
-                <Button
-                labelStyle={style.label}
-                style={style.guardar}
-                color="#56ABDF"
-                  mode="contained"
-                  onPress={() => hideModal()}>
-                  Entendido
-                </Button>
-             
-        </Modal>
+        <Button
+          labelStyle={style.label}
+          style={style.guardar}
+          color="#FFC936"
+          mode="contained"
+          compact={true}
+          onPress={() =>
+            cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
+          }>
+          {botonLabel}
+        </Button>
+      </View>
+      <Portal>
+        <Dialog visible={msjModal} style={globalStyles.dialog}>
+          <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph style={globalStyles.dialogMsj}>
+              Se debe cumplir el plazo de 15 días de adaptación.
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              color="#9575cd"
+              mode="contained"
+              onPress={() => setmsjModal(false)}>
+              Ok
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>
+      <InfoBuscado visible={visible} hideModal={hideModal} />
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  columncenter:{
+  columncenter: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
   },
   imglogoInfo: {
-      height: 60,
-      width: 60,
-      opacity: 0.3,
+    height: 60,
+    width: 60,
+    opacity: 0.3,
   },
   InfoContent: {
     flexDirection: 'column',
-    padding: 20
+    padding: 20,
   },
   rowinfo: {
     flexDirection: 'row',
@@ -272,31 +235,31 @@ const style = StyleSheet.create({
     marginStart: 10,
     padding: 0,
     marginTop: 10,
-    color: '#3B94CA'
+    color: '#FFC936',
   },
   texto: {
     alignItems: 'flex-start',
     paddingHorizontal: 5,
   },
   modal: {
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: '#FFFFFF',
     padding: 20,
     marginHorizontal: '10%',
     marginVertical: '12%',
     elevation: 10,
     borderRadius: 10,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   rowDias: {
     flexDirection: 'column',
     justifyContent: 'center',
-    marginHorizontal: "10%",
+    marginHorizontal: '10%',
     alignContent: 'center',
     alignItems: 'center',
     borderWidth: 4,
     padding: 10,
     paddingVertical: 5,
-    borderColor: "#56ABDF",
+    borderColor: '#FFC936',
     borderRadius: 20,
     marginTop: '5%',
   },
@@ -327,21 +290,20 @@ const style = StyleSheet.create({
   colDia: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
   },
   textDia: {
     fontSize: 19,
     justifyContent: 'flex-start',
-    textAlign: 'right'
+    textAlign: 'right',
   },
   textNumber: {
     fontSize: 16,
-    textAlign: 'center'
-
+    textAlign: 'center',
   },
   label: {
-    color: "#FFFFFF"
-    },
+    color: '#FFFFFF',
+  },
   guardar: {
     justifyContent: 'flex-end',
     padding: 3,
@@ -373,7 +335,7 @@ const style = StyleSheet.create({
   textEstado: {
     textAlign: 'center',
     marginTop: 5,
-    color: "#3B94CA",
+    color: '#000000',
   },
   columnEstado: {
     flexDirection: 'column',
@@ -381,16 +343,16 @@ const style = StyleSheet.create({
   rowEstado: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: "20%",
+    marginHorizontal: '20%',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: '5%'
-    },
+    marginTop: '5%',
+  },
   imglogo: {
     height: 40,
     width: 40,
     opacity: 0.3,
-    },
+  },
   viewDetalle: {
     marginHorizontal: 10,
     padding: 10,
@@ -403,7 +365,7 @@ const style = StyleSheet.create({
   },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#56ABDF',
+    backgroundColor: '#FFC936',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -418,7 +380,7 @@ const style = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     alignContent: 'center',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
   },
   cardNew: {
     backgroundColor: '#FFFFFF',
@@ -451,16 +413,16 @@ const style = StyleSheet.create({
   edad: {
     fontSize: 25,
     marginBottom: 'auto',
-    },
-    iconSexo: {
+  },
+  iconSexo: {
     marginRight: 'auto',
     marginStart: 5,
-    },
-    containerH1: {
+  },
+  containerH1: {
     flexDirection: 'row',
     flex: 3,
     alignItems: 'baseline',
-    alignContent: 'flex-start'
-    },
+    alignContent: 'flex-start',
+  },
 });
 export default EstadosBuscado;

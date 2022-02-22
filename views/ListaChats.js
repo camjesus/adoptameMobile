@@ -1,13 +1,13 @@
 import {useState, useEffect, useRef} from 'react';
 import * as React from "react";
-import {Plataform, KeyboardAvoidingView, FlatList, View, Text} from 'react-native';
+import {Plataform, StyleSheet, FlatList, View, Text} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
 import firebaseApp from '../database/firebaseDB';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as firebase from 'firebase';
 import _s from 'firebase/storage';
 import firestore from 'firebase/firestore';
-import { configureFonts, IconButton } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 import CardChat from '../components/ui/CardChat';
 import { ScrollView } from 'react-native-gesture-handler';
 import globalStyles from '../styles/global';
@@ -26,6 +26,7 @@ const ListaChats = (props) => {
   const [userId, gUserId] = useState(null);
   const [usernombre, gNombre] = useState(null);
   const [mascotaItem, setmascotaItem] = useState({});
+  const [tipoB, setTipoB] = useState("mismascotas");
   const _chats = [];
   const _chats1 = [];
 
@@ -38,7 +39,7 @@ const ListaChats = (props) => {
 
       if(userId !== null)
       {
-        buscarChats(userId);
+        tipoBusqueda(userId, tipoB);
       }else{
         obtenerDatosStorage();
       }
@@ -58,13 +59,14 @@ const ListaChats = (props) => {
       });
   }
 
-    const buscarChats = (id) => {
+    const tipoBusqueda = (id, tipoB) => {
         console.log('Busco chats');
         console.log('idchat');
-        
+        setTipoB(tipoB);
+
         console.log("userId");
         console.log(id);
-
+    if(tipoB == 'mispreguntas'){
         db.collection('chats')
         .where('usuario2', '==', id)
         //.get()
@@ -78,6 +80,7 @@ const ListaChats = (props) => {
           _chats.push(chats);
       }
         );
+      }else {
 
         db.collection('chats')
         .where('usuario1', '==', id)
@@ -90,10 +93,12 @@ const ListaChats = (props) => {
           )
         }
         );
+      }
 
         
-
     }
+
+    
 
     return(
       <View>
@@ -108,13 +113,33 @@ const ListaChats = (props) => {
         <Text style={globalStyles.title}>Chats</Text>
         <View style={globalStyles.viewR}></View>
       </View>
-     {chats === [] &&(
+      <View style={styles.tipoBusqueda}>
+      <Button
+          style={styles.buttonGL}
+          mode="contained"
+          color={tipoB === 'mismascotas' ? '#9575cd' : '#ffffff'}
+          labelStyle={styles.labelStyleGroup}
+          onPress={() => tipoBusqueda(userId, 'mismascotas')}>
+          Mis Mascotas
+        </Button>
+        <Button
+          style={styles.buttonGR}
+          mode="contained"
+          color={tipoB === 'mispreguntas' ? '#9575cd' : '#ffffff' }
+          labelStyle={styles.labelStyleGroup}
+          onPress={() => tipoBusqueda(userId, 'mispreguntas')}>
+          Mis Preguntas
+        </Button>
+      </View>
+      {(tipoB === 'mispreguntas' && chats === []) &&(
             <Text style={globalStyles.msjAdvertencia}>
               No tiene chats
             </Text>
           )}
    <ScrollView style={{paddingVertical: 15}}>
-   <FlatList
+     {tipoB === 'mispreguntas' &&(
+       <View>
+      <FlatList
         data={chats}
         renderItem={({item}) => (
           <CardChat
@@ -125,6 +150,10 @@ const ListaChats = (props) => {
         )}
         keyExtractor={(item) => item._id}
       />
+      </View>
+     )}
+   
+   {tipoB === 'mismascotas' &&(
 
   <FlatList
         data={chats1}
@@ -137,10 +166,30 @@ const ListaChats = (props) => {
         )}
         keyExtractor={(item) => item._id}
       />
-      
+      )} 
       </ScrollView>
       </View>
     );
+    
 };
+
+const styles = StyleSheet.create({
+  tipoBusqueda: {
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 5
+  },
+  buttonGL: {
+    borderBottomLeftRadius: 30,
+    borderTopLeftRadius: 30,
+    flex: 2,
+  },
+  buttonGR: {
+    borderBottomRightRadius: 30,
+    borderTopRightRadius: 30,
+    flex: 2,
+  },
+});
 
 export default ListaChats;

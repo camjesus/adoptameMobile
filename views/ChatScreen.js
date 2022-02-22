@@ -48,10 +48,20 @@ const ChatScreen = (props) => {
       setModo('rescatista');
     }
     buscarChat();
-
+    customNames(user.name, mascotaItemRef.current.rescatista);
   }, [])
 
+  const customNames = (usuario, rescatista) => {
+    if (usuario.indexOf(' ') >= 0) {
+      var index = usuario.indexOf(' ');
+      user.name = usuario.substring(0, index);
+    }
 
+    if (rescatista.indexOf(' ') >= 0) {
+      var index = rescatista.indexOf(' ');
+      mascotaItemRef.current.rescatista = rescatista.substring(0, index);
+    }
+};
 
   const sendMessageAuto = (messages) => {
     setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
@@ -139,6 +149,7 @@ const ChatScreen = (props) => {
     var fecha = new Date();
     if(idChat === null)
     {
+
        db.collection("chats")
       .add({
             fecha: fecha,
@@ -194,7 +205,7 @@ const customtInputToolbar = props => {
       placeholder="Escribí tu mensaje..."
       containerStyle={{
         backgroundColor: "white",
-        borderTopColor: "#FFAD00",
+        borderTopColor: "#9575cd",
         borderTopWidth: 1,
       }}
     />
@@ -207,12 +218,12 @@ const customView = props => {
       {...props}
       wrapperStyle={{
         right: {
-          backgroundColor: "#FFAD00"
+          backgroundColor: "#9575cd"
         },
         left: {
           backgroundColor: "white",
           borderWidth: 1,
-          borderColor: "#FFAD00",
+          borderColor: "#9575cd",
         }
       }}
       textStyle={{
@@ -522,7 +533,7 @@ const customAvatar = (props) => {
               Cancelar
             </Button>
               <Button
-              color="#FFAD00"
+              color="#9575cd"
                 mode="contained"
                 style={{marginHorizontal: 10}}
                 onPress={() => {
@@ -634,7 +645,7 @@ const style = StyleSheet.create({
     marginTop: 20
   },
   renderMessage: {
-    backgroundColor: "#FFAD00"
+    backgroundColor: "#9575cd"
   },
   sendIcon: {
     fontSize: 25,
@@ -646,7 +657,7 @@ iconSend: {
       alignItems: 'flex-start'
 },
 textAvatar: {
-  backgroundColor: "#FFAD00"
+  backgroundColor: "#9575cd"
 },
 viewPopupSolc: {
   position: 'absolute',
@@ -657,7 +668,7 @@ viewPopupSolc: {
   padding: 9,
   backgroundColor: '#FFFFFF',
   borderRadius: 10,
-  borderColor: '#FFAD00',
+  borderColor: '#9575cd',
   borderStyle: 'solid',
   borderWidth: 1,
   elevation: 6,
@@ -672,7 +683,7 @@ viewPopup: {
   padding: 10,
   backgroundColor: '#FFFFFF',
   borderRadius: 10,
-  borderColor: '#FFAD00',
+  borderColor: '#9575cd',
   borderStyle: 'solid',
   borderWidth: 1,
   elevation: 10,

@@ -16,7 +16,7 @@ export default function Navigation() {
       initialRouteName="account"
       tabBarOptions={{
         inactiveTintColor: '#ffffff',
-        activeTintColor: '#FFAD00',
+        activeTintColor: '#9575cd',
         style: {
           backgroundColor: '#9C9C9C',
         },

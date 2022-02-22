@@ -1,18 +1,15 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import axios from 'axios';
-import CardMascota from '../components/ui/CardMascota';
 import globalStyle from '../styles/global';
-import {ScrollView} from 'react-native-gesture-handler';
 import GetLocation from 'react-native-get-location';
-import {Text, Button, IconButton, Modal, Portal, ActivityIndicator} from 'react-native-paper';
+import {Text, Button, IconButton} from 'react-native-paper';
 import globalStyles from '../styles/global';
 import constantes from '../components/context/Constantes';
-import BarraFiltro from '../components/ui/BarraFiltro';
-import BarraSuperior from '../components/ui/BarraSuperior';
-import Swiper from 'react-native-deck-swiper';
-import { Transitioning, Transition } from 'react-native-reanimated';
+import Transition from 'react-native-reanimated';
 import AsyncStorage from '@react-native-community/async-storage';
+import SwiperCard from '../components/ui/SwiperCard';
+import HeaderDisponible from '../components/ui/HeaderDisponible';
 
 const Disponibles = ({navigation, route, props}) => {
   const data = route.params;
@@ -21,7 +18,7 @@ const Disponibles = ({navigation, route, props}) => {
   const [mascotasDisp, gDisponibles] = useState([]);
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
-  const [estado, setEstado] = useState('ADOPCION');
+  const [estado, setEstado] = useState('DISPONIBLE');
   const isFirstTime = useRef(true);
   const [distancia, gDistancia] = useState(100);
   const paramsDefault = new URLSearchParams();
@@ -38,32 +35,10 @@ const Disponibles = ({navigation, route, props}) => {
   //const idTime = useRef();
 
   //Botones accion mascota
-  const [colorBL, setColorBL] = useState('#D0800A');
-  const [colorBR, setColorBR] = useState('#FFAD00');
-  const [colorBC, setColorBC] = useState('#FFAD00');
+  const [colorBL, setColorBL] = useState('#f5bb05');
+  const [colorBR, setColorBR] = useState('#9575cd');
+  const [colorBC, setColorBC] = useState('#9575cd');
 
-  const transition = (
-    <Transition.Sequence>
-      <Transition.Out
-        type='slide-bottom'
-        durationMs={ANIMATION_DURATION}
-        interpolation='easeIn'
-      />
-      <Transition.Together>
-        <Transition.In
-          type='fade'
-          durationMs={ANIMATION_DURATION}
-          delayMs={ANIMATION_DURATION / 2}
-        />
-        <Transition.In
-          type='slide-bottom'
-          durationMs={ANIMATION_DURATION}
-          delayMs={ANIMATION_DURATION / 2}
-          interpolation='easeOut'
-        />
-      </Transition.Together>
-    </Transition.Sequence>
-  );
   //paramsDefault.append('estado', estado);
   paramsDefault.append('sexo', 'MACHO');
   paramsDefault.append('sexo', 'HEMBRA');
@@ -92,31 +67,36 @@ const Disponibles = ({navigation, route, props}) => {
   }, [estado]);
 
   const obtenerMasDisponilbes = async (latitud, longitud) => {
-    paramsDefault.append('latitud', latitud);
-    paramsDefault.append('longitud', longitud);
+    paramsDefault.append('latitud', -34.634491); //latitud);
+    paramsDefault.append('longitud', -58.4648853); //longitud);
     paramsDefault.append('estado', estado);
 
-    
-      console.log();
-      var request = {
-        params: primerCarga === true ? paramsDefault : data.data,
-      };
-      console.log('request');
-      console.log(request.params);
-      const url = constantes.BASE_URL + 'mascotasPorFiltro';
-    axios
-      .get(url, request)
-      .then((response) => {
-        const resultado = response.data;
-        console.log(resultado.data);
-        console.log('paso por obetener mascotas Disponibles');
-        gDisponibles(response.data);
-        hideModal();
-      })
-    .catch((error) => {
-        console.log(error);
-        hideModal();
-    });
+    console.log();
+    var request = {
+      params: primerCarga === true ? paramsDefault : data.data,
+    };
+    console.log('request');
+    console.log(request.params);
+    const url = constantes.BASE_URL + 'mascotasPorFiltro';
+    try {
+      const resultado = await axios.get(url, request);
+      console.log(resultado.data);
+      console.log('paso por obetener mascotas Disponibles');
+      gDisponibles(resultado.data);
+      hideModal();
+    } catch (error) {
+      console.log(error);
+      hideModal();
+    }
+  };
+
+  const goToFiltros = () => {
+    gPrimerCarga(false);
+    navigation.navigate('filtros', {filtros: paramsDefault});
+  };
+
+  const heandlePress = () => {
+    navigation.toggleDrawer();
   };
 
   const getCurrentPosition = async () => {
@@ -155,7 +135,6 @@ const Disponibles = ({navigation, route, props}) => {
       gConsDisponibles(true);
     }
     obtenerDatosStorage();
-    
     //obtenerMasDisponilbes();
   }, [data]);
 
@@ -180,29 +159,22 @@ const Disponibles = ({navigation, route, props}) => {
     setIndex(index + 1);
   };
 
-  useEffect(() => {
-    console.log(index);
-    if (index === 2) {
-      setIndex(0);
-    }
-  }, [index]);
-
   const tipoBusqueda = (accion) => {
     switch (accion) {
       case 'ADOPCION':
-        setColorBL('#D0800A');
-        setColorBC('#FFAD00');
-        setColorBR('#FFAD00');
+        setColorBL('#f5bb05');
+        setColorBC('#9575cd');
+        setColorBR('#9575cd');
         break;
       case 'ENCONTRADO':
-        setColorBL('#FFAD00');
-        setColorBC('#D0800A');
-        setColorBR('#FFAD00');
+        setColorBL('#9575cd');
+        setColorBC('#f5bb05');
+        setColorBR('#9575cd');
         break;
       case 'BUSCADO':
-        setColorBL('#FFAD00');
-        setColorBC('#FFAD00');
-        setColorBR('#D0800A');
+        setColorBL('#9575cd');
+        setColorBC('#9575cd');
+        setColorBR('#f5bb05');
         break;
     }
 
@@ -212,26 +184,24 @@ const Disponibles = ({navigation, route, props}) => {
   return (
     <View style={globalStyle.base}>
       <View style={styles.header}>
-        <BarraSuperior
-          {...props}
-          navigation={navigation}
-          route={route}
-          style={styles.barraSup}
+        <IconButton
+          icon="menu"
+          color="#FFFFFF"
+          style={styles.button}
+          onPress={() => heandlePress()}
+          size={30}
         />
         <Text style={styles.title}>Portal Pet</Text>
-        <IconButton
-          icon="filter"
-          color="#FFFFFF"
-          style={styles.iconEdit}
-          onPress={() =>{
-            gPrimerCarga(false);
-            navigation.navigate('filtros', {filtros: paramsDefault});
-          }}
-          size={30}
-         />
+          <IconButton
+            icon="filter"
+            color="#FFFFFF"
+            style={styles.iconEdit}
+            onPress={goToFiltros}
+            size={30}
+          />
       </View>
       <View style={styles.tipoBusqueda}>
-      <Button
+        <Button
           style={styles.buttonGL}
           mode="contained"
           color={colorBL}
@@ -264,83 +234,19 @@ const Disponibles = ({navigation, route, props}) => {
         </View>
       )}
       {mascotasDisp.length > 0 && (
-        <View style={styles.containerSwiper}>
-          <Swiper
-            cards={mascotasDisp}
-            cardIndex={index}
-            renderCard={(card) => (
-              <CardMascota mascota={card} navigation={navigation} />
-            )}
-            onSwiper={onSwiped}
-            infinite
-            backgroundColor="#FFFFFF"
-            //onTapCard={() => onSwiped()}
-            cardVerticalMargin={50}
-            stackSize={3}
-            stackScale={10}
-            stackSeparation={14}
-            animateOverlayLabelsOpacity
-            animateCardOpacity
-            disableTopSwipe
-            disableBottomSwipe
-            overlayLabels={{
-              left: {
-                title: 'NOPE',
-                style: {
-                  label: {
-                    backgroundColor: colors.red,
-                    borderColor: colors.red,
-                    color: colors.red,
-                    borderWidth: 1,
-                    fontSize: 24
-                  },
-                  wrapper: {
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    justifyContent: 'flex-start',
-                    marginTop: 20,
-                    marginLeft: -20
-                  }
-                }
-              },
-              right: {
-                title: 'LIKE',
-                style: {
-                  label: {
-                    backgroundColor: colors.blue,
-                    borderColor: colors.blue,
-                    color: colors.blue,
-                    borderWidth: 1,
-                    fontSize: 24
-                  },
-                  wrapper: {
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    marginTop: 20,
-                    marginLeft: 20
-                  }
-                }
-              }
-            }}
-          />
-        </View>
+        <SwiperCard
+          {...props}
+          navigation={navigation}
+          onSwiped={onSwiped}
+          codeindex={index}
+          mascotasDisp={mascotasDisp}
+          colors={colors}
+        />
       )}
-       <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={styles.modal}>
-          <View style={styles.viewLogo}>
-            <Image source={require('../img/casita.png')} style={styles.imglogo} /> 
-            <Text style={styles.cargarText}>Buscando Mascotas</Text>
-          </View>
-          <ActivityIndicator animating={true} color="#FFAD00" size={50} />
-        </Modal>
-      </Portal>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   cargarText: {
     textAlign: 'center',
@@ -390,10 +296,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 0,
     paddingBottom: 5,
-    marginBottom: 1,
   },
    containerSwiper: {
-    flex: 11,
     backgroundColor: '#FFFFFF',
     margin: 0,
     padding: 0,
@@ -414,12 +318,6 @@ const styles = StyleSheet.create({
   },
   buttonG: {
     marginHorizontal: 1,
-  },
-  iconEdit: {
-    marginTop: 'auto',
-    alignItems: 'baseline',
-    alignContent: 'center',
-    justifyContent: 'flex-end'
   },
 });
 export default Disponibles;

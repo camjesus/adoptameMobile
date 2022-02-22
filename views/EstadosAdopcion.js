@@ -1,6 +1,6 @@
 
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Button,
@@ -16,6 +16,8 @@ import globalStyles from '../styles/global';
 import ProgressCircle from 'react-native-progress-circle';
 import constantes from '../components/context/Constantes';
 import axios from 'axios';
+import ProgressStatus from '../components/ui/ProgressState'
+import InfoAdopcion from '../components/ui/InfoAdopcion';
 
 
 const EstadosAdopcion = ({navigation, route, props}) => {
@@ -110,7 +112,9 @@ const EstadosAdopcion = ({navigation, route, props}) => {
         icon="arrow-left"
         color="#FFFFFF"
         style={globalStyles.iconBack}
-        onPress={() => navigation.navigate('misMascotas', {consultarMascotas: true})}
+          onPress={() =>
+            navigation.navigate('misMascotas', {consultarMascotas: true})
+          }
         size={30}
     />
     <Text style={globalStyles.title}>{mascotaItem.nombre}</Text>
@@ -140,7 +144,7 @@ const EstadosAdopcion = ({navigation, route, props}) => {
               style={style.iconSexo}
               name={nombreSexo}
               size={30}
-              color="#FFAD00"
+              color="#9575cd"
             />
           </View>
         </View>
@@ -152,45 +156,21 @@ const EstadosAdopcion = ({navigation, route, props}) => {
           <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
         </View>
         <View style={style.rowEstado}>
-        <View style={style.columnEstado}>
-        <ProgressCircle
-            percent={porcentajeAnima}
-            radius={40}
-            borderWidth={8}
-            color="#FFAD00"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/home-search.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Búsqueda</Text>
-        </View>
-        <View style={style.columnEstadoCen}>
-        <ProgressCircle
-            percent={porcentajeDias}
-            radius={40}
-            borderWidth={8}
-            color="#FFAD00"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/dots-horizontal.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Adaptación</Text>
-        </View>
-        <View style={style.columnEstado}>
-        <ProgressCircle
-            percent={adoptado}
-            radius={40}
-            borderWidth={8}
-            color="#FFAD00"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/home-heart.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Adoptado</Text>
-        </View>
+        <ProgressStatus
+            value={porcentajeAnima}
+            image={'home-search'}
+            textDescription={'Búsqueda'}
+          />
+          <ProgressStatus
+            value={porcentajeDias}
+            image={'dots'}
+            textDescription={'Adaptación'}
+          />
+          <ProgressStatus
+            value={adoptado}
+            image={'home-heart'}
+            textDescription={'Adoptado'}
+          />
         </View>
         <View style={style.rowDias}>
         <View style={style.colDia}>
@@ -205,23 +185,20 @@ const EstadosAdopcion = ({navigation, route, props}) => {
             <Text style={style.textNumber}>{diasAdaptacion}</Text>
         </View>
         {mascotaItem.estado == 'SEGUIMIENTO' && (
-            <Button
-            labelStyle={style.label}
-            style={style.cancelar}
-            color="#BE0238"
-            mode="contained"
+          <IconButton
             icon="close"
-            compact={true}
+            color="#FFFFFF"
+            style={style.cancelar}
             onPress={() =>
               cambiarEstado(mascotaItem.id, mascotaItem.estado, true)
-            }>
-            CANCELAR adaptación
-          </Button>
+            }
+            size={30}
+          />
         )}
           <Button
             labelStyle={style.label}
             style={style.guardar}
-            color="#FFAD00"
+            color="#9575cd"
             mode="contained"
             compact={true}
             onPress={() =>
@@ -238,7 +215,7 @@ const EstadosAdopcion = ({navigation, route, props}) => {
             </Dialog.Content>
             <Dialog.Actions>
                 <Button
-                color="#FFAD00"
+                color="#9575cd"
                   mode="contained"
                   onPress={() => setmsjModal(false)}>
                   Ok
@@ -246,89 +223,16 @@ const EstadosAdopcion = ({navigation, route, props}) => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-        <Portal>
-        <Modal
+        <InfoAdopcion 
           visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={style.modal}>
-            <View style={style.InfoContent}>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/home-search.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-
-              <Text style={style.sub}>Búsqueda</Text>
-              <Text style={style.texto}>La mascota esta en bùsqueda de su nueva familia</Text>
-              </View>
-
-            </View>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/dots-horizontal.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-
-              <Text style={style.sub}>Adaptación</Text>
-              <Text style={style.texto}>Es un periodo de mínimo 15 días para que la mascota y su nueva familia se conozcan y que sean compatibles</Text>
-              </View>
-
-            </View>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/home-heart.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-              <Text style={style.sub}>Adoptado</Text>
-              <Text style={style.texto}>Tu mascota consiguió su nuevo hogar!</Text>
-              </View>
-              </View>
-                </View>
-                <Button
-                labelStyle={style.label}
-                style={style.guardar}
-                color="#FFAD00"
-                  mode="contained"
-                  onPress={() => hideModal()}>
-                  Entendido
-                </Button>
-             
-        </Modal>
-      </Portal>
+          hideModal={hideModal}
+        />
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  InfoContent: {
-    flexDirection: 'column',
-    padding: 20
-  },
-  rowinfo: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  sub: {
-    textAlign: 'left',
-    fontSize: 16,
-    marginStart: 10,
-    padding: 0,
-    marginTop: 10,
-    color: '#D0800A'
-  },
-  texto: {
-    alignItems: 'flex-start',
-    paddingHorizontal: 5,
-  },
-  modal: {
-    backgroundColor: '#FFFFFF', 
-    padding: 20,
-    marginHorizontal: '10%',
-    marginVertical: '12%',
-    elevation: 10,
-    borderRadius: 10,
-    justifyContent: 'center'
-  },
+
   descripcion: {
     fontSize: 15,
     marginTop: 0,
@@ -353,12 +257,6 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     marginHorizontal: 10,
   },
-  columncenter:{
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
   icoCal: {
     marginStart: 5,
   },
@@ -378,20 +276,17 @@ const style = StyleSheet.create({
     marginHorizontal: "30%",
     alignContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
     borderWidth: 4,
     padding: 'auto',
     paddingVertical: 5,
-    borderColor: "#FFAD00",
+    borderColor: "#9575cd",
     borderRadius: 20,
     marginTop: '5%',
   },
   textNumber: {
     fontSize: 30,
   },
-  label: {
-    color: "#FFFFFF"
-    },
   guardar: {
     justifyContent: 'flex-end',
     padding: 3,
@@ -401,19 +296,15 @@ const style = StyleSheet.create({
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
-    marginHorizontal: 40,
-    marginTop: '5%',
-    marginBottom: '10%',
+    marginHorizontal: '20%',
+    marginBottom: 15
   },
   cancelar: {
-    padding: 3,
-    borderRadius: 5,
-    shadowColor: '#000000',
-    shadowOpacity: 0.8,
-    elevation: 6,
-    shadowRadius: 15,
-    shadowOffset: {width: 1, height: 13},
-    marginHorizontal: 40,
+    position: 'absolute',
+    margin: 20,
+    right: 0,
+    bottom: '58%',
+    backgroundColor: '#c20000'
   },
   iconEdit: {
     right: 10,
@@ -423,7 +314,7 @@ const style = StyleSheet.create({
   textEstado: {
     textAlign: 'center',
     marginTop: 5,
-    color: "#D0800A",
+    color: "#000000",
   },
   columnEstado: {
     flexDirection: 'column',
@@ -448,7 +339,7 @@ const style = StyleSheet.create({
       },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -467,7 +358,7 @@ const style = StyleSheet.create({
   cardNew: {
     backgroundColor: '#FFFFFF',
     marginHorizontal: 20,
-    marginBottom: 10,
+    marginBottom: 5,
     borderRadius: 40,
     shadowColor: '#000000',
     shadowOpacity: 0.8,

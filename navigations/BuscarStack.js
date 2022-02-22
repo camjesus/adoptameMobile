@@ -8,7 +8,7 @@ import CrearUsuario from '../views/CrearUsuario';
 import DetalleMascota from '../views/DetalleMascota';
 import Denunciar from '../views/Denunciar';
 import ChatScreen from '../views/ChatScreen';
-import ChatScreenTest from '../views/ChatScreenTest';
+import Inicio from '../views/Inicio';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
@@ -19,7 +19,7 @@ const theme = {
   colors: {
     accent: '#252932',
     backdrop: 'transparent',
-    background: '#FFAD00',
+    background: '#9575cd',
     disabled: 'rgba(0, 0, 0, 0.90)',
     error: '#B00020',
     notification: '#f50057',
@@ -36,6 +36,7 @@ export default function BuscarStack() {
   return (
     <PaperProvider theme={theme}>
       <Stack.Navigator>
+        
         <Stack.Screen
           name="Disponibles"
           component={Disponibles}

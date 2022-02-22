@@ -182,7 +182,7 @@ const Filtros = ({navigation, route}) => {
             <Text style={style.textCheck}>Perro</Text>
             <Switch
               value={checkedPerro}
-              color="#FFAD00"
+              color="#9575cd"
               onValueChange={() => {
                 setCheckedPerro(!checkedPerro);
               }}
@@ -192,7 +192,7 @@ const Filtros = ({navigation, route}) => {
               <Text style={style.textCheck}>Gato</Text>
               <Switch
                 value={checkedGato}
-                color="#FFAD00"
+                color="#9575cd"
                 onValueChange={() => {
                   setCheckedGato(!checkedGato);
                 }}
@@ -204,7 +204,7 @@ const Filtros = ({navigation, route}) => {
             <Text style={style.textCheck}>Macho</Text>
             <Switch
               value={checkedMacho}
-              color="#FFAD00"
+              color="#9575cd"
               onValueChange={() => {
                 setCheckedMacho(!checkedMacho);
               }}
@@ -214,7 +214,7 @@ const Filtros = ({navigation, route}) => {
             <Text style={style.textCheck}>Hembra</Text>
             <Switch
               value={checkedHembra}
-              color="#FFAD00"
+              color="#9575cd"
               onValueChange={() => {
                 setCheckedHembra(!checkedHembra);
               }}
@@ -228,7 +228,7 @@ const Filtros = ({navigation, route}) => {
           <Text style={style.textCheck}>Pequeño</Text>
           <Switch
             value={checkedPeque}
-            color="#FFAD00"
+            color="#9575cd"
             onValueChange={() => {
               setCheckedPeque(!checkedPeque);
             }}
@@ -238,7 +238,7 @@ const Filtros = ({navigation, route}) => {
           <Text style={style.textCheck}>Mediano</Text>
           <Switch
             value={checkedMediano}
-            color="#FFAD00"
+            color="#9575cd"
             onValueChange={() => {
               setCheckedMediano(!checkedMediano);
             }}
@@ -248,7 +248,7 @@ const Filtros = ({navigation, route}) => {
           <Text style={style.textCheck}>Grande</Text>
           <Switch
             value={checkedGrande}
-            color="#FFAD00"
+            color="#9575cd"
             onValueChange={() => {
               setCheckedGrande(!checkedGrande);
             }}
@@ -268,9 +268,9 @@ const Filtros = ({navigation, route}) => {
               gEdad(parseFloat(value));
             }}
             value={edad}
-            minimumTrackTintColor="#FFAD00"
-            maximumTrackTintColor="#D0800A"
-            thumbTintColor="#FFAD00"
+            minimumTrackTintColor="#9575cd"
+            maximumTrackTintColor="#f5bb05"
+            thumbTintColor="#9575cd"
             style={{marginVertical: 10}}
           />
         </View>
@@ -287,9 +287,9 @@ const Filtros = ({navigation, route}) => {
               gDistancia(parseFloat(value));
             }}
             value={distancia}
-            minimumTrackTintColor="#FFAD00"
-            maximumTrackTintColor="#D0800A"
-            thumbTintColor="#FFAD00"
+            minimumTrackTintColor="#9575cd"
+            maximumTrackTintColor="#f5bb05"
+            thumbTintColor="#9575cd"
             thumbTouchSize={{width: 100, height: 100}}
             style={{marginVertical: 10, marginBottom: 30}}
           />
@@ -315,7 +315,7 @@ const style = StyleSheet.create({
   },
   ingresar: {
     justifyContent: 'flex-end',
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderRadius: 5,
     shadowColor: '#000000',
     shadowOpacity: 0.8,
@@ -382,7 +382,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   slider: {
-    color: '#FFAD00',
+    color: '#9575cd',
   },
 });
 

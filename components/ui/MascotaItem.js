@@ -24,6 +24,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
   const [postText, setPostText] = React.useState('');
   const [encontrado, setencontrado] = React.useState(false);
   const [alerta, ingresarAlerta] = useState(false);
+  const [editar, setEditarM] = useState(true);
   const [color, setcolor] = useState('');
   const [mensaje, setMensaje] = useState('Desea eliminar esta mascota permanentemente?');
   const [labelBoton, setLabelBoton] = useState('Eliminar');
@@ -40,7 +41,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
   }, [mascota]);
 
   const tomoNombreIcon = () => {
-
+    editMascota();
     switch(estado)
     {
       case 'ADOPCION':
@@ -55,9 +56,9 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
         }
         break;
         case 'BUSCADO':
-        case 'FINBUSCADO':
+        case 'ENCASA':
           setcolor("celeste");
-          if(estado === 'FINBUSCADO')
+          if(estado === 'ENCASA')
         {
           setPostText('EN CASA');
         } else {
@@ -66,8 +67,22 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
         break;
         case 'ENCONTRADO':
         case 'ENTREGADO':
+          setPostText(estado);
           setcolor("verde");
         break;
+    }
+  };
+
+  const editMascota = () => {
+    setEditarM(true);
+    switch (estado)
+    {
+      case 'ENTREGADO':
+      case 'ENCASA':
+      case 'ADOPTADA':
+      case 'SEGUIMIENTO':
+        setEditarM(false);
+        break;  
     }
   };
 
@@ -88,7 +103,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
 
   const mascotaEstado = () => {
    console.log("Entro por mascota estado");
-    if (mascota.estado === 'ENCONTRADO' || mascota.estado === 'ENTREGADO') {  
+    if (mascota.estado === 'ENCONTRADO' || mascota.estado === 'ENTREGADO') {
       navigation.navigate('EstadosEncontrado', {mascotaItem: mascota});
     }
     if (
@@ -98,7 +113,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
     ) {
       navigation.navigate('EstadosAdopcion', {mascotaItem: mascota});
     }
-    if (mascota.estado == 'BUSCADO' || mascota.estado == 'FINBUSCADO') {
+    if (mascota.estado == 'BUSCADO' || mascota.estado == 'ENCASA') {
       navigation.navigate('EstadosBuscado', {mascotaItem: mascota});
     }
   };
@@ -133,18 +148,20 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
               uri: foto_url,
             }}
           />
+           {editar == true &&(
             <View style={style.container}>
-           
-            <IconButton
+                  <IconButton
                   icon="pencil"
                   color="#FFFFFF"
                   style={style.fab}
                   onPress={() => {
-                    navigation.navigate('crearMascota', {mascotaItem: mascota});
+                  navigation.navigate('crearMascota', {mascotaItem: mascota});
                   }}
                   size={30}
-            />
-          </View>
+                  />
+            </View>
+
+           )}
           <IconButton
                   icon="trash-can"
                   color="#FFFFFF"
@@ -165,7 +182,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
                 style={style.iconSexo}
                 name={nombreSexo}
                 size={30}
-                color="#FFAD00"
+                color="#9575cd"
               />
             </View>
           )}
@@ -177,7 +194,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
                 style={style.iconSexo}
                 name={nombreSexo}
                 size={30}
-                color="#FFAD00"
+                color="#9575cd"
               />
               </View>
           )}
@@ -232,7 +249,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
 const style = StyleSheet.create({
   textEstadoBus: {
     fontSize: 23,
-    backgroundColor: '#56ABDF',
+    backgroundColor: '#f5bb05',
     flex: 1,
     textAlign: 'center',
     padding: 10,
@@ -243,7 +260,7 @@ const style = StyleSheet.create({
   },
   textEstadoEn: {
     fontSize: 23,
-    backgroundColor: '#40BF8B',
+    backgroundColor: '#F59822',
     flex: 1,
     textAlign: 'center',
     padding: 10,
@@ -268,7 +285,7 @@ const style = StyleSheet.create({
   },
   textEstado: {
     fontSize: 23,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     flex: 1,
     textAlign: 'center',
     padding: 10,
@@ -355,8 +372,11 @@ const style = StyleSheet.create({
     marginTop: 'auto',
   },
   iconSexo: {
-    marginTop: 15,
-    marginStart: 10,
+    position: 'absolute',
+    margin: 10,
+    right: 0,
+    top: 0,
+    backgroundColor: 'transparent',
   },
 });
 export default MascotaItem;

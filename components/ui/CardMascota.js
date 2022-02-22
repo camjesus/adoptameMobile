@@ -31,64 +31,54 @@ const CardMascota = ({mascota, navigation, route}) => {
   useEffect(() => {
     switch (mascota?.tamanio) {
       case 'CHICO':
-        setColorChico('#FFAD00');
+        setColorChico('#9575cd');
         setColorMediano('#FFFFFF');
         setColorGrande('#FFFFFF');
         break;
       case 'MEDIANO':
         setColorChico('#FFFFFF');
-        setColorMediano('#FFAD00');
+        setColorMediano('#9575cd');
         setColorGrande('#FFFFFF');
         break;
       case 'GRANDE':
         setColorChico('#FFFFFF');
         setColorMediano('#FFFFFF');
-        setColorGrande('#FFAD00');
+        setColorGrande('#9575cd');
         break;
     }
   }, []);
 
   return (
-   
-    <View style={style.cardNew}>
-       <TouchableOpacity 
-    onPress={() => {
-          navigation.navigate('DetalleMascota', {
-            mascotaItem: mascota,
-            idMascota: mascota.id,
-          });
-    }}
-    >
-        <View style={style.viewMascota}>
-          <Image
-            style={style.imgMascota}
-            source={{
-              uri: mascota?.foto_url,
+    <TouchableOpacity
+      style={style.cardNew}
+      onPress={() => {
+        navigation.navigate('DetalleMascota', {
+          mascotaItem: mascota,
+          idMascota: mascota.id
+        });
+      }}>
+      <Image
+        style={style.imgMascota}
+        source={{
+          uri: mascota?.foto_url,
+        }}
+      />
+      <View style={style.pawRow}>
+        <Maticons style={style.paw} name="paw" size={45} color={colorGrande} />
+        <Maticons style={style.paw} name="paw" size={35} color={colorMediano} />
+        <Maticons style={style.paw} name="paw" size={25} color={colorChico} />
+      </View>
+      <Button
+        style={style.masInfo}
+        mode="contained"
+        onPress={() => {
+          navigation.navigate('DetalleMascota', {mascotaItem: mascota, idMascota: mascota.id});
             }}
-          />
-        </View>
-        </TouchableOpacity>
-        <View style={style.pawRow}>
-        <Maticons
-              style={style.paw}
-              name="paw"
-              size={45}
-              color={colorGrande}
-            />
-             <Maticons
-              style={style.paw}
-              name="paw"
-              size={35}
-              color={colorMediano}
-            />
-             <Maticons
-              style={style.paw}
-              name="paw"
-              size={25}
-              color={colorChico}
-            />
-        </View>
-        <View style={style.infoMascota}>
+            animated="true"
+            icon="plus"
+            >
+            Más Info
+          </Button>
         <View style={style.infoMascota}>
         {mascota?.estado === 'ENCONTRADO' && (
             <View style={style.containerH1}>
@@ -97,7 +87,7 @@ const CardMascota = ({mascota, navigation, route}) => {
                 style={style.iconSexo}
                 name={nombreSexo}
                 size={30}
-                color="#FFAD00"
+                color="#9575cd"
               />
             </View>
           )}
@@ -109,30 +99,18 @@ const CardMascota = ({mascota, navigation, route}) => {
                 style={style.iconSexo}
                 name={nombreSexo}
                 size={30}
-                color="#FFAD00"
+                color="#9575cd"
               />
               </View>
           )}
-          </View>
         </View>
-
-        <Button
-            style={style.masInfo}
-            mode="contained"
-            onPress={() => {
-              navigation.navigate('DetalleMascota', {mascotaItem: mascota, idMascota: mascota.id})
-            }}
-            animated="true"
-            icon="plus"
-            >
-            Más Info
-          </Button>
-    </View>
+        </TouchableOpacity>
   );
 };
 
 const style = StyleSheet.create({
-  paw: {
+  viewMascota: {
+    marginTop: 'auto'
   },
   pawRow: {
     flexDirection: 'row',
@@ -141,43 +119,35 @@ const style = StyleSheet.create({
     position: 'absolute',
     marginStart: 10,
     margin: 10,
-    bottom: 80,
+    bottom: '10%',
     left: 0,
   },
   masInfo: {
     position: 'absolute',
     margin: 20,
     borderRadius: 5,
-    marginBottom: 45,
     right: 0,
-    bottom: 30,
-    backgroundColor: '#FFAD00',
+    bottom: '5%',
+    backgroundColor: '#9575cd',
     shadowColor: '#000000',
     elevation: 10,
     shadowOffset: {width: 1, height: 13},
   },
   infoMascota: {
-    flex: 2,
     margin: 10,
     flexDirection: 'row',
   },
   cardNew: {
     backgroundColor: '#FFFFFF',
     borderRadius: 25,
-    shadowColor: '#000000',
-    shadowOpacity: 0.8,
-    shadowRadius: 15,
-    elevation: 10,
-    shadowOffset: {width: 1, height: 13},
+    elevation: 3,
     flexDirection: 'column',
-    flex: 5,
     margin: 0,
     padding: 0,
-    marginTop: -30,
-    marginBottom: 30,
+    marginBottom: 'auto',
   },
   imgMascota: {
-    height: 500,
+    height: '90%',
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     borderRadius: 10,
@@ -185,22 +155,22 @@ const style = StyleSheet.create({
   nombre: {
     fontSize: 30,
     marginTop: 'auto',
+    marginVertical: 10
   },
   edad: {
     fontSize: 30,
     marginTop: 'auto',
+    marginVertical: 10
   },
   iconSexo: {
     marginStart: 10,
     marginRight: 'auto',
+    marginVertical: 10
   },
   containerH1: {
     flexDirection: 'row',
-    flex: 3,
     alignItems: 'center',
     marginStart: 10,
-    marginTop: 'auto',
-    marginBottom: 'auto',
   },
 });
 export default CardMascota;

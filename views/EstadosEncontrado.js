@@ -1,4 +1,3 @@
-
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,30 +8,29 @@ import {
   Portal,
   Dialog,
   Paragraph,
-  Modal
+  Modal,
 } from 'react-native-paper';
 import {Icon} from 'react-native-elements';
 import globalStyles from '../styles/global';
 import ProgressCircle from 'react-native-progress-circle';
 import constantes from '../components/context/Constantes';
 import axios from 'axios';
-
+import ProgressStatus from '../components/ui/ProgressState';
+import InfoEncontrado from '../components/ui/InfoEncontrado';
 
 const EstadosEncontrado = ({navigation, route, props}) => {
   const {params} = route;
   const {mascotaItem} = params;
   const [nombreSexo, gNombreSexo] = useState('gender-male');
   const [porcentajeAnima, setPorcentajeAnima] = useState();
-  
-  const [adoptado, setAdoptado] = useState(0);
+
+  const [busqueda, setBusqueda] = useState(0);
   const [botonLabel, setBotonLabel] = useState('');
   const setInfo = useRef(false);
   const [msjModal, setmsjModal] = useState(false);
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
-
 
   useEffect(() => {
     tomoNombreIcon();
@@ -54,16 +52,18 @@ const EstadosEncontrado = ({navigation, route, props}) => {
     var now = new Date();
     console.log('date' + date);
     if (mascotaItem.estado == 'ENCONTRADO') {
-      setBotonLabel('Entregado');
+      setBotonLabel('YA LO ENTREGUE');
     }
     if (mascotaItem.estado == 'ENTREGADO') {
       setBotonLabel('ENTREGADO!');
-      setAdoptado(100);
+      setBusqueda(100);
     }
   };
 
-
   const cambiarEstado = async (id, estado, finSeguimiento) => {
+    if (estado == 'ENCONTRADO') {
+      estado = 'ENTREGADO';
+    }
     const postEstado = {id, estado: estado};
     mascotaItem.estado = estado;
     const url = constantes.BASE_URL + 'estadoMascota';
@@ -74,27 +74,27 @@ const EstadosEncontrado = ({navigation, route, props}) => {
   };
 
   return (
-      <View>
-    <View style={style.header}>
-    <IconButton
-        icon="arrow-left"
-        color="#FFFFFF"
-        style={globalStyles.iconBack}
-        onPress={() =>
-          navigation.navigate('misMascotas', {consultarMascotas: true})
-        }
-        size={30}
-    />
-    <Text style={globalStyles.title}>Encontrado</Text>
-    <IconButton
+    <View>
+      <View style={style.header}>
+        <IconButton
+          icon="arrow-left"
+          color="#FFFFFF"
+          style={globalStyles.iconBack}
+          onPress={() =>
+            navigation.navigate('misMascotas', {consultarMascotas: true})
+          }
+          size={30}
+        />
+        <Text style={globalStyles.title}>Encontrado</Text>
+        <IconButton
           icon="information-outline"
           color="#FFFFFF"
           style={style.iconEdit}
           onPress={() => showModal()}
           size={30}
-         />
-    </View>
-    <View style={style.cardNew}>
+        />
+      </View>
+      <View style={style.cardNew}>
         <View style={style.viewMascota}>
           <Image
             style={style.imgMascota}
@@ -103,172 +103,102 @@ const EstadosEncontrado = ({navigation, route, props}) => {
             }}
           />
         </View>
-          <View style={style.viewDetalle}>
-         <View style={style.infoMascota}>
-          <View style={style.containerH1}>
-            <Text style={style.nombre}>{mascotaItem.fechaInicioS}</Text>
-            <Maticons
-              style={style.iconSexo}
-              name={nombreSexo}
-              size={30}
-              color="#40BF8B"
-            />
+        <View style={style.viewDetalle}>
+          <View style={style.infoMascota}>
+            <View style={style.containerH1}>
+              <Text style={style.nombre}>{mascotaItem.fechaInicioS}</Text>
+              <Maticons
+                style={style.iconSexo}
+                name={nombreSexo}
+                size={30}
+                color="#F59822"
+              />
+            </View>
           </View>
-        </View>
-            <Text style={style.tituloDes}>
-                Descripción:
-            </Text>
+          <Text style={style.tituloDes}>Descripción:</Text>
           <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
         </View>
         <View style={style.rowEstado}>
-        <View style={style.columnEstado}>
-        <ProgressCircle
-            percent={porcentajeAnima}
-            radius={40}
-            borderWidth={8}
-            color="#40BF8B"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/home-search.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Búsqueda</Text>
-        </View>
-        <View style={style.columnEstado}>
-        <ProgressCircle
-            percent={adoptado}
-            radius={40}
-            borderWidth={8}
-            color="#40BF8B"
-            shadowColor="#999"
-            bgColor="#fff"
-            >
-            <Image source={require('../img/home-heart.png')} style={style.imglogo} /> 
-        </ProgressCircle>
-        <Text style={style.textEstado}>Entregado</Text>
-        </View>
-        
+          <ProgressStatus
+            value={porcentajeAnima}
+            image={'home-search'}
+            textDescription={'Búsqueda'}
+          />
+          <ProgressStatus
+            value={busqueda}
+            image={'home-heart'}
+            textDescription={'Entregado'}
+          />
         </View>
         <View style={style.rowDias}>
-        <View style={style.colDia}>
+          <View style={style.colDia}>
             <Text style={style.textDia}>Info</Text>
-            <Maticons
-              name="information-variant"
-              size={24}
-              color="#000000"
-            />
-            </View>
-            <Text style={style.textNumber}>Guarda información característica de la mascota que solo podría saber su familia</Text>
+            <Maticons name="information-variant" size={24} color="#000000" />
+          </View>
+          <Text style={style.textNumber}>
+            Guarda información característica de la mascota que solo podría
+            saber su familia
+          </Text>
         </View>
-        {mascotaItem.estado == 'SEGUIMIENTO' && (
+        <Button
+          labelStyle={style.label}
+          style={style.guardar}
+          color="#F59822"
+          mode="contained"
+          compact={true}
+          onPress={() =>
+            cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
+          }>
+          {botonLabel}
+        </Button>
+      </View>
+      <Portal>
+        <Dialog visible={msjModal} style={globalStyles.dialog}>
+          <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph style={globalStyles.dialogMsj}>
+              Se debe cumplir el plazo de 15 días de adaptación.
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
             <Button
-            labelStyle={style.label}
-            style={style.cancelar}
-            color="#BE0238"
-            mode="contained"
-            icon="close"
-            compact={true}
-            onPress={() =>
-              cambiarEstado(mascotaItem.id, mascotaItem.estado, true)
-            }>
-            CANCELAR adaptación
-          </Button>
-        )}
-          <Button
-            labelStyle={style.label}
-            style={style.guardar}
-            color="#40BF8B"
-            mode="contained"
-            compact={true}
-            onPress={() =>
-              cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
-            }>
-            {botonLabel}
-          </Button>
-        </View>
-        <Portal>
-          <Dialog visible={msjModal} style={globalStyles.dialog} >
-              <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph style={globalStyles.dialogMsj}>Se debe cumplir el plazo de 15 días de adaptación.</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button
-                color="#FFAD00"
-                  mode="contained"
-                  onPress={() => setmsjModal(false)}>
-                  Ok
-                </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-        <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={style.modal}>
-            <View style={style.InfoContent}>
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/home-search.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-
-              <Text style={style.sub}>Búsqueda</Text>
-              <Text style={style.texto}>En la espera de que lo encuentre su familia. Acordate de revisar si lo estan buscando en "Buscados"</Text>
-              </View>
-
-            </View>
-            
-            <View style={style.rowinfo}>
-            <View style={style.columncenter}>
-            <Image source={require('../img/home-heart.png')} style={style.imglogoInfo} /> 
-              </View>
-              <View>
-              <Text style={style.sub}>Entregado</Text>
-              <Text style={style.texto}>Comparte con nosotros si encontraste a su familia</Text>
-              </View>
-              </View>
-                </View>
-                <Button
-                labelStyle={style.label}
-                style={style.guardar}
-                color="#40BF8B"
-                  mode="contained"
-                  onPress={() => hideModal()}>
-                  Entendido
-                </Button>
-             
-        </Modal>
+              color="#9575cd"
+              mode="contained"
+              onPress={() => setmsjModal(false)}>
+              Ok
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>
+      <InfoEncontrado visible={visible} hideModal={hideModal} />
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  columncenter:{
+  columncenter: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
   },
   modal: {
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: '#FFFFFF',
     padding: 20,
     marginHorizontal: '10%',
     marginVertical: '12%',
     elevation: 10,
     borderRadius: 10,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   imglogoInfo: {
-      height: 60,
-      width: 60,
-      opacity: 0.3,
+    height: 60,
+    width: 60,
+    opacity: 0.3,
   },
   InfoContent: {
     flexDirection: 'column',
-    padding: 20
+    padding: 20,
   },
   rowinfo: {
     flexDirection: 'row',
@@ -280,7 +210,7 @@ const style = StyleSheet.create({
     marginStart: 10,
     padding: 0,
     marginTop: 10,
-    color: '#40BF8B'
+    color: '#F59822',
   },
   texto: {
     alignItems: 'flex-start',
@@ -289,13 +219,13 @@ const style = StyleSheet.create({
   rowDias: {
     flexDirection: 'column',
     justifyContent: 'center',
-    marginHorizontal: "10%",
+    marginHorizontal: '10%',
     alignContent: 'center',
     alignItems: 'center',
     borderWidth: 4,
     padding: 10,
     paddingVertical: 5,
-    borderColor: "#40BF8B",
+    borderColor: '#F59822',
     borderRadius: 20,
     marginTop: '5%',
   },
@@ -319,19 +249,19 @@ const style = StyleSheet.create({
   colDia: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
   },
   textDia: {
     fontSize: 19,
     justifyContent: 'flex-start',
-    textAlign: 'right'
+    textAlign: 'right',
   },
   textNumber: {
     fontSize: 16,
-    textAlign: 'center'
-    },
+    textAlign: 'center',
+  },
   label: {
-    color: "#FFFFFF"
+    color: '#FFFFFF',
   },
   guardar: {
     justifyContent: 'flex-end',
@@ -346,7 +276,7 @@ const style = StyleSheet.create({
     marginTop: '5%',
     marginBottom: '10%',
   },
-  cancelar: { 
+  cancelar: {
     padding: 3,
     borderRadius: 5,
     shadowColor: '#000000',
@@ -361,27 +291,15 @@ const style = StyleSheet.create({
     top: 10,
     flex: 2,
   },
-  textEstado: {
-    textAlign: 'center',
-    marginTop: 5,
-    color: "#208A8B",
-  },
-  columnEstado: {
-    flexDirection: 'column',
-  },
   rowEstado: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: "20%",
+    marginHorizontal: '20%',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: '5%'
-    },
-  imglogo: {
-    height: 40,
-    width: 40,
-    opacity: 0.3,
-    },
+    marginTop: '5%',
+  },
+
   viewDetalle: {
     marginHorizontal: 10,
     padding: 10,
@@ -393,7 +311,7 @@ const style = StyleSheet.create({
   },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#40BF8B',
+    backgroundColor: '#F59822',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
@@ -408,7 +326,7 @@ const style = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     alignContent: 'center',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
   },
   cardNew: {
     backgroundColor: '#FFFFFF',
@@ -444,12 +362,12 @@ const style = StyleSheet.create({
   iconSexo: {
     marginRight: 'auto',
     marginStart: 5,
-    },
-    containerH1: {
+  },
+  containerH1: {
     flexDirection: 'row',
     flex: 3,
     alignItems: 'baseline',
-    alignContent: 'flex-start'
-    },
+    alignContent: 'flex-start',
+  },
 });
 export default EstadosEncontrado;

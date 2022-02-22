@@ -88,7 +88,7 @@ const Denunciar = (props, route) => {
               style={style.advertencia}
               name="alert-outline"
               size={80}
-              color="#FFAD00"
+              color="#9575cd"
             />
         <Text style={style.motivoText}>Estan pidiendo dinero por esta mascota</Text>
         </View>
@@ -100,7 +100,7 @@ const Denunciar = (props, route) => {
               style={style.advertencia}
               name="eye-off-outline"
               size={80}
-              color="#FFAD00"
+              color="#9575cd"
             />
         <Text style={style.motivoText}>La información tiene contenido inapropiado</Text>
         </View>
@@ -180,7 +180,7 @@ const style = StyleSheet.create({
     paddingBottom: 30,
     elevation: 4,
     borderRadius: 10,
-    backgroundColor: "#D0800A"
+    backgroundColor: "#f5bb05"
   },
   motivoText: 
   {
@@ -191,7 +191,7 @@ const style = StyleSheet.create({
   viewOtro: {
     justifyContent: 'flex-end',
     marginHorizontal: '10%',
-    borderColor: "#FFAD00",
+    borderColor: "#9575cd",
     borderWidth: 3,
     borderStyle: 'solid',
     padding: 10,
@@ -206,7 +206,7 @@ const style = StyleSheet.create({
   },
   guardar: {
     justifyContent: 'flex-end',
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     padding: 3,
     borderRadius: 5,
     shadowColor: '#000000',

@@ -12,7 +12,7 @@ const theme = {
   colors: {
     accent: '#252932',
     backdrop: 'transparent',
-    background: '#FFAD00',
+    background: '#9575cd',
     disabled: 'rgba(0, 0, 0, 0.90)',
     error: '#B00020',
     notification: '#f50057',

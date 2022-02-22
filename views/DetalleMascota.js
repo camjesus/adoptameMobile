@@ -45,19 +45,19 @@ const DetalleMascota = ({navigation, route, props}) => {
       useEffect(() => {
         switch (mascotaItem.tamanio) {
           case 'CHICO':
-            setColorChico('#FFAD00');
+            setColorChico('#9575cd');
             setColorMediano('#FFFFFF');
             setColorGrande('#FFFFFF');
             break;
           case 'MEDIANO':
             setColorChico('#FFFFFF');
-            setColorMediano('#FFAD00');
+            setColorMediano('#9575cd');
             setColorGrande('#FFFFFF');
             break;
           case 'GRANDE':
             setColorChico('#FFFFFF');
             setColorMediano('#FFFFFF');
-            setColorGrande('#FFAD00');
+            setColorGrande('#9575cd');
             break;
         }
       }, []);
@@ -162,7 +162,7 @@ const DetalleMascota = ({navigation, route, props}) => {
               style={style.iconSexo}
               name={nombreSexo}
               size={25}
-              color="#FFAD00"
+              color="#9575cd"
             />
           </View>
         </View>
@@ -278,14 +278,14 @@ const style = StyleSheet.create({
     marginBottom: 10,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     shadowColor: '#000000',
     elevation: 10,
     shadowOffset: {width: 1, height: 13},
   },
   header: {
     paddingBottom: 90,
-    backgroundColor: '#FFAD00',
+    backgroundColor: '#9575cd',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     shadowColor: '#000000',
