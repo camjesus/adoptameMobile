@@ -1,22 +1,15 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  Button,
-  Text,
-  IconButton,
-  Portal,
-  Dialog,
-  Paragraph,
-  Modal,
-} from 'react-native-paper';
+import {Button, Text, IconButton, Dialog} from 'react-native-paper';
 import {Icon} from 'react-native-elements';
 import globalStyles from '../styles/global';
-import ProgressCircle from 'react-native-progress-circle';
 import constantes from '../components/context/Constantes';
 import axios from 'axios';
-import ProgressStatus from '../components/ui/ProgressState';
+import ProgressStatus from '../components/ui/ProgressStatus';
 import InfoEncontrado from '../components/ui/InfoEncontrado';
+import CardDetalle from '../components/ui/CardDetalle';
+import HeaderStatus from '../components/ui/HeaderStatus';
 
 const EstadosEncontrado = ({navigation, route, props}) => {
   const {params} = route;
@@ -24,13 +17,12 @@ const EstadosEncontrado = ({navigation, route, props}) => {
   const [nombreSexo, gNombreSexo] = useState('gender-male');
   const [porcentajeAnima, setPorcentajeAnima] = useState();
 
-  const [busqueda, setBusqueda] = useState(0);
+  const [encontrado, setEncontrado] = useState(0);
   const [botonLabel, setBotonLabel] = useState('');
-  const setInfo = useRef(false);
-  const [msjModal, setmsjModal] = useState(false);
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const [popUp, setPopUp] = React.useState(false);
 
   useEffect(() => {
     tomoNombreIcon();
@@ -49,18 +41,17 @@ const EstadosEncontrado = ({navigation, route, props}) => {
   const aplicoEstados = () => {
     //var date = new Date('05/31/2021');
     var date = new Date(mascotaItem.fechaInicio);
-    var now = new Date();
     console.log('date' + date);
     if (mascotaItem.estado == 'ENCONTRADO') {
       setBotonLabel('YA LO ENTREGUE');
     }
     if (mascotaItem.estado == 'ENTREGADO') {
+      setEncontrado(100);
       setBotonLabel('ENTREGADO!');
-      setBusqueda(100);
     }
   };
 
-  const cambiarEstado = async (id, estado, finSeguimiento) => {
+  const cambiarEstado = async (id, estado) => {
     if (estado == 'ENCONTRADO') {
       estado = 'ENTREGADO';
     }
@@ -75,107 +66,90 @@ const EstadosEncontrado = ({navigation, route, props}) => {
 
   return (
     <View>
-      <View style={style.header}>
-        <IconButton
-          icon="arrow-left"
-          color="#FFFFFF"
-          style={globalStyles.iconBack}
-          onPress={() =>
-            navigation.navigate('misMascotas', {consultarMascotas: true})
-          }
-          size={30}
-        />
-        <Text style={globalStyles.title}>Encontrado</Text>
-        <IconButton
-          icon="information-outline"
-          color="#FFFFFF"
-          style={style.iconEdit}
-          onPress={() => showModal()}
-          size={30}
-        />
-      </View>
+      <HeaderStatus
+        navigation={navigation}
+        showModal={showModal}
+        title={'Encontrado'}
+      />
       <View style={style.cardNew}>
-        <View style={style.viewMascota}>
-          <Image
-            style={style.imgMascota}
-            source={{
-              uri: mascotaItem.foto_url,
-            }}
-          />
-        </View>
-        <View style={style.viewDetalle}>
-          <View style={style.infoMascota}>
-            <View style={style.containerH1}>
-              <Text style={style.nombre}>{mascotaItem.fechaInicioS}</Text>
-              <Maticons
-                style={style.iconSexo}
-                name={nombreSexo}
-                size={30}
-                color="#F59822"
-              />
-            </View>
-          </View>
-          <Text style={style.tituloDes}>Descripción:</Text>
-          <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
-        </View>
-        <View style={style.rowEstado}>
+        <CardDetalle mascotaItem={mascotaItem} nombreSexo={nombreSexo} />
+        <View style={style.rowEstado} key={'encontrado'}>
           <ProgressStatus
+            key={'encontradoanima'}
             value={porcentajeAnima}
             image={'home-search'}
             textDescription={'Búsqueda'}
           />
           <ProgressStatus
-            value={busqueda}
+            key={'encontradoentr'}
+            value={encontrado}
             image={'home-heart'}
             textDescription={'Entregado'}
           />
         </View>
-        <View style={style.rowDias}>
-          <View style={style.colDia}>
-            <Text style={style.textDia}>Info</Text>
-            <Maticons name="information-variant" size={24} color="#000000" />
+        <IconButton
+          icon="lightbulb-on-outline"
+          color="#FFFFFF"
+          style={style.popUp}
+          onPress={() => setPopUp(true)}
+          size={30}
+        />
+        <Dialog visible={popUp} style={globalStyles.dialog}>
+          <View style={style.rowEnc}>
+            <View style={style.colDia}>
+              <Text style={style.textDia}>Info</Text>
+              <Maticons name="information-variant" size={24} color="#000000" />
+            </View>
+            <Dialog.Content>
+              <Text style={style.textBusc} key={'encText'}>
+                Adopta.Me es una sociedad en crecimiento, recuerda consultar por
+                las mascotas encontradas. {'\n'} Entre todxs lo encontraremos!
+              </Text>
+            </Dialog.Content>
+            <Button
+              color="#9575cd"
+              mode="contained"
+              onPress={() => setPopUp(false)}>
+              CERRAR
+            </Button>
           </View>
-          <Text style={style.textNumber}>
-            Guarda información característica de la mascota que solo podría
-            saber su familia
-          </Text>
-        </View>
+        </Dialog>
         <Button
           labelStyle={style.label}
           style={style.guardar}
           color="#F59822"
           mode="contained"
           compact={true}
-          onPress={() =>
-            cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
-          }>
+          onPress={() => cambiarEstado(mascotaItem.id, mascotaItem.estado)}>
           {botonLabel}
         </Button>
       </View>
-      <Portal>
-        <Dialog visible={msjModal} style={globalStyles.dialog}>
-          <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph style={globalStyles.dialogMsj}>
-              Se debe cumplir el plazo de 15 días de adaptación.
-            </Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button
-              color="#9575cd"
-              mode="contained"
-              onPress={() => setmsjModal(false)}>
-              Ok
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+
       <InfoEncontrado visible={visible} hideModal={hideModal} />
     </View>
   );
 };
 
 const style = StyleSheet.create({
+  rowEnc: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    borderWidth: 4,
+    padding: 10,
+    paddingVertical: 5,
+    borderColor: '#FFC936',
+    borderRadius: 20,
+    margin: 10,
+  },
+  popUp: {
+    position: 'absolute',
+    margin: 20,
+    right: 0,
+    bottom: '58%',
+    backgroundColor: '#c20000',
+  },
   columncenter: {
     flexDirection: 'column',
     justifyContent: 'center',
@@ -216,49 +190,12 @@ const style = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 5,
   },
-  rowDias: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginHorizontal: '10%',
-    alignContent: 'center',
-    alignItems: 'center',
-    borderWidth: 4,
-    padding: 10,
-    paddingVertical: 5,
-    borderColor: '#F59822',
-    borderRadius: 20,
-    marginTop: '5%',
-  },
-  descripcion: {
-    fontSize: 15,
-    marginTop: 0,
-    marginHorizontal: 10,
-  },
-  tituloDes: {
-    fontSize: 18,
-    marginStart: 5,
-    fontWeight: 'bold',
-  },
   columnEstadoCen: {
     flexDirection: 'column',
     marginHorizontal: 10,
   },
   icoCal: {
     marginStart: 5,
-  },
-  colDia: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'baseline',
-  },
-  textDia: {
-    fontSize: 19,
-    justifyContent: 'flex-start',
-    textAlign: 'right',
-  },
-  textNumber: {
-    fontSize: 16,
-    textAlign: 'center',
   },
   label: {
     color: '#FFFFFF',
@@ -286,11 +223,6 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: 40,
   },
-  iconEdit: {
-    right: 10,
-    top: 10,
-    flex: 2,
-  },
   rowEstado: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -300,33 +232,9 @@ const style = StyleSheet.create({
     marginTop: '5%',
   },
 
-  viewDetalle: {
-    marginHorizontal: 10,
-    padding: 10,
-    paddingTop: 0,
-  },
   viewDes: {
     marginHorizontal: 20,
     marginBottom: 0,
-  },
-  header: {
-    paddingBottom: 90,
-    backgroundColor: '#F59822',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-    shadowColor: '#000000',
-    shadowOpacity: 1,
-    shadowRadius: 30,
-    elevation: 10,
-    shadowOffset: {width: 1, height: 13},
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  infoMascota: {
-    marginTop: 10,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'baseline',
   },
   cardNew: {
     backgroundColor: '#FFFFFF',
@@ -340,34 +248,6 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
     marginTop: -80,
     flexDirection: 'column',
-  },
-  imgMascota: {
-    height: 200,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    borderRadius: 10,
-    margin: 0,
-    shadowColor: '#202020',
-    shadowOffset: {width: 0, height: 0},
-    shadowRadius: 5,
-  },
-  nombre: {
-    fontSize: 25,
-    marginBottom: 'auto',
-  },
-  edad: {
-    fontSize: 25,
-    marginBottom: 'auto',
-  },
-  iconSexo: {
-    marginRight: 'auto',
-    marginStart: 5,
-  },
-  containerH1: {
-    flexDirection: 'row',
-    flex: 3,
-    alignItems: 'baseline',
-    alignContent: 'flex-start',
   },
 });
 export default EstadosEncontrado;

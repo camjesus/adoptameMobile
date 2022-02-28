@@ -1,4 +1,3 @@
-
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,14 +10,13 @@ import {
   Paragraph,
   Modal,
 } from 'react-native-paper';
-import {Icon} from 'react-native-elements';
 import globalStyles from '../styles/global';
-import ProgressCircle from 'react-native-progress-circle';
 import constantes from '../components/context/Constantes';
 import axios from 'axios';
-import ProgressStatus from '../components/ui/ProgressState'
+import ProgressStatus from '../components/ui/ProgressStatus';
 import InfoAdopcion from '../components/ui/InfoAdopcion';
-
+import CardDetalle from '../components/ui/CardDetalle';
+import HeaderStatus from '../components/ui/HeaderStatus';
 
 const EstadosAdopcion = ({navigation, route, props}) => {
   const {params} = route;
@@ -30,11 +28,9 @@ const EstadosAdopcion = ({navigation, route, props}) => {
   const [visible, setVisible] = React.useState(false);
   const [adoptado, setAdoptado] = useState(0);
   const [botonLabel, setBotonLabel] = useState('');
-  const setInfo = useRef(false);
   const [msjModal, setmsjModal] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
 
   useEffect(() => {
     tomoNombreIcon();
@@ -73,7 +69,6 @@ const EstadosAdopcion = ({navigation, route, props}) => {
     }
   };
 
-
   const cambiarEstado = async (id, estado, finSeguimiento) => {
     if (estado == 'ADOPCION') {
       mascotaItem.fechaCalculo = new Date();
@@ -106,83 +101,47 @@ const EstadosAdopcion = ({navigation, route, props}) => {
   };
 
   return (
-      <View>
-    <View style={style.header}>
-    <IconButton
-        icon="arrow-left"
-        color="#FFFFFF"
-        style={globalStyles.iconBack}
-          onPress={() =>
-            navigation.navigate('misMascotas', {consultarMascotas: true})
-          }
-        size={30}
-    />
-    <Text style={globalStyles.title}>{mascotaItem.nombre}</Text>
-    <IconButton
-          icon="information-outline"
-          color="#FFFFFF"
-          style={style.iconEdit}
-          onPress={() => showModal()}
-          size={30}
-         />
-    </View>
-    <View style={style.cardNew}>
-        <View style={style.viewMascota}>
-          <Image
-            style={style.imgMascota}
-            source={{
-              uri: mascotaItem.foto_url,
-            }}
-          />
-        </View>
-          <View style={style.viewDetalle}>
-         <View style={style.infoMascota}>
-          <View style={style.containerH1}>
-            <Text style={style.nombre}>{mascotaItem.nombre}</Text>
-            <Text style={style.edad}>, {mascotaItem.edad} años</Text>
-            <Maticons
-              style={style.iconSexo}
-              name={nombreSexo}
-              size={30}
-              color="#9575cd"
-            />
-          </View>
-        </View>
-        </View>
-        <View style={style.viewDes}>
-            <Text style={style.tituloDes}>
-                Descripción:
-            </Text>
-          <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
-        </View>
-        <View style={style.rowEstado}>
-        <ProgressStatus
+    <View>
+      <HeaderStatus
+        navigation={navigation}
+        showModal={showModal}
+        title={'Adopción'}
+      />
+      <View style={style.cardNew}>
+        <CardDetalle mascotaItem={mascotaItem} nombreSexo={nombreSexo} />
+        <View style={style.rowEstado} key={'adopcion'}>
+          <ProgressStatus
+            key={'adopcionbus'}
             value={porcentajeAnima}
             image={'home-search'}
             textDescription={'Búsqueda'}
           />
           <ProgressStatus
+            key={'adopciondias'}
             value={porcentajeDias}
             image={'dots'}
             textDescription={'Adaptación'}
           />
           <ProgressStatus
+            key={'adopcionadop'}
             value={adoptado}
             image={'home-heart'}
             textDescription={'Adoptado'}
           />
         </View>
         <View style={style.rowDias}>
-        <View style={style.colDia}>
+          <View style={style.colDia}>
             <Text style={style.textDia}>Día:</Text>
             <Maticons
-            style={style.icoCal}
+              style={style.icoCal}
               name="calendar"
               size={24}
               color="#000000"
             />
-            </View>
-            <Text style={style.textNumber}>{diasAdaptacion}</Text>
+          </View>
+          <Text style={style.textNumber} key={'adopcion'}>
+            {diasAdaptacion}
+          </Text>
         </View>
         {mascotaItem.estado == 'SEGUIMIENTO' && (
           <IconButton
@@ -195,44 +154,42 @@ const EstadosAdopcion = ({navigation, route, props}) => {
             size={30}
           />
         )}
-          <Button
-            labelStyle={style.label}
-            style={style.guardar}
-            color="#9575cd"
-            mode="contained"
-            compact={true}
-            onPress={() =>
-              cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
-            }>
-            {botonLabel}
-          </Button>
-        </View>
-        <Portal>
-          <Dialog visible={msjModal} style={globalStyles.dialog} >
-              <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph style={globalStyles.dialogMsj}>Se deben cumplir al menos 15 días del periodo de adaptación.</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button
-                color="#9575cd"
-                  mode="contained"
-                  onPress={() => setmsjModal(false)}>
-                  Ok
-                </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-        <InfoAdopcion 
-          visible={visible}
-          hideModal={hideModal}
-        />
+        <Button
+          labelStyle={style.label}
+          style={style.guardar}
+          color="#9575cd"
+          mode="contained"
+          compact={true}
+          onPress={() =>
+            cambiarEstado(mascotaItem.id, mascotaItem.estado, false)
+          }>
+          {botonLabel}
+        </Button>
+      </View>
+      <Portal>
+        <Dialog visible={msjModal} style={globalStyles.dialog}>
+          <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph style={globalStyles.dialogMsj}>
+              Se deben cumplir al menos 15 días del periodo de adaptación.
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              color="#9575cd"
+              mode="contained"
+              onPress={() => setmsjModal(false)}>
+              Ok
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <InfoAdopcion visible={visible} hideModal={hideModal} />
     </View>
   );
 };
 
 const style = StyleSheet.create({
-
   descripcion: {
     fontSize: 15,
     marginTop: 0,
@@ -263,24 +220,24 @@ const style = StyleSheet.create({
   colDia: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   textDia: {
     fontSize: 19,
     justifyContent: 'flex-start',
-    textAlign: 'right'
+    textAlign: 'right',
   },
   rowDias: {
     flexDirection: 'column',
     justifyContent: 'center',
-    marginHorizontal: "30%",
+    marginHorizontal: '30%',
     alignContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
     borderWidth: 4,
     padding: 'auto',
     paddingVertical: 5,
-    borderColor: "#9575cd",
+    borderColor: '#9575cd',
     borderRadius: 20,
     marginTop: '5%',
   },
@@ -297,14 +254,14 @@ const style = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
     marginHorizontal: '20%',
-    marginBottom: 15
+    marginBottom: 15,
   },
   cancelar: {
     position: 'absolute',
     margin: 20,
     right: 0,
     bottom: '58%',
-    backgroundColor: '#c20000'
+    backgroundColor: '#c20000',
   },
   iconEdit: {
     right: 10,
@@ -314,7 +271,7 @@ const style = StyleSheet.create({
   textEstado: {
     textAlign: 'center',
     marginTop: 5,
-    color: "#000000",
+    color: '#000000',
   },
   columnEstado: {
     flexDirection: 'column',
@@ -322,21 +279,21 @@ const style = StyleSheet.create({
   rowEstado: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: "10%",
+    marginHorizontal: '10%',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: '5%'
-    },
-    imglogoInfo: {
-      height: 50,
-      width: 50,
-      opacity: 0.3,
-    },
-    imglogo: {
-      height: 40,
-      width: 40,
-      opacity: 0.3,
-      },
+    marginTop: '5%',
+  },
+  imglogoInfo: {
+    height: 50,
+    width: 50,
+    opacity: 0.3,
+  },
+  imglogo: {
+    height: 40,
+    width: 40,
+    opacity: 0.3,
+  },
   header: {
     paddingBottom: 90,
     backgroundColor: '#9575cd',
@@ -353,7 +310,7 @@ const style = StyleSheet.create({
   infoMascota: {
     flexDirection: 'row',
     alignContent: 'center',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
   },
   cardNew: {
     backgroundColor: '#FFFFFF',
@@ -385,16 +342,16 @@ const style = StyleSheet.create({
   edad: {
     fontSize: 25,
     marginBottom: 'auto',
-    },
-    iconSexo: {
+  },
+  iconSexo: {
     marginRight: 'auto',
     marginStart: 5,
-    },
-    containerH1: {
+  },
+  containerH1: {
     flexDirection: 'row',
     flex: 3,
     alignItems: 'baseline',
-    alignContent: 'flex-start'
-    },
+    alignContent: 'flex-start',
+  },
 });
 export default EstadosAdopcion;

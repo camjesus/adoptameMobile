@@ -3,7 +3,7 @@ import {View, Image, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
 import ProgressCircle from 'react-native-progress-circle';
 
-function ProgressState({value, image, textDescription}) {
+function ProgressStatus({value, image, textDescription}) {
   return (
     <View style={style.columnEstado}>
       <ProgressCircle
@@ -58,4 +58,4 @@ const style = StyleSheet.create({
     opacity: 0.3,
   },
 })
-export default ProgressState
+export default ProgressStatus;

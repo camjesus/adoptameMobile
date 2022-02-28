@@ -15,3 +15,4 @@ const getById = async (id) => {
       console.log(error);
     }
   };
+  export default getById;

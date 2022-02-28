@@ -18,7 +18,7 @@ const Disponibles = ({navigation, route, props}) => {
   const [mascotasDisp, gDisponibles] = useState([]);
   const [primerCarga, gPrimerCarga] = useState(true);
   const [consultarDisponibles, gConsDisponibles] = useState(true);
-  const [estado, setEstado] = useState('DISPONIBLE');
+  const [estado, setEstado] = useState('ADOPCION');
   const isFirstTime = useRef(true);
   const [distancia, gDistancia] = useState(100);
   const paramsDefault = new URLSearchParams();

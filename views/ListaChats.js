@@ -136,7 +136,7 @@ const ListaChats = (props) => {
               No tiene chats
             </Text>
           )}
-   <ScrollView style={{paddingVertical: 15}}>
+   <View style={{paddingVertical: 15}}>
      {tipoB === 'mispreguntas' &&(
        <View>
       <FlatList
@@ -167,7 +167,7 @@ const ListaChats = (props) => {
         keyExtractor={(item) => item._id}
       />
       )} 
-      </ScrollView>
+      </View>
       </View>
     );
     

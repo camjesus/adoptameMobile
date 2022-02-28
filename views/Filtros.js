@@ -291,7 +291,7 @@ const Filtros = ({navigation, route}) => {
             maximumTrackTintColor="#f5bb05"
             thumbTintColor="#9575cd"
             thumbTouchSize={{width: 100, height: 100}}
-            style={{marginVertical: 10, marginBottom: 30}}
+            style={{marginVertical: 10, marginBottom: 10}}
           />
         </View>
         <Button
@@ -338,7 +338,7 @@ const style = StyleSheet.create({
     shadowOffset: {width: 1, height: 13},
     marginVertical: 40,
     padding: 30,
-    paddingTop: 40,
+    paddingTop: 20,
   },
   mascotaRow: {
     flexDirection: 'row',
