@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
-import {Headline, Card, Text} from 'react-native-paper';
+import {IconButton, Text} from 'react-native-paper';
 import axios from 'axios';
 import globalStyles from '../styles/global';
 import EventoItem from '../components/ui/EventoItem';
-import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import constantes from '../components/context/Constantes'; 
+import constantes from '../components/context/Constantes';
 import {useIsFocused} from '@react-navigation/native';
 
 const Eventos = ({navigation, route}) => {
@@ -16,13 +15,12 @@ const Eventos = ({navigation, route}) => {
     if (isFocused) {
       obtenerEventos();
     }
-  },[isFocused]);
-
+  }, [isFocused]);
 
   const obtenerEventos = async () => {
     try {
-     // const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/eventos`;
-      const url =constantes.BASE_URL+'eventos'; 
+      // const url = `https://adoptameapp.herokuapp.com/adoptame/mobile/eventos`;
+      const url = constantes.BASE_URL + 'eventos';
       const resultado = await axios.get(url);
       console.log(resultado.data);
       console.log('paso por obetener los eventos');
@@ -31,28 +29,27 @@ const Eventos = ({navigation, route}) => {
       console.log(error);
     }
   };
-  //<Headline style={globalStyles.titulo}>
-  //{eventos.length > 0 ? 'Eventos del mes' : 'No hay eventos este mes!'}{' '}
-  //</Headline>
 
   return (
     <View style={globalStyles.base}>
-      <Card style={styles.titulo}>
-        <View style={styles.viewTitulo}>
-          <Maticons
-            style={styles.tituloIcon}
-            name="calendar-multiple"
-            size={30}
-            color="#252932"
-          />
-          <Text style={styles.tituloTxt}>Eventos</Text>
-        </View>
-      </Card>
+     <View style={globalStyles.header}>
+        <IconButton
+          icon="arrow-left"
+          color="#FFFFFF"
+          style={globalStyles.iconBack}
+          onPress={() => navigation.goBack()}
+          size={30}
+        />
+        <Text style={globalStyles.title}>Eventos</Text>
+        <View style={globalStyles.viewR}></View>
+      </View>
       <View>
-          {eventos.length === 0  && (
-              <Text style={globalStyles.msjAdvertencia} >No hay eventos disponibles</Text>
-            )}
-          </View>
+        {eventos.length === 0 && (
+          <Text style={globalStyles.msjAdvertencia}>
+            No hay eventos disponibles
+          </Text>
+        )}
+      </View>
       <FlatList
         data={eventos}
         renderItem={({item}) => <EventoItem evento={item} />}

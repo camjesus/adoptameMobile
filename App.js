@@ -12,6 +12,7 @@ import {
 import MisMascotasStack from './navigations/MisMascotasStack';
 import BuscarStack from './navigations/BuscarStack';
 import ChatsStack from './navigations/ChatsStack';
+import EventoStack from './navigations/EventoStack';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {View, StyleSheet, Text} from 'react-native';
@@ -188,6 +189,23 @@ const App = (props, navigation) => {
                 ),
               }}
             />
+            <Drawer.Screen
+              name="EventoStack"
+              component={EventoStack}
+              options={{
+                drawerLabel: 'Eventos',
+                drawerIcon: ({focused, size}) => (
+                  <Icon
+                    reverse
+                    size={22}
+                    name="calendar-blank"
+                    type="material-community"
+                    color="#9575cd"
+                  />
+                ),
+              }}
+            />
+
           </Drawer.Navigator>
         </NavigationContainer>
       </PaperProvider>

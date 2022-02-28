@@ -8,7 +8,7 @@ export default function EventoStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="eventos"
+        name="Eventos"
         component={Eventos}
         options={{headerShown: false}}
       />
