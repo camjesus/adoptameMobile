@@ -4,6 +4,8 @@ const infoStyle = StyleSheet.create({
     rowinfo: {
       flexDirection: 'row',
       justifyContent: 'center',
+      marginHorizontal: 20,
+      marginVertical: 10
     },
     columncenter:{
       flexDirection: 'column',
@@ -33,7 +35,8 @@ const infoStyle = StyleSheet.create({
       shadowRadius: 15,
       shadowOffset: {width: 1, height: 13},
       marginHorizontal: '20%',
-      marginBottom: 15
+      marginBottom: 15,
+      marginTop: 10
     },
     texto: {
       alignItems: 'flex-start',

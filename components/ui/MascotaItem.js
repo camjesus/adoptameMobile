@@ -1,6 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
 
-import {StyleSheet, View, Image, Text, Alert, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import axios from 'axios';
 import {
   Button,
@@ -26,7 +33,9 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
   const [alerta, ingresarAlerta] = useState(false);
   const [editar, setEditarM] = useState(true);
   const [color, setcolor] = useState('');
-  const [mensaje, setMensaje] = useState('Desea eliminar esta mascota permanentemente?');
+  const [mensaje, setMensaje] = useState(
+    'Desea eliminar esta mascota permanentemente?',
+  );
   const [labelBoton, setLabelBoton] = useState('Eliminar');
 
   useEffect(() => {
@@ -42,47 +51,43 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
 
   const tomoNombreIcon = () => {
     editMascota();
-    switch(estado)
-    {
+    switch (estado) {
       case 'ADOPCION':
       case 'ADOPTADA':
       case 'SEGUIMIENTO':
-        setcolor("amarillo");
-        if(estado === 'ADOPCION')
-        {
+        setcolor('amarillo');
+        if (estado === 'ADOPCION') {
           setPostText('Adopción');
         } else {
           setPostText(estado);
         }
         break;
-        case 'BUSCADO':
-        case 'ENCASA':
-          setcolor("celeste");
-          if(estado === 'ENCASA')
-        {
+      case 'BUSCADO':
+      case 'ENCASA':
+        setcolor('celeste');
+        if (estado === 'ENCASA') {
           setPostText('EN CASA');
         } else {
           setPostText(estado);
         }
         break;
-        case 'ENCONTRADO':
-        case 'ENTREGADO':
-          setPostText(estado);
-          setcolor("verde");
+      case 'ENCONTRADO':
+      case 'ENTREGADO':
+        setPostText(estado);
+        setcolor('verde');
         break;
     }
   };
 
   const editMascota = () => {
     setEditarM(true);
-    switch (estado)
-    {
+    switch (estado) {
       case 'ENTREGADO':
       case 'ENCASA':
       case 'ADOPTADA':
       case 'SEGUIMIENTO':
         setEditarM(false);
-        break;  
+        break;
     }
   };
 
@@ -95,16 +100,18 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
   };
 
   const validoEncontrado = () => {
-    if(mascota.estado === 'ENCONTRADO' ||
-    mascota.estado === 'ENTREGADO'){
+    if (mascota.estado === 'ENCONTRADO' || mascota.estado === 'ENTREGADO') {
       setencontrado(true);
     }
   };
 
   const mascotaEstado = () => {
-   console.log("Entro por mascota estado");
+    console.log('Entro por mascota estado');
     if (mascota.estado === 'ENCONTRADO' || mascota.estado === 'ENTREGADO') {
-      navigation.navigate('EstadosEncontrado', {mascotaItem: mascota});
+      navigation.navigate('StatusPet', {
+        mascotaItem: mascota,
+        type: 'Encontrado',
+      });
     }
     if (
       mascota.estado === 'ADOPCION' ||
@@ -114,13 +121,16 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
       navigation.navigate('EstadosAdopcion', {mascotaItem: mascota});
     }
     if (mascota.estado == 'BUSCADO' || mascota.estado == 'ENCASA') {
-      navigation.navigate('EstadosBuscado', {mascotaItem: mascota});
+      navigation.navigate('StatusPet', {
+        mascotaItem: mascota,
+        type: 'Encontrado',
+      });
     }
   };
 
-   const eliminarMascota = async () => {
+  const eliminarMascota = async () => {
     try {
-     const url = constantes.BASE_URL + `eliminarMascota/${mascota.id}`;
+      const url = constantes.BASE_URL + `eliminarMascota/${mascota.id}`;
       console.log(url);
       const resultado = await axios.post(url);
       console.log(resultado.data);
@@ -134,103 +144,96 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
   };
 
   return (
-    <TouchableOpacity
-    onPress={mascotaEstado}>
-    <View>
-  
-      <View style={style.viewContainer}>
-      
-         
-        <View style={style.viewMascota}>
-          <Image
-            style={style.imgMascota}
-            source={{
-              uri: foto_url,
-            }}
-          />
-           {editar == true &&(
-            <View style={style.container}>
-                  <IconButton
+    <TouchableOpacity onPress={mascotaEstado}>
+      <View>
+        <View style={style.viewContainer}>
+          <View style={style.viewMascota}>
+            <Image
+              style={style.imgMascota}
+              source={{
+                uri: foto_url,
+              }}
+            />
+            {editar == true && (
+              <View style={style.container}>
+                <IconButton
                   icon="pencil"
                   color="#FFFFFF"
                   style={style.fab}
                   onPress={() => {
-                  navigation.navigate('crearMascota', {mascotaItem: mascota});
+                    navigation.navigate('crearMascota', {mascotaItem: mascota});
                   }}
                   size={30}
-                  />
-            </View>
-
-           )}
-          <IconButton
-                  icon="trash-can"
-                  color="#FFFFFF"
-                  style={style.fabDelete}
-                  onPress={() => {
-                    setLabelBoton('Eliminar');
-                    setMensaje('Desea eliminar esta mascota permanentemente?'); 
-                    ingresarAlerta(true);}}
-                  size={30}
+                />
+              </View>
+            )}
+            <IconButton
+              icon="trash-can"
+              color="#FFFFFF"
+              style={style.fabDelete}
+              onPress={() => {
+                setLabelBoton('Eliminar');
+                setMensaje('Desea eliminar esta mascota permanentemente?');
+                ingresarAlerta(true);
+              }}
+              size={30}
             />
-        </View>
+          </View>
 
-        <View style={style.infoMascota}>
-        {encontrado && (
-            <View style={style.containerH1}>
-              <Text style={style.nombre}>{fechaInicioS}</Text>
-              <Maticons
-                style={style.iconSexo}
-                name={nombreSexo}
-                size={30}
-                color="#9575cd"
-              />
-            </View>
-          )}
+          <View style={style.infoMascota}>
+            {encontrado && (
+              <View style={style.containerH1}>
+                <Text style={style.nombre}>{fechaInicioS}</Text>
+                <Maticons
+                  style={style.iconSexo}
+                  name={nombreSexo}
+                  size={30}
+                  color="#9575cd"
+                />
+              </View>
+            )}
             {!encontrado && (
               <View style={style.containerH1}>
-                  <Text style={style.nombre}>{nombre}</Text>
-                  <Text style={style.edad}>, {edad} años</Text>
-                  <Maticons
-                style={style.iconSexo}
-                name={nombreSexo}
-                size={30}
-                color="#9575cd"
-              />
+                <Text style={style.nombre}>{nombre}</Text>
+                <Text style={style.edad}>, {edad} años</Text>
+                <Maticons
+                  style={style.iconSexo}
+                  name={nombreSexo}
+                  size={30}
+                  color="#9575cd"
+                />
               </View>
-          )}
-        </View>
-        {color === "verde" && (
+            )}
+          </View>
+          {color === 'verde' && (
             <Text style={style.textEstadoEn}>{postText}</Text>
           )}
-          {color === "amarillo" && (
+          {color === 'amarillo' && (
             <Text style={style.textEstado}>{postText}</Text>
           )}
-          {color === "celeste" && (
+          {color === 'celeste' && (
             <Text style={style.textEstadoBus}>{postText}</Text>
           )}
-         
+        </View>
       </View>
-
-    </View>
-    <Portal>
-            <Dialog visible={alerta} style={globalStyles.dialog}>
-              <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
-              <Dialog.Content style={globalStyles.dialogMsj}>
-                <Paragraph>{mensaje}</Paragraph>
-              </Dialog.Content>
-              <Dialog.Actions style={{justifyContent: 'space-between'}}
->
+      <Portal>
+        <Dialog visible={alerta} style={globalStyles.dialog}>
+          <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
+          <Dialog.Content style={globalStyles.dialogMsj}>
+            <Paragraph>{mensaje}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions style={{justifyContent: 'space-between'}}>
             {mensaje == 'Desea eliminar esta mascota permanentemente?' && (
               <Button
-              style={{marginHorizontal: 10}}
-              onPress={() => {
-                ingresarAlerta(false);
-              }}>
-              Cancelar
-            </Button>
+                style={{marginHorizontal: 10}}
+                onPress={() => {
+                  ingresarAlerta(false);
+                }}>
+                Cancelar
+              </Button>
             )}
             <Button
-            style={{marginHorizontal: 10}}
+              style={{marginHorizontal: 10}}
               onPress={() => {
                 ingresarAlerta(false);
                 eliminarMascota();
@@ -238,11 +241,10 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
               }}>
               {labelBoton}
             </Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </TouchableOpacity>
-
   );
 };
 
@@ -256,7 +258,7 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     color: '#FFFFFF',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   textEstadoEn: {
     fontSize: 23,
@@ -267,7 +269,7 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     color: '#FFFFFF',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   fabDelete: {
     position: 'absolute',
@@ -292,7 +294,7 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     color: '#FFFFFF',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   infoMascota: {
     flex: 2,

@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import {Text} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import globalStyles from '../../styles/global';
 
 function CardDetalle({mascotaItem, nombreSexo}) {
   return (
@@ -27,12 +26,8 @@ function CardDetalle({mascotaItem, nombreSexo}) {
             />
           </View>
         </View>
-        <Text style={style.tituloDes} key={'enTit'}>
-          Descripción:
-        </Text>
-        <Text style={style.descripcion} key={'enDes'}>
-          {mascotaItem.descripcion}
-        </Text>
+        <Text style={style.tituloDes}>Descripción:</Text>
+        <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
       </View>
     </View>
   );
