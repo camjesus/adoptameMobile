@@ -10,11 +10,12 @@ import {
   Paragraph,
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-import axios from 'axios';
-import constantes from '../components/context/Constantes';
 import globalStyles from '../styles/global';
+import {useDispatch} from 'react-redux';
+import {updateUser} from '../store/actions/auth.action';
 
 const Cuenta = ({navigation}) => {
+  const dispatch = useDispatch();
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
@@ -31,16 +32,20 @@ const Cuenta = ({navigation}) => {
     email,
     password: null,
     ubicacion: null,
-    telefono
+    telefono,
   };
 
   useEffect(() => {
     console.log('entre a cuena');
     obtenerDatosStorage();
+    initialValues();
+  }, []);
+
+  const initialValues = () => {
     setEditoCampos(false);
     setIconoRight('pencil');
     gCamposEdit(true);
-  }, []);
+  };
 
   const obtenerDatosStorage = async () => {
     try {
@@ -51,7 +56,7 @@ const Cuenta = ({navigation}) => {
       await AsyncStorage.getItem('nombre').then((value) => {
         gNombre(
           value.substring(0, 1).toUpperCase() +
-          value.substr(1, value.length - 1),
+            value.substr(1, value.length - 1),
         );
       });
 
@@ -70,21 +75,6 @@ const Cuenta = ({navigation}) => {
     }
   };
 
-  const editarStorage = async () => {
-    try {
-      await AsyncStorage.setItem('nombre', usuario.nombre);
-      await AsyncStorage.setItem('apellido', usuario.apellido);
-      await AsyncStorage.setItem('telefono', usuario.telefono);
-      await AsyncStorage.setItem('email', usuario.email);
-      console.log('se guardo el storage');
-      await AsyncStorage.getItem('nombre').then((value) => {
-        console.log('valor de userId ' + value);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const editarUsuario = async (icono) => {
     if (editoCampos && icono === 'check') {
       if (telefono.length !== 10) {
@@ -92,24 +82,8 @@ const Cuenta = ({navigation}) => {
         ingresarAlerta(true);
         return;
       }
-      try {
-        const url = constantes.BASE_URL + 'modifyUser';
-        console.log(usuario);
-        const resultado = await axios.post(url, usuario);
-        console.log(resultado.data.status);
-        if (resultado.data.status === 'SUCESS') {
-          guardaMensaje('El usuario se editó con éxito');
-          ingresarAlerta(true);
-          editarStorage();
-          setEditoCampos(false);
-          return;
-        }
-      } catch (error) {
-        console.log(error);
-        guardaMensaje('Error al editar el usuario');
-        ingresarAlerta(true);
-        return;
-      }
+      dispatch(updateUser(usuario));
+      initialValues();
     }
   };
 
@@ -140,66 +114,73 @@ const Cuenta = ({navigation}) => {
             editarUsuario(iconoRight);
           }}
           size={30}
-         />
+        />
       </View>
       <View style={style.cardNew}>
-      <ScrollView style={style.scroll}>
-        <View style={style.contenedor}>
+        <ScrollView style={style.scroll}>
+          <View style={style.contenedor}>
             <TextInput
-                label="Nombre"
-                value={nombre}
-                onChangeText={(texto) => {gNombre(texto); setEditoCampos(true);}}
-                style={style.input}
-                disabled={camposEdit}
+              label="Nombre"
+              value={nombre}
+              onChangeText={(texto) => {
+                gNombre(texto);
+                setEditoCampos(true);
+              }}
+              style={style.input}
+              disabled={camposEdit}
             />
             <TextInput
-                label="Apellido"
-                value={apellido}
-                onChangeText={(texto) => {gApellido(texto); setEditoCampos(true);}}
-                style={style.input}
-                disabled={camposEdit}
+              label="Apellido"
+              value={apellido}
+              onChangeText={(texto) => {
+                gApellido(texto);
+                setEditoCampos(true);
+              }}
+              style={style.input}
+              disabled={camposEdit}
             />
             <TextInput
-                label="Teléfono"
-                value={telefono}
-                onChangeText={(texto) => {gTelefono(texto); setEditoCampos(true);}}
-                style={style.input}
-                disabled={camposEdit}
+              label="Teléfono"
+              value={telefono}
+              onChangeText={(texto) => {
+                gTelefono(texto);
+                setEditoCampos(true);
+              }}
+              style={style.input}
+              disabled={camposEdit}
             />
             <TextInput
-                label="Email"
-                value={email}
-                style={style.input}
-                disabled="true"
+              label="Email"
+              value={email}
+              style={style.input}
+              disabled="true"
             />
-        </View>
-        <View style={style.Viewguardar}>
-        <Button
-            style={style.guardar}
-            mode="contained"
-            compact={true}
-            disabled={!editoCampos}
-            onPress={() => editarUsuario()}>
-            Editar
-          </Button>
+          </View>
+          <View style={style.Viewguardar}>
+            <Button
+              style={style.guardar}
+              mode="contained"
+              compact={true}
+              disabled={!editoCampos}
+              onPress={() => editarUsuario(iconoRight)}>
+              Editar
+            </Button>
           </View>
         </ScrollView>
       </View>
       <Portal>
-          <Dialog visible={alerta} style={globalStyles.dialog} >
-              <Dialog.Title style={globalStyles.dialogTitle}>Error</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button
-                  mode="contained"
-                  onPress={() => ingresarAlerta(false)}>
-                  Ok
-                </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
+        <Dialog visible={alerta} style={globalStyles.dialog}>
+          <Dialog.Title style={globalStyles.dialogTitle}>Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button mode="contained" onPress={() => ingresarAlerta(false)}>
+              Ok
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };

@@ -17,7 +17,12 @@ function CardDetalle({mascotaItem, nombreSexo}) {
       <View style={style.viewDetalle}>
         <View style={style.infoMascota}>
           <View style={style.containerH1}>
-            <Text style={style.nombre}>{mascotaItem.fechaInicioS}</Text>
+            {mascotaItem.nombre !== '' && (
+              <Text style={style.nombre}>{mascotaItem.nombre}</Text>
+            )}
+            {mascotaItem.nombre === '' && (
+              <Text style={style.nombre}>{mascotaItem.fechaInicioS}</Text>
+            )}
             <Maticons
               style={style.iconSexo}
               name={nombreSexo}

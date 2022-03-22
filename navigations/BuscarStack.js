@@ -48,18 +48,8 @@ export default function BuscarStack() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{headerShown: false, swipeEnabled: false}}
-        />
-        <Stack.Screen
           name="cuenta"
           component={Cuenta}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CrearUsuario"
-          component={CrearUsuario}
           options={{headerShown: false}}
         />
         <Stack.Screen

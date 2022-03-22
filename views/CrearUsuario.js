@@ -9,13 +9,13 @@ import {
   IconButton,
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
-import axios from 'axios';
 import {ScrollView} from 'react-native-gesture-handler';
-import constantes from '../components/context/Constantes'; 
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import * as firebase from 'firebase'; 
+import {useDispatch} from 'react-redux';
+import {AddnewUser} from '../store/actions/auth.action';
+
 
 const CrearUsuario = ({navigation}) => {
+  const dispatch = useDispatch();
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
@@ -67,36 +67,11 @@ const CrearUsuario = ({navigation}) => {
       email,
       password,
       ubicacion,
-      telefono
+      telefono,
     };
     console.log(nuevoUsuario);
-    const url = constantes.BASE_URL + 'signInUser/';
-    const resultado = await axios.post(
-     // 'https://adoptameapp.herokuapp.com/adoptame/mobile/signInUser/',
-      url,
-      nuevoUsuario,
-    );
-    console.log(resultado.data.result);
-    if (resultado.data.status === 'SUCESS') {
-      setTitulo('Bienvenid@');
-      guardaMensaje('Usuario creado con éxito');
-      setResultadoCrear('SUCESS');
-      ingresarAlerta(true);
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((response) => {
-          console.log(response);
-        })
-      .cath((err) => {
-        console.log(err);
-      })
-    } else {
-      setTitulo('Error');
-      guardaMensaje(resultado.data.result);
-      setResultadoCrear('ERROR');
-      ingresarAlerta(true);
-    }
+    dispatch(AddnewUser(nuevoUsuario));
+    navigation.goBack();
   };
 
   const focusedTextInput = (ref) => {

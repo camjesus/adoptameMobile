@@ -27,7 +27,6 @@ const Filtros = ({navigation, route}) => {
   const [checkedGrande, setCheckedGrande] = React.useState(true);
   const [checkedPerro, setCheckedPerro] = React.useState(true);
   const [checkedGato, setCheckedGato] = React.useState(true);
-  const isFirstTime = useRef(true);
   const km = ' km';
   const anios = ' años';
   const params = new URLSearchParams();
@@ -47,10 +46,10 @@ const Filtros = ({navigation, route}) => {
     }
 
     if (checkedPerro) {
-      //params.append('tipoMascota', 'PERRO');
+      params.append('tipoMascota', 'PERRO');
     }
     if (checkedGato) {
-      //params.append('tipoMascota', 'GATO');
+      params.append('tipoMascota', 'GATO');
     }
 
     if (checkedMacho) {

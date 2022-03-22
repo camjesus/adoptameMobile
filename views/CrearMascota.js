@@ -1,4 +1,4 @@
-import React, {useState, useEffect,useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, PermissionsAndroid, Image, Alert} from 'react-native';
 
 import {
@@ -16,39 +16,37 @@ import {
 } from 'react-native-paper';
 import {CheckBox} from 'react-native-elements';
 import globalStyles from '../styles/global';
-import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-community/async-storage';
-import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import constantes from '../components/context/Constantes'; 
-import * as firebase from 'firebase';
-import firebaseApp from '../database/firebaseDB';
-const db = firebase.firestore(firebaseApp);
 
-
+import {useSelector, useDispatch} from 'react-redux';
+import {AddNewPet} from '../store/actions/pet.action';
 
 const CrearMascota = ({navigation, route, props}) => {
+  const dispatch = useDispatch();
   const {params} = route;
   const {mascotaItem} = params;
-  const [edit, setEdit] = useState(mascotaItem.id != null ? true : false)
+  const [edit] = useState(mascotaItem.id != null ? true : false);
   const [nombre, gNombre] = useState(mascotaItem.nombre);
   const [sexo, gSexo] = useState(mascotaItem.sexo);
   const [tamanio, gTamanio] = useState(mascotaItem.tamanio);
   const [descripcion, gDescripcion] = useState(mascotaItem.descripcion);
   const [edad, gEdad] = useState(mascotaItem.edad.toString());
-  const [raza, gRaza] = useState('Mestizo');
+  const [raza] = useState('Mestizo');
   const [tipoMascota, gTipoMascota] = useState(mascotaItem.tipoMascota);
   const [longitud, gLongitud] = useState(mascotaItem.longitud);
   const [latitud, gLatitud] = useState(mascotaItem.latitud);
-  const [rescatista, gRescatista] = useState(mascotaItem.rescatista);
+  //const [rescatista, gRescatista] = useState(mascotaItem.rescatista);
+  const rescatista = useSelector((state) => state.auth.userId);
   const [accion, setAccion] = useState(mascotaItem.estado);
   const [imagen, gImagen] = useState(null);
-  const [cambioFoto, setCambioFoto] = React.useState(mascotaItem.cambioFoto === null ? false : mascotaItem.cambioFoto);
+  const [cambioFoto, setCambioFoto] = React.useState(
+    mascotaItem.cambioFoto === null ? false : mascotaItem.cambioFoto,
+  );
   console.log('mascotaItem');
   console.log(mascotaItem);
   const [checkedAdefinir, setCheckedAdefinir] = React.useState(false);
-  
+
   const [alerta, ingresarAlerta] = useState(false);
   const [mensaje, guardaMensaje] = useState('');
   const [titulo, gTitulo] = useState('');
@@ -56,53 +54,48 @@ const CrearMascota = ({navigation, route, props}) => {
   const [colorUbicacion, gColorUbicacion] = useState('#252932');
   const descRef = useRef();
   const edadRef = useRef(mascotaItem.edad);
-  const mascotaItemRef = useRef(mascotaItem);
   const colorSelect = '#f5bb05';
   const colorNoSelect = '#9575cd';
 
   const guardarMascota = async () => {
-
-    if (checkedAdefinir) {
+    if (checkedAdefinir && accion === 'ENCONTRADO') {
+      gNombre('Sin Collar');
+    } else if (checkedAdefinir) {
       gNombre('A definir');
     }
     try {
-        if (nombre === '' || edad === '' || descripcion === '') {
-          gTitulo('Advertencia');
-          guardaMensaje('Todos los campos son requeridos');
-          ingresarAlerta(true);
-          return;
-        }
+      if (nombre === '' || edad === '' || descripcion === '') {
+        gTitulo('Advertencia');
+        guardaMensaje('Todos los campos son requeridos');
+        ingresarAlerta(true);
+        return;
+      }
 
-        if(imagen === null && mascotaItem.foto_url === null)
-        {
-          gTitulo('Advertencia');
-          guardaMensaje('Es necesario cargar una foto para subir la mascota');
-          ingresarAlerta(true);
-        }
+      if (imagen === null && mascotaItem.foto_url === null) {
+        gTitulo('Advertencia');
+        guardaMensaje('Es necesario cargar una foto para subir la mascota');
+        ingresarAlerta(true);
+      }
 
-        if (edad > 30) {
-          gTitulo('Advertencia');
-          guardaMensaje('La mascota no puede ser mayor a 30 años');
-          ingresarAlerta(true);
-          return;
-        }
+      if (edad > 30) {
+        gTitulo('Advertencia');
+        guardaMensaje('La mascota no puede ser mayor a 30 años');
+        ingresarAlerta(true);
+        return;
+      }
 
-        if (latitud === '' || longitud === '') {
-          gTitulo('Advertencia');
-          guardaMensaje('Por favor indique en el mapa una dirección');
-          ingresarAlerta(true);
-          return;
-        }
+      if (latitud === '' || longitud === '') {
+        gTitulo('Advertencia');
+        guardaMensaje('Por favor indique en el mapa una dirección');
+        ingresarAlerta(true);
+        return;
+      }
       var bodyFormData = new FormData();
-      if(imagen !== null)
-      {
+      if (imagen !== null) {
         bodyFormData.append('image', {
           name: imagen.fileName,
           type: imagen.type,
-          uri:
-            Platform.OS === 'android'
-              ? imagen.uri
-              : imagen.uri.replace('file://', ''),
+          uri: imagen.uri.replace('file://', ''),
         });
       }
       bodyFormData.append('nombre', nombre);
@@ -117,74 +110,30 @@ const CrearMascota = ({navigation, route, props}) => {
       bodyFormData.append('longitud', longitud);
       bodyFormData.append('cambioFoto', cambioFoto);
       bodyFormData.append('rescatista', parseInt(rescatista));
-      if(mascotaItem.id !== null)
-      {
+      if (mascotaItem.id !== null) {
         bodyFormData.append('id', parseInt(mascotaItem.id));
         bodyFormData.append('foto_url', mascotaItem.foto_url);
       }
 
       console.log('bodyFormData');
       console.log(bodyFormData);
-      const urlUpload = constantes.BASE_URL + 'uploadPet';
-      axios.request({
-          method: 'post',
-          url:urlUpload,
-          data: bodyFormData,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })  
-        .then(function (response) {
-          console.log("response");
-          console.log(response);
-          if (edit) {
-            if(cambioFoto)
-            {
-              updateFotoFirebase(response.data.foto_url, response.data.id);
-            }
-            gTitulo('Editar Mascota');
-            guardaMensaje('La mascota se editó con éxito!');
-          }else{
-            gTitulo('Nueva Mascota');
-            guardaMensaje('La nueva mascota se creó con éxito!');
-          }
-         
-          ingresarAlerta(true);
-        })
-        .catch(function (response) {
-          //handle error
-          console.log(response);
-          gTitulo('Nueva Mascota');
-          guardaMensaje('Ha ocurrido un error, intente mas tarde');
-          ingresarAlerta(true);
-        });
+      dispatch(AddNewPet(bodyFormData, cambioFoto));
+
+      if (edit) {
+        gTitulo('Editar Mascota');
+        guardaMensaje('La mascota se editó con éxito!');
+      } else {
+        gTitulo('Nueva Mascota');
+        guardaMensaje('La nueva mascota se creó con éxito!');
+      }
+      ingresarAlerta(true);
     } catch (error) {
       console.log(error);
       gTitulo('Nueva Mascota');
       guardaMensaje('Ha ocurrido un error, intente mas tarde');
       ingresarAlerta(true);
     }
-    
   };
-
-  const updateFotoFirebase = (newFoto, mascotaId) => {
-    
-    db.collection("chats")
-    .where("idMascota", "==", mascotaId)
-    .onSnapshot((snapshot) => {
-      console.log('snapshot');
-      console.log(snapshot);
-      console.log("encontre chats");
-        snapshot.docs.map((doc) => (
-          db.collection("chats")
-          .doc(doc.id)
-          .update({
-            imagenMascota: newFoto
-          })
-          ));
-  
-  });
-}
 
   const abrirMapa = () => {
     console.log('abrir Mapa ');
@@ -193,14 +142,11 @@ const CrearMascota = ({navigation, route, props}) => {
 
   useEffect(() => {
     console.log('entro a useEffec con coordenadas ' + route);
-    AsyncStorage.getItem('userId').then((value) => {
-      gRescatista(value);
-    });
     if (route.params?.coordinates) {
       console.log(route.params?.coordinates);
       gLatitud(route.params?.coordinates.latitude);
       gLongitud(route.params?.coordinates.longitude);
-      gColorUbicacion("#FFFFFF");
+      gColorUbicacion('#FFFFFF');
     }
   }, [route.params?.coordinates]);
 
@@ -209,10 +155,11 @@ const CrearMascota = ({navigation, route, props}) => {
       if (mascotaItem.nombre == 'A definir') {
         setCheckedAdefinir(true);
       }
-      gColorUbicacion("#FFFFFF");
-      gColorCamara("#FFFFFF");
-     }
+      gColorUbicacion('#FFFFFF');
+      gColorCamara('#FFFFFF');
+    }
   }, []);
+
   const focusedTextInput = (ref) => {
     ref.current.focus();
   };
@@ -278,215 +225,218 @@ const CrearMascota = ({navigation, route, props}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        //let source = {uri: response.uri};
-
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
         gImagen(response);
         mascotaItem.foto_url = null;
         setCambioFoto(true);
-        gColorCamara("#FFFFFF");
+        gColorCamara('#FFFFFF');
       }
     });
   };
 
   return (
-    <View style={{backgroundColor: "#FFFFFF"}}>
-        <KeyboardAwareScrollView style={style.scroll}>
-    <View style={globalStyles.header}>
-    <IconButton
-      icon="arrow-left"
-      color="#FFFFFF"
-      style={globalStyles.iconBack}
-      onPress={() => navigation.goBack()}
-      size={30}
-    />
-    {mascotaItem.id === null && (
-      <Text style={globalStyles.title}>Nueva mascota</Text>
-    )}
-     {mascotaItem.id !== null && (
-      <Text style={globalStyles.title}>Editar mascota</Text>
-    )}
-      <IconButton
-        icon="check"
-        color="#FFFFFF"
-        style={globalStyles.iconBack}
-        onPress={() => guardarMascota()}
-        size={30}
-      />
-  </View>
-          <View style={globalStyles.base}>
-        <View style={globalStyles.contenedor}>
-          <View style={style.avatar}>
-          {cambioFoto === true &&(
-            <Avatar.Image
-            size={190}
-            source={imagen}
-            style={style.avatarImage}
+    <View style={{backgroundColor: '#FFFFFF'}}>
+      <KeyboardAwareScrollView style={style.scroll}>
+        <View style={globalStyles.header}>
+          <IconButton
+            icon="arrow-left"
+            color="#FFFFFF"
+            style={globalStyles.iconBack}
+            onPress={() => navigation.goBack()}
+            size={30}
           />
+          {mascotaItem.id === null && (
+            <Text style={globalStyles.title}>Nueva mascota</Text>
           )}
-               
-        {cambioFoto === false && (
+          {mascotaItem.id !== null && (
+            <Text style={globalStyles.title}>Editar mascota</Text>
+          )}
+          <IconButton
+            icon="check"
+            color="#FFFFFF"
+            style={globalStyles.iconBack}
+            onPress={() => guardarMascota()}
+            size={30}
+          />
+        </View>
+        <View style={globalStyles.base}>
+          <View style={globalStyles.contenedor}>
+            <View style={style.avatar}>
+              {cambioFoto === true && (
+                <Avatar.Image
+                  size={190}
+                  source={imagen}
+                  style={style.avatarImage}
+                />
+              )}
+
+              {cambioFoto === false && (
                 <Image
-                style={style.avatarImage}
-                source={{
-                  uri: mascotaItem.foto_url,
-                }}
-              />
-             )}
+                  style={style.avatarImage}
+                  source={{
+                    uri: mascotaItem.foto_url,
+                  }}
+                />
+              )}
             </View>
-          <View style={style.viewRowIcon}>
-            <FAB
-          icon="camera"
-          style={style.fabLeft}
-          color={colorCamara}
-          onPress={() => selectPhotoTapped()}
-          animated="true"
-          small
-        />
-          <FAB
-          icon="map-marker-plus"
-          style={style.fabRight}
-          color={colorUbicacion}
-          small
-          onPress={() => abrirMapa()}
-          animated="true"
-        />
-          </View>
-          <View style={style.buttonGroup}>
-          <Button
-              style={style.buttonGL}
-              mode="contained"
-              compact={true}
-              color={accion === "ADOPCION" ? colorSelect : colorNoSelect}
-              labelStyle={style.labelStyleGroup}
-              onPress={() => setAccion('ADOPCION')}>
-              Adopción
-            </Button>
-            <Button
-              style={style.buttonG}
-              mode="contained"
-              color={accion === "ENCONTRADO" ? colorSelect : colorNoSelect}
-              compact={true}
-              labelStyle={style.labelStyleGroup}
-              onPress={() => setAccion('ENCONTRADO')}>
-              Encontrado
-            </Button>
-            <Button
-              style={style.buttonGR}
-              mode="contained"
-              color={accion === "BUSCADO" ? colorSelect : colorNoSelect}
-              compact={true}
-              labelStyle={style.labelStyleGroup}
-              onPress={() => setAccion('BUSCADO')}>
-              Buscado
-            </Button>
-          </View>
-          <View style={{paddingHorizontal: 20}}>
-            <View style={style.rowNombre}>
-            <TextInput
-              label="Nombre"
-              value={nombre}
-              onChangeText={(texto) => gNombre(texto)}
-              style={style.inputNombre}
-              disabled={checkedAdefinir}
-              onSubmitEditing={(event) => { focusedTextInput(descRef) }}
-            />
-             <View style={style.rowadefinir}>
-            <CheckBox
-                right
-                title='A definir'
-                containerStyle={style.checkStyle}
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checkedColor='#9575cd'
-                checked={checkedAdefinir}
-                onPress={() => {
-                  setCheckedAdefinir(!checkedAdefinir);
-                  gNombre('');
-                }}
+            <View style={style.viewRowIcon}>
+              <FAB
+                icon="camera"
+                style={style.fabLeft}
+                color={colorCamara}
+                onPress={() => selectPhotoTapped()}
+                animated="true"
+                small
+              />
+              <FAB
+                icon="map-marker-plus"
+                style={style.fabRight}
+                color={colorUbicacion}
+                small
+                onPress={() => abrirMapa()}
+                animated="true"
               />
             </View>
-          </View>
-          <TextInput
-            label={'Descripción (' + (200 - descripcion.length) + ')'}
-            value={descripcion}
-                onChangeText={(texto) => gDescripcion(texto)}
-            style={style.input}
-            ref={descRef}
-            maxLength={200}
-            multiline={true}
-            onSubmitEditing={(event) => { focusedTextInput(edadRef) }}
-          />
-
-          <TextInput
-            label="Edad"
-            value={edad}
-            keyboardType="numeric"
-            onChangeText={(texto) => gEdad(texto)}
-            style={style.input}
-            ref={edadRef}
-          />
-          </View>
-          <View style={style.containerCheck}>
-            <View style={style.viewCheck}>
-            <View style={style.mascotaRowText}>
-              <Text style={style.titulo}>Tipo:</Text>
-
-              <Text style={style.tituloright}>Sexo:</Text>
-            </View>
-            <View style={style.mascotaRowTipoSexo}>
-              <View style={style.buttonGroupS}>
-          <Button
-              style={style.buttonGLS}
-              mode="contained"
-              color={tipoMascota === "PERRO" ? colorSelect : colorNoSelect}
-              compact={true}
-              labelStyle={style.labelStyleGroup}
-              onPress={() => gTipoMascota('PERRO')}>
-              Perro
-            </Button>
-            <Button
-              style={style.buttonGRS}
-              mode="contained"
-              compact={true}
-              labelStyle={style.labelStyleGroup}
-              color={tipoMascota === "GATO" ? colorSelect : colorNoSelect}
-              onPress={() => gTipoMascota('GATO')}>
-              Gato
-            </Button>
-          </View>
-              <View style={style.buttonGroupS}>
+            <View style={style.buttonGroup}>
               <Button
-                  style={style.buttonGLS}
-                  mode="contained"
-                  compact={true}
-                  color={sexo === "MACHO" ? colorSelect : colorNoSelect}
-                  labelStyle={style.labelStyleGroup}
-                  onPress={() => gSexo('MACHO')}>
-                  MACHO
-                </Button>
-                <Button
-                  style={style.buttonGRS}
-                  compact={true}
-                  mode="contained"
-                  labelStyle={style.labelStyleGroup}
-                  color={sexo === "HEMBRA" ? colorSelect : colorNoSelect}
-                  onPress={() => gSexo('HEMBRA')}>
-                  Hembra
-                </Button>
+                style={style.buttonGL}
+                mode="contained"
+                compact={true}
+                color={accion === 'ADOPCION' ? colorSelect : colorNoSelect}
+                labelStyle={style.labelStyleGroup}
+                onPress={() => setAccion('ADOPCION')}>
+                Adopción
+              </Button>
+              <Button
+                style={style.buttonG}
+                mode="contained"
+                color={accion === 'ENCONTRADO' ? colorSelect : colorNoSelect}
+                compact={true}
+                labelStyle={style.labelStyleGroup}
+                onPress={() => setAccion('ENCONTRADO')}>
+                Encontrado
+              </Button>
+              <Button
+                style={style.buttonGR}
+                mode="contained"
+                color={accion === 'BUSCADO' ? colorSelect : colorNoSelect}
+                compact={true}
+                labelStyle={style.labelStyleGroup}
+                onPress={() => setAccion('BUSCADO')}>
+                Buscado
+              </Button>
+            </View>
+            <View style={{paddingHorizontal: 20}}>
+              <View style={style.rowNombre}>
+                <TextInput
+                  label="Nombre"
+                  value={nombre}
+                  onChangeText={(texto) => gNombre(texto)}
+                  style={style.inputNombre}
+                  disabled={checkedAdefinir}
+                  onSubmitEditing={(event) => {
+                    focusedTextInput(descRef);
+                  }}
+                />
+                <View style={style.rowadefinir}>
+                  <CheckBox
+                    right
+                    title={accion === 'ENCONTRADO' ? 'Sin Collar' : 'A definir'}
+                    containerStyle={style.checkStyle}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checkedColor="#9575cd"
+                    checked={checkedAdefinir}
+                    onPress={() => {
+                      setCheckedAdefinir(!checkedAdefinir);
+                      gNombre('');
+                    }}
+                  />
+                </View>
               </View>
+              <TextInput
+                label={'Descripción (' + (200 - descripcion.length) + ')'}
+                value={descripcion}
+                onChangeText={(texto) => gDescripcion(texto)}
+                style={style.input}
+                ref={descRef}
+                maxLength={200}
+                multiline={true}
+                onSubmitEditing={(event) => {
+                  focusedTextInput(edadRef);
+                }}
+              />
+
+              <TextInput
+                label="Edad"
+                value={edad}
+                keyboardType="numeric"
+                onChangeText={(texto) => gEdad(texto)}
+                style={style.input}
+                ref={edadRef}
+              />
             </View>
-            </View>
-            <View style={style.mascotaRowText}>
-            <Text style={style.titulo}>Tamaño:</Text>
-            </View>
-            <View style={style.buttonGroupT}>
+            <View style={style.containerCheck}>
+              <View style={style.viewCheck}>
+                <View style={style.mascotaRowText}>
+                  <Text style={style.titulo}>Tipo:</Text>
+
+                  <Text style={style.tituloright}>Sexo:</Text>
+                </View>
+                <View style={style.mascotaRowTipoSexo}>
+                  <View style={style.buttonGroupS}>
+                    <Button
+                      style={style.buttonGLS}
+                      mode="contained"
+                      color={
+                        tipoMascota === 'PERRO' ? colorSelect : colorNoSelect
+                      }
+                      compact={true}
+                      labelStyle={style.labelStyleGroup}
+                      onPress={() => gTipoMascota('PERRO')}>
+                      Perro
+                    </Button>
+                    <Button
+                      style={style.buttonGRS}
+                      mode="contained"
+                      compact={true}
+                      labelStyle={style.labelStyleGroup}
+                      color={
+                        tipoMascota === 'GATO' ? colorSelect : colorNoSelect
+                      }
+                      onPress={() => gTipoMascota('GATO')}>
+                      Gato
+                    </Button>
+                  </View>
+                  <View style={style.buttonGroupS}>
+                    <Button
+                      style={style.buttonGLS}
+                      mode="contained"
+                      compact={true}
+                      color={sexo === 'MACHO' ? colorSelect : colorNoSelect}
+                      labelStyle={style.labelStyleGroup}
+                      onPress={() => gSexo('MACHO')}>
+                      MACHO
+                    </Button>
+                    <Button
+                      style={style.buttonGRS}
+                      compact={true}
+                      mode="contained"
+                      labelStyle={style.labelStyleGroup}
+                      color={sexo === 'HEMBRA' ? colorSelect : colorNoSelect}
+                      onPress={() => gSexo('HEMBRA')}>
+                      Hembra
+                    </Button>
+                  </View>
+                </View>
+              </View>
+              <View style={style.mascotaRowText}>
+                <Text style={style.titulo}>Tamaño:</Text>
+              </View>
+              <View style={style.buttonGroupT}>
                 <Button
                   style={style.buttonGL}
                   mode="contained"
-                  color={tamanio === "CHICO" ? colorSelect : colorNoSelect}
+                  color={tamanio === 'CHICO' ? colorSelect : colorNoSelect}
                   compact={true}
                   labelStyle={style.labelStyleGroup}
                   onPress={() => gTamanio('CHICO')}>
@@ -497,7 +447,7 @@ const CrearMascota = ({navigation, route, props}) => {
                   mode="contained"
                   compact={true}
                   labelStyle={style.labelStyleGroup}
-                  color={tamanio === "MEDIANO" ? colorSelect : colorNoSelect}
+                  color={tamanio === 'MEDIANO' ? colorSelect : colorNoSelect}
                   onPress={() => gTamanio('MEDIANO')}>
                   Mediano
                 </Button>
@@ -506,12 +456,12 @@ const CrearMascota = ({navigation, route, props}) => {
                   mode="contained"
                   compact={true}
                   labelStyle={style.labelStyleGroup}
-                  color={tamanio === "GRANDE" ? colorSelect : colorNoSelect}
+                  color={tamanio === 'GRANDE' ? colorSelect : colorNoSelect}
                   animated={false}
                   onPress={() => gTamanio('GRANDE')}>
                   grande
                 </Button>
-            </View>
+              </View>
             </View>
             <Button
               style={style.ingresar}
@@ -521,25 +471,31 @@ const CrearMascota = ({navigation, route, props}) => {
               onPress={() => guardarMascota()}>
               Guardar
             </Button>
-          <Portal>
-            <Dialog visible={alerta} style={globalStyles.dialog}>
-              <Dialog.Title style={globalStyles.dialogTitle}>{titulo}</Dialog.Title>
-              <Dialog.Content style={globalStyles.dialogMsj}>
-                <Paragraph>{mensaje}</Paragraph>
-              </Dialog.Content>
-              <Dialog.Actions>
-                <Button onPress={() => {
-                  ingresarAlerta(false);
-                  if(titulo !== 'Advertencia'){
-                    navigation.navigate('misMascotas', {consultarMascotas: true});
-                  }
-                }
-              }>Ok</Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
+            <Portal>
+              <Dialog visible={alerta} style={globalStyles.dialog}>
+                <Dialog.Title style={globalStyles.dialogTitle}>
+                  {titulo}
+                </Dialog.Title>
+                <Dialog.Content style={globalStyles.dialogMsj}>
+                  <Paragraph>{mensaje}</Paragraph>
+                </Dialog.Content>
+                <Dialog.Actions>
+                  <Button
+                    onPress={() => {
+                      ingresarAlerta(false);
+                      if (titulo !== 'Advertencia') {
+                        navigation.navigate('misMascotas', {
+                          consultarMascotas: true,
+                        });
+                      }
+                    }}>
+                    Ok
+                  </Button>
+                </Dialog.Actions>
+              </Dialog>
+            </Portal>
+          </View>
         </View>
-      </View>
       </KeyboardAwareScrollView>
     </View>
   );
@@ -552,7 +508,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginStart: 5,
-    marginTop: 'auto'
+    marginTop: 'auto',
   },
   adefinir: {
     fontSize: 14,
@@ -560,7 +516,7 @@ const style = StyleSheet.create({
   },
   rowNombre: {
     flexDirection: 'row',
-    marginBottom:  0,
+    marginBottom: 0,
   },
   checkStyle: {
     alignItems: 'baseline',
@@ -737,6 +693,6 @@ const style = StyleSheet.create({
     color: '#FFFFFF',
     padding: 0,
     margin: 0,
-  }
+  },
 });
 export default CrearMascota;

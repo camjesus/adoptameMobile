@@ -9,13 +9,37 @@ import {Text, Card, IconButton} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
-import constantes from '../components/context/Constantes'; 
+import constantes from '../components/context/Constantes';
 
 const MisMascotas = (props) => {
   const {navigation} = props;
   const [mascotas, guardarMascotas] = useState([]);
   const [userId, gUserId] = useState('');
   const mascotasRef = useRef(null);
+  const newMascota = {
+    activa: true,
+    cambioFoto: true,
+    descripcion: '',
+    edad: '',
+    estado: 'ADOPCION',
+    fechaCalculo: null,
+    fechaFin: null,
+    fechaInicio: null,
+    fechaInicioS: null,
+    foto_url: null,
+    id: null,
+    idAdoptante: null,
+    image: null,
+    latitud: null,
+    longitud: null,
+    nombre: null,
+    raza: null,
+    rescatista: null,
+    rescatistaId: null,
+    sexo: 'MACHO',
+    tamanio: 'CHICO',
+    tipoMascota: 'PERRO',
+  };
 
   const [consultarMascotas, gConsMascotaApi] = useState(false); //si adopto una mascota es para saber si recargo la pagina
   const isFocused = useIsFocused(); //devuelve true si la pantalla tiene foco
@@ -23,8 +47,8 @@ const MisMascotas = (props) => {
   //const id = route.params;
   useEffect(() => {
     console.log('pase por el effect');
-      obtenerDatosStorage();
-      gConsMascotaApi(false);
+    obtenerDatosStorage();
+    gConsMascotaApi(false);
   }, [isFocused, consultarMascotas]); //cuando la pantalla tiene el foco
 
   const obtenerDatosStorage = async () => {
@@ -69,36 +93,16 @@ const MisMascotas = (props) => {
           color="#FFFFFF"
           style={styles.iconEdit}
           onPress={() => {
-            navigation.navigate('crearMascota', {mascotaItem: {
-            activa: true,
-            cambioFoto: true,
-            descripcion: "",
-            edad: "",
-            estado: "ADOPCION",
-            fechaCalculo: null,
-            fechaFin: null,
-            fechaInicio: null,
-            fechaInicioS: null,
-            foto_url: null,
-            id: null,
-            idAdoptante: null,
-            image: null,
-            latitud: null,
-            longitud: null,
-            nombre: null,
-            raza: null,
-            rescatista: null,
-            rescatistaId: null,
-            sexo: "MACHO",
-            tamanio: "CHICO"
-            }});
+            navigation.navigate('crearMascota', {
+              mascotaItem: newMascota,
+            });
           }}
           size={30}
-         />
+        />
       </View>
       <View>
         <View>
-          {mascotas.length === 0  && (
+          {mascotas.length === 0 && (
             <Text style={globalStyles.msjAdvertencia}>
               Aún no cargaste mascotas
             </Text>
@@ -123,29 +127,9 @@ const MisMascotas = (props) => {
           style={styles.fab}
           color="#FFFFFF"
           onPress={() => {
-            navigation.navigate('crearMascota', {mascotaItem: {
-            activa: true,
-            cambioFoto: true,
-            descripcion: "",
-            edad: "",
-            estado: "ADOPCION",
-            fechaCalculo: null,
-            fechaFin: null,
-            fechaInicio: null,
-            fechaInicioS: null,
-            foto_url: null,
-            id: null,
-            idAdoptante: null,
-            image: null,
-            latitud: null,
-            longitud: null,
-            nombre: null,
-            raza: null,
-            rescatista: null,
-            rescatistaId: null,
-            sexo: "MACHO",
-            tamanio: "CHICO"
-            }});
+            navigation.navigate('crearMascota', {
+              mascotaItem: newMascota,
+            });
           }}
           animated="true"
         />
@@ -185,7 +169,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'flex-end',
     marginEnd: 20,
-    marginTop: 10
+    marginTop: 10,
   },
 });
 

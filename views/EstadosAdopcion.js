@@ -8,19 +8,19 @@ import {
   Portal,
   Dialog,
   Paragraph,
-  Modal,
 } from 'react-native-paper';
 import globalStyles from '../styles/global';
-import constantes from '../components/context/Constantes';
-import axios from 'axios';
 import ProgressStatus from '../components/ui/ProgressStatus';
 import InfoAdopcion from '../components/ui/InfoAdopcion';
 import CardDetalle from '../components/ui/CardDetalle';
 import HeaderStatus from '../components/ui/HeaderStatus';
+import {useDispatch} from 'react-redux';
+import {changeStatus} from '../store/actions/pet.action';
 
 const EstadosAdopcion = ({navigation, route, props}) => {
   const {params} = route;
   const {mascotaItem} = params;
+  const dispatch = useDispatch();
   const [nombreSexo, gNombreSexo] = useState('gender-male');
   const [diasAdaptacion, setDiasAdaptacion] = useState(0);
   const [porcentajeDias, setPorcentajeDias] = useState(0);
@@ -90,13 +90,9 @@ const EstadosAdopcion = ({navigation, route, props}) => {
       }
     }
 
-    const postEstado = {id, estado: estado};
-    mascotaItem.estado = estado;
-    const url = constantes.BASE_URL + 'estadoMascota';
-
-    const resultado = await axios.post(url, postEstado);
-    console.log('DATA ' + resultado.data);
-    mascotaItem.current = resultado.data;
+    let data = dispatch(changeStatus(id, estado));
+    console.log('DATA ' + data);
+    mascotaItem.current = data;
     aplicoEstados();
   };
 
