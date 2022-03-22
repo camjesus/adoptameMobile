@@ -233,16 +233,7 @@ const Disponibles = ({navigation, route, props}) => {
           </Text>
         </View>
       )}
-      {mascotasDisp.length > 0 && (
-        <SwiperCard
-          {...props}
-          navigation={navigation}
-          onSwiped={onSwiped}
-          codeindex={index}
-          mascotasDisp={mascotasDisp}
-          colors={colors}
-        />
-      )}
+     
     </View>
   );
 };

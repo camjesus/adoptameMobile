@@ -14,9 +14,9 @@ const DetalleMascota = ({navigation, route, props}) => {
     const {mascotaItem} = params;
     const {idMascota} = params;
     const [nombreSexo, gNombreSexo] = useState('gender-male');
-    const [colorChico, setColorChico] = useState('');
-    const [colorMediano, setColorMediano] = useState('');
-    const [colorGrande, setColorGrande] = useState('');
+    const [colorChico, setColorChico] = useState('white');
+    const [colorMediano, setColorMediano] = useState('white');
+    const [colorGrande, setColorGrande] = useState('white');
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);

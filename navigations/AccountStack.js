@@ -29,8 +29,17 @@ const Stack = createStackNavigator();
 export default function AccountStack() {
   return (
     <PaperProvider theme={theme}>
-      <Stack.Navigator >
-
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CrearUsuario"
+          component={CrearUsuario}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </PaperProvider>
   );
