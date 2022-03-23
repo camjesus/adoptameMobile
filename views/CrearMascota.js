@@ -16,9 +16,8 @@ import {
 } from 'react-native-paper';
 import {CheckBox} from 'react-native-elements';
 import globalStyles from '../styles/global';
-import ImagePicker from 'react-native-image-picker';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import ImageSelector from '../components/ui/ImageSelector';
 import {useSelector, useDispatch} from 'react-redux';
 import {AddNewPet} from '../store/actions/pet.action';
 
@@ -167,75 +166,6 @@ const CrearMascota = ({navigation, route, props}) => {
     ref.current.focus();
   };
 
-  const selectPhotoTapped = async () => {
-    const options = {
-      quality: 1.0,
-      maxWidth: 500,
-      maxHeight: 500,
-      storageOptions: {
-        privateDirectory: true,
-        skipBackup: true,
-      },
-    };
-
-    try {
-      console.log('pidiendo permiso');
-      await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      ]);
-
-      const permissionCamera = await PermissionsAndroid.check(
-        'android.permission.CAMERA',
-      );
-      const permissionWriteStorage = await PermissionsAndroid.check(
-        'android.permission.WRITE_EXTERNAL_STORAGE',
-      );
-      const permissionREADStorage = await PermissionsAndroid.check(
-        'android.permission.READ_EXTERNAL_STORAGE',
-      );
-      console.log('sali de perdir permiso');
-
-      if (
-        !permissionCamera ||
-        !permissionWriteStorage ||
-        !permissionREADStorage
-      ) {
-        console.log('Failed to get the required permissions');
-
-        return {
-          error: 'Failed to get the required permissions.',
-        };
-      }
-    } catch (error) {
-      console.log('error' + error);
-
-      return {
-        error: 'Failed to get the required permissions.',
-      };
-    }
-
-    console.log('abriendo camara');
-
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled photo picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        gImagen(response);
-        mascotaItem.foto_url = null;
-        setCambioFoto(true);
-        gColorCamara('#FFFFFF');
-      }
-    });
-  };
-
   return (
     <View style={{backgroundColor: '#FFFFFF'}}>
       <KeyboardAwareScrollView style={style.scroll}>
@@ -282,13 +212,12 @@ const CrearMascota = ({navigation, route, props}) => {
               )}
             </View>
             <View style={style.viewRowIcon}>
-              <FAB
-                icon="camera"
-                style={style.fabLeft}
-                color={colorCamara}
-                onPress={() => selectPhotoTapped()}
-                animated="true"
-                small
+              <ImageSelector
+                onImageSelected={gImagen}
+                colorCamara={colorCamara}
+                setCambioFoto={setCambioFoto}
+                gColorCamara={gColorCamara}
+                mascotaItem={mascotaItem}
               />
               <FAB
                 icon="map-marker-plus"
@@ -576,12 +505,6 @@ const style = StyleSheet.create({
   buttonG: {
     marginHorizontal: 1,
     flex: 3,
-  },
-  fabLeft: {
-    bottom: 0,
-    backgroundColor: '#9575cd',
-    elevation: 10,
-    shadowOffset: {width: 1, height: 13},
   },
   fabRight: {
     bottom: 0,
