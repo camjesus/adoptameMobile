@@ -5,11 +5,20 @@ import axios from 'axios';
 import globalStyles from '../styles/global';
 import MascotaItem from '../components/ui/MascotaItem';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Text, Card, IconButton, Button, TextInput, Portal, Dialog,Paragraph} from 'react-native-paper';
+import {
+  Text,
+  Card,
+  IconButton,
+  Button,
+  TextInput,
+  Portal,
+  Dialog,
+  Paragraph,
+} from 'react-native-paper';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
-import constantes from '../components/context/Constantes'; 
+import constantes from '../components/context/Constantes';
 
 const Denunciar = (props, route) => {
   const {params} = route;
@@ -26,7 +35,7 @@ const Denunciar = (props, route) => {
 
   useEffect(() => {
     console.log('pase por el effect');
-    if(consultoDenuncias){
+    if  (consultoDenuncias) {
       obtenerDatosStorage();
       gConsultoDenuncias(false);
     }
@@ -43,99 +52,120 @@ const Denunciar = (props, route) => {
     }
   };
 
-
   const enviarDenuncia = async () => {
     var newDenuncia = new FormData();
     newDenuncia.append('idMotivo', motivoID);
     newDenuncia.append('idMascota', mascotaItem.id);
     newDenuncia.append('idPersona', userId);
     newDenuncia.append('otro', otro);
-    
+
     const urdenuncia = constantes.BASE_URL + 'addDenuncia/';
     console.log(newDenuncia);
 
-    const resultado = await axios.post(
-      urdenuncia,
-      newDenuncia,
-     );
-     console.log(resultado);
-    
-     ingresarAlerta(true);
+    const resultado = await axios.post(urdenuncia, newDenuncia);
+    console.log(resultado);
+
+    ingresarAlerta(true);
   };
-  
 
   return (
     <View>
-    <ScrollView>
-    <View style={globalStyles.base , {flex: 1}}>
-      <View style={globalStyles.header}>
-        <IconButton
-          icon="arrow-left"
-          color="#FFFFFF"
-          style={globalStyles.iconBack}
-          onPress={() => navigation.goBack()}
-          size={30}
-        />
-       
+      <ScrollView>
+        <View style={(globalStyles.base, {flex: 1})}>
+          <View style={globalStyles.header}>
+            <IconButton
+              icon="arrow-left"
+              color="#FFFFFF"
+              style={globalStyles.iconBack}
+              onPress={() => navigation.goBack()}
+              size={30}
+            />
+
+
         <Text style={globalStyles.title}>Reportar</Text>
 
-        <View style={globalStyles.viewR}></View>
-      </View>
-<View style={{ marginVertical: '5%'}}>
-        <TouchableOpacity  onPress={() => {gMotivoID(2); gOtro(""); console.log(motivoID);}}>
-        <View style={motivoID !== 2 ? style.viewMotivos : style.viewMotivosDesc}>
-        <Maticons
-              style={style.advertencia}
-              name="alert-outline"
-              size={80}
-              color="#9575cd"
-            />
-        <Text style={style.motivoText}>Estan pidiendo dinero por esta mascota</Text>
-        </View>
-        </TouchableOpacity>
+            <View style={globalStyles.viewR} />
+          </View>
+          <View style={{marginVertical: '5%'}}>
+            <TouchableOpacity
+              onPress={() => {
+                gMotivoID(2);
+                gOtro('');
+                console.log(motivoID);
+              }}>
+              <View
+                style={
+                  motivoID !== 2 ? style.viewMotivos : style.viewMotivosDesc
+                }>
+                <Maticons
+                  style={style.advertencia}
+                  name="alert-outline"
+                  size={80}
+                  color="#9575cd"
+                />
+                <Text style={style.motivoText}>
+                  Estan pidiendo dinero por esta mascota
+                </Text>
+              </View>
+            </TouchableOpacity>
 
-        <TouchableOpacity  onPress={() => {gMotivoID(1);gOtro(""); console.log(motivoID);}}>
-        <View style={motivoID !== 1 ? style.viewMotivos : style.viewMotivosDesc}>
-        <Maticons
-              style={style.advertencia}
-              name="eye-off-outline"
-              size={80}
-              color="#9575cd"
-            />
-        <Text style={style.motivoText}>La información tiene contenido inapropiado</Text>
-        </View>
-        </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                gMotivoID(1);
+                gOtro('');
+                console.log(motivoID);
+              }}>
+              <View
+                style={
+                  motivoID !== 1 ? style.viewMotivos : style.viewMotivosDesc
+                }>
+                <Maticons
+                  style={style.advertencia}
+                  name="eye-off-outline"
+                  size={80}
+                  color="#9575cd"
+                />
+                <Text style={style.motivoText}>
+                  La información tiene contenido inapropiado
+                </Text>
+              </View>
+            </TouchableOpacity>
 
-    <View style={style.viewOtro}>
-      <TextInput
-            label={'Otro (' + (200 - otro.length) + ')'}
-            value={otro}
-            onChangeText={(texto) => {gOtro(texto); gMotivoID(0)}}
-            style={style.inputOtro}
-            maxLength={200}
-            multiline={true}
-      />
-    </View>
-    <View>
-     <Button
-        style={style.guardar}
-        mode="contained"
-        icon="send"
-        rigth
-        onPress={() => enviarDenuncia()}>
-        Enviar
-      </Button>
-      </View>
-      </View>
-    </View>
-    </ScrollView>
+            <View style={style.viewOtro}>
+              <TextInput
+                label={'Otro (' + (200 - otro.length) + ')'}
+                value={otro}
+                onChangeText={(texto) => {
+                  gOtro(texto);
+                  gMotivoID(0);
+                ;}}
+                style={style.inputOtro}
+                maxLength={200}
+                multiline={true}
+              />
+            </View>
+            <View>
+              <Button
+                style={style.guardar}
+                mode="contained"
+                icon="send"
+                rigth
+                onPress={() => enviarDenuncia()}>
+                Enviar
+              </Button>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
       <Portal>
-      <Dialog visible={alerta} style={globalStyles.dialog} >
+        <Dialog visible={alerta} style={globalStyles.dialog}>
           <Dialog.Title style={globalStyles.dialogTitle}>Mensaje</Dialog.Title>
-        <Dialog.Content>
-          <Paragraph style={globalStyles.dialogMsj}>El reporte se envió con éxito</Paragraph>
-        </Dialog.Content>
-        <Dialog.Actions>
+          <Dialog.Content>
+            <Paragraph style={globalStyles.dialogMsj}>
+              El reporte se envió con éxito
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
             <Button
               mode="contained"
               onPress={() => {
@@ -147,10 +177,10 @@ const Denunciar = (props, route) => {
               }}>
               Ok
             </Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
-   </View>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </View>
   );
 };
 const style = StyleSheet.create({
@@ -180,24 +210,24 @@ const style = StyleSheet.create({
     paddingBottom: 30,
     elevation: 4,
     borderRadius: 10,
-    backgroundColor: "#f5bb05"
+    backgroundColor: '#f5bb05',
   },
-  motivoText: 
+  motivoText:
   {
     fontSize: 20,
     textAlign: 'center',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   viewOtro: {
     justifyContent: 'flex-end',
     marginHorizontal: '10%',
-    borderColor: "#9575cd",
+    borderColor: '#9575cd',
     borderWidth: 3,
     borderStyle: 'solid',
     padding: 10,
     borderRadius: 10,
     bottom: 0,
-    marginTop: 20
+    marginTop: 20,
   },
   inputOtro: {
     marginBottom: 3,

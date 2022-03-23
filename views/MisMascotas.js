@@ -15,7 +15,6 @@ const MisMascotas = (props) => {
   const {navigation} = props;
   const [mascotas, guardarMascotas] = useState([]);
   const [userId, gUserId] = useState('');
-  const mascotasRef = useRef(null);
   const newMascota = {
     activa: true,
     cambioFoto: true,

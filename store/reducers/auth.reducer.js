@@ -16,7 +16,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userId: action.userId,
       };
-    case CHECK_USERID:
+    case CHECK_USER_ID:
       return {
         ...state,
         userId: action.userId,

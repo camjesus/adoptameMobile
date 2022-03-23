@@ -13,7 +13,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
 import {AddnewUser} from '../store/actions/auth.action';
 
-
 const CrearUsuario = ({navigation}) => {
   const dispatch = useDispatch();
   const [nombre, gNombre] = useState('');
@@ -38,8 +37,8 @@ const CrearUsuario = ({navigation}) => {
       nombre === '' ||
       apellido === '' ||
       email === '' ||
-      password === ''||
-      telefono === '' 
+      password === '' ||
+      telefono === ''
     ) {
       setTitulo('Validación');
       guardaMensaje('Todos los campos son requeridos');
@@ -49,9 +48,11 @@ const CrearUsuario = ({navigation}) => {
     //password con una mayuscula , un numero y 8 caracteres
     let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
-    if (reg.test(password) === false) { 
+    if (reg.test(password) === false) {
       setTitulo('Validación');
-      guardaMensaje('Las contraseñas deben tener 8 caracteres una mayúscula y un número');
+      guardaMensaje(
+        'Las contraseñas deben tener 8 caracteres una mayúscula y un número',
+      );
       ingresarAlerta(true);
       return;
     }
@@ -82,7 +83,7 @@ const CrearUsuario = ({navigation}) => {
     if (!alerta && resultadoCrear === 'SUCESS') {
       navigation.navigate('BuscarStack', {screen: 'Login'});
     }
-  }, [alerta])
+  }, [alerta]);
 
   return (
     <View style={globalStyles.base}>
@@ -95,61 +96,71 @@ const CrearUsuario = ({navigation}) => {
           size={30}
         />
         <Text style={style.title}>Ingresa tus datos</Text>
-        <View style={globalStyles.viewR}></View>
+        <View style={globalStyles.viewR} />
       </View>
       <View style={style.cardNew}>
-      <ScrollView style={style.scroll}>
-        <View style={style.contenedor}>
-<TextInput
-            label="Nombre"
-            onChangeText={(texto) => gNombre(texto)}
-            style={style.input}
-            value={nombre}
-            onSubmitEditing={(event) => { focusedTextInput(apellidoImp) }}
-          />
-          <TextInput
-            label="Apellido"
-            onChangeText={(texto) => gApellido(texto)}
-            style={style.input}
-            value={apellido}
-            ref={apellidoImp}
-            onSubmitEditing={(event) => { focusedTextInput(emailRef) }}
-          />
-   
-          <TextInput
-            label="Email"
-            onChangeText={(texto) => gEmail(texto)}
-            style={style.input}
-            value={email}
-            ref={emailRef}
-            onSubmitEditing={(event) => { focusedTextInput(teleRef) }}
-          />
-          <TextInput
-            label="Teléfono"
-            onChangeText={(texto) => gTelefono(texto)}
-            style={style.input}
-            value={telefono}
-            ref={teleRef}
-            onSubmitEditing={(event) => { focusedTextInput(passRef) }}
-          />
-          <TextInput
-            label="Contraseña"
-            onChangeText={(texto) => gPassword(texto)}
-            style={style.input}
-            value={password}
-            secureTextEntry={true}
-            ref={passRef}
-            onSubmitEditing={(event) => { focusedTextInput(RpassRef) }}
-          />
+        <ScrollView style={style.scroll}>
+          <View style={style.contenedor}>
+            <TextInput
+              label="Nombre"
+              onChangeText={(texto) => gNombre(texto)}
+              style={style.input}
+              value={nombre}
+              onSubmitEditing={(event) => {
+                focusedTextInput(apellidoImp);
+              }}
+            />
+            <TextInput
+              label="Apellido"
+              onChangeText={(texto) => gApellido(texto)}
+              style={style.input}
+              value={apellido}
+              ref={apellidoImp}
+              onSubmitEditing={(event) => {
+                focusedTextInput(emailRef);
+              }}
+            />
 
-          <TextInput
-            label="Repetir contraseña"
-            onChangeText={(texto) => gPasswordRep(texto)}
-            style={style.input}
-            value={passwordRep}
-            ref={RpassRef}
-            secureTextEntry={true}
-          />
+            <TextInput
+              label="Email"
+              onChangeText={(texto) => gEmail(texto)}
+              style={style.input}
+              value={email}
+              ref={emailRef}
+              onSubmitEditing={(event) => {
+                focusedTextInput(teleRef);
+              }}
+            />
+            <TextInput
+              label="Teléfono"
+              onChangeText={(texto) => gTelefono(texto)}
+              style={style.input}
+              value={telefono}
+              ref={teleRef}
+              onSubmitEditing={(event) => {
+                focusedTextInput(passRef);
+              }}
+            />
+            <TextInput
+              label="Contraseña"
+              onChangeText={(texto) => gPassword(texto)}
+              style={style.input}
+              value={password}
+              secureTextEntry={true}
+              ref={passRef}
+              onSubmitEditing={(event) => {
+                focusedTextInput(RpassRef);
+              }}
+            />
+
+            <TextInput
+              label="Repetir contraseña"
+              onChangeText={(texto) => gPasswordRep(texto)}
+              style={style.input}
+              value={passwordRep}
+              ref={RpassRef}
+              secureTextEntry={true}
+            />
 
             <View style={style.Viewguardar}>
               <Button
@@ -158,25 +169,27 @@ const CrearUsuario = ({navigation}) => {
                 onPress={() => guardarUsuario()}>
                 Crear
               </Button>
+            </View>
           </View>
-		</View>
         </ScrollView>
       </View>
       <Portal>
-          <Dialog visible={alerta} style={globalStyles.dialog} >
-              <Dialog.Title style={globalStyles.dialogTitle}>{titulo}</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button
-                  mode="contained"
-                  onPress={() => {ingresarAlerta(false);}}>
-                  Ok
-                </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
+        <Dialog visible={alerta} style={globalStyles.dialog}>
+          <Dialog.Title style={globalStyles.dialogTitle}>{titulo}</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph style={globalStyles.dialogMsj}>{mensaje}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              mode="contained"
+              onPress={() => {
+                ingresarAlerta(false);
+              }}>
+              Ok
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };

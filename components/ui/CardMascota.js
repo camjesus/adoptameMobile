@@ -54,7 +54,7 @@ const CardMascota = ({mascota, navigation, route}) => {
       onPress={() => {
         navigation.navigate('DetalleMascota', {
           mascotaItem: mascota,
-          idMascota: mascota.id
+          idMascota: mascota.id,
         });
       }}>
       <Image
@@ -72,45 +72,47 @@ const CardMascota = ({mascota, navigation, route}) => {
         style={style.masInfo}
         mode="contained"
         onPress={() => {
-          navigation.navigate('DetalleMascota', {mascotaItem: mascota, idMascota: mascota.id});
-            }}
-            animated="true"
-            icon="plus"
-            >
-            Más Info
-          </Button>
-        <View style={style.infoMascota}>
+          navigation.navigate('DetalleMascota', {
+            mascotaItem: mascota,
+            idMascota: mascota.id,
+          });
+        }}
+        animated="true"
+        icon="plus">
+        Más Info
+      </Button>
+      <View style={style.infoMascota}>
         {mascota?.estado === 'ENCONTRADO' && (
-            <View style={style.containerH1}>
-              <Text style={style.nombre}>{mascota?.fechaInicioS}</Text>
-              <Maticons
-                style={style.iconSexo}
-                name={nombreSexo}
-                size={30}
-                color="#9575cd"
-              />
-            </View>
-          )}
-          {mascota?.estado !== 'ENCONTRADO' && (
-              <View style={style.containerH1}>
-                  <Text style={style.nombre}>{mascota?.nombre}</Text>
-                  <Text style={style.edad}>, {mascota?.edad} años</Text>
-                  <Maticons
-                style={style.iconSexo}
-                name={nombreSexo}
-                size={30}
-                color="#9575cd"
-              />
-              </View>
-          )}
-        </View>
-        </TouchableOpacity>
+          <View style={style.containerH1}>
+            <Text style={style.nombre}>{mascota?.fechaInicioS}</Text>
+            <Maticons
+              style={style.iconSexo}
+              name={nombreSexo}
+              size={30}
+              color="#9575cd"
+            />
+          </View>
+        )}
+        {mascota?.estado !== 'ENCONTRADO' && (
+          <View style={style.containerH1}>
+            <Text style={style.nombre}>{mascota?.nombre}</Text>
+            <Text style={style.edad}>, {mascota?.edad} años</Text>
+            <Maticons
+              style={style.iconSexo}
+              name={nombreSexo}
+              size={30}
+              color="#9575cd"
+            />
+          </View>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const style = StyleSheet.create({
   viewMascota: {
-    marginTop: 'auto'
+    marginTop: 'auto',
   },
   pawRow: {
     flexDirection: 'row',
@@ -155,17 +157,17 @@ const style = StyleSheet.create({
   nombre: {
     fontSize: 30,
     marginTop: 'auto',
-    marginVertical: 10
+    marginVertical: 10,
   },
   edad: {
     fontSize: 30,
     marginTop: 'auto',
-    marginVertical: 10
+    marginVertical: 10,
   },
   iconSexo: {
     marginStart: 10,
     marginRight: 'auto',
-    marginVertical: 10
+    marginVertical: 10,
   },
   containerH1: {
     flexDirection: 'row',

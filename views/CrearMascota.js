@@ -152,7 +152,10 @@ const CrearMascota = ({navigation, route, props}) => {
 
   useEffect(() => {
     if (mascotaItem.id !== null) {
-      if (mascotaItem.nombre == 'A definir') {
+      if (
+        mascotaItem.nombre == 'A definir' ||
+        mascotaItem.nombre == 'Sin Collar'
+      ) {
         setCheckedAdefinir(true);
       }
       gColorUbicacion('#FFFFFF');

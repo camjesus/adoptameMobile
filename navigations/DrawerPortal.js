@@ -126,7 +126,7 @@ const DrawerPortal = (props, navigation) => {
             margin: 0,
             padding: 0,
           }}
-          initialRouteName="Disponibles"
+          initialRouteName="Home"
           drawerType={'front'}>
           <Drawer.Screen
             name="BuscarStack"

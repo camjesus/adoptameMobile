@@ -25,7 +25,7 @@ const globalStyles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 20
   },
-  msjDisponibles: {
+  msjHome: {
     textAlign: 'center',
     marginVertical: 20,
     fontSize: 20,
