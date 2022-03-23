@@ -95,7 +95,7 @@ const Cuenta = ({navigation}) => {
           color="#FFFFFF"
           style={style.iconBack}
           onPress={() =>
-            navigation.navigate('BuscarStack', {screen: 'Disponibles'})
+            navigation.navigate('BuscarStack', {screen: 'Home'})
           }
           size={30}
         />

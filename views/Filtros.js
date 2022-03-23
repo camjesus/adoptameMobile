@@ -69,7 +69,7 @@ const Filtros = ({navigation, route}) => {
 
     console.log(params);
     guardarFiltros();
-    navigation.navigate('Disponibles', {data: params});
+    navigation.navigate('Home', {data: params});
   };
 
   const getCurrentPosition = async () => {

@@ -1,14 +1,13 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Filtros from '../views/Filtros';
-import Disponibles from '../views/Disponibles';
+import Home from '../views/Home';
 import Login from '../views/Login';
 import Cuenta from '../views/Cuenta';
 import CrearUsuario from '../views/CrearUsuario';
 import DetalleMascota from '../views/DetalleMascota';
 import Denunciar from '../views/Denunciar';
 import ChatScreen from '../views/ChatScreen';
-import Inicio from '../views/Inicio';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
@@ -38,8 +37,8 @@ export default function BuscarStack() {
       <Stack.Navigator>
         
         <Stack.Screen
-          name="Disponibles"
-          component={Disponibles}
+          name="Home"
+          component={Home}
           options={{headerShown: false}}
         />
         <Stack.Screen
