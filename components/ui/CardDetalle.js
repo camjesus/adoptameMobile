@@ -31,8 +31,6 @@ function CardDetalle({mascotaItem, nombreSexo}) {
             />
           </View>
         </View>
-        <Text style={style.tituloDes}>Descripción:</Text>
-        <Text style={style.descripcion}>{mascotaItem.descripcion}</Text>
       </View>
     </View>
   );

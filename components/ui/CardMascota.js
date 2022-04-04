@@ -1,53 +1,11 @@
-import constantes from '../context/Constantes';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
-import {Card} from 'react-native-elements';
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
-import {IconButton, Button} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 
-const CardMascota = ({mascota, navigation, route}) => {
+function CardMascota({mascota, navigation, route}) {
   console.log(mascota + 'en CardMascota');
   console.log(route);
-  const [image, gFotoURL] = useState('../../img/default.jpg');
-  const [nombreSexo, gNombreSexo] = useState('gender-male');
-  const [colorChico, setColorChico] = useState('#FFFFFF');
-  const [colorMediano, setColorMediano] = useState('#FFFFFF');
-  const [colorGrande, setColorGrande] = useState('#FFFFFF');
-
-  useEffect(() => {
-    tomoNombreIcon();
-  }, [mascota?.sexo]);
-
-  const tomoNombreIcon = () => {
-    if (mascota?.sexo.toUpperCase() === 'MACHO') {
-      gNombreSexo('gender-male');
-    } else {
-      gNombreSexo('gender-female');
-    }
-  };
-
-  useEffect(() => {
-    switch (mascota?.tamanio) {
-      case 'CHICO':
-        setColorChico('#9575cd');
-        setColorMediano('#FFFFFF');
-        setColorGrande('#FFFFFF');
-        break;
-      case 'MEDIANO':
-        setColorChico('#FFFFFF');
-        setColorMediano('#9575cd');
-        setColorGrande('#FFFFFF');
-        break;
-      case 'GRANDE':
-        setColorChico('#FFFFFF');
-        setColorMediano('#FFFFFF');
-        setColorGrande('#9575cd');
-        break;
-    }
-  }, []);
-
   return (
     <TouchableOpacity
       style={style.cardNew}
@@ -64,9 +22,24 @@ const CardMascota = ({mascota, navigation, route}) => {
         }}
       />
       <View style={style.pawRow}>
-        <Maticons style={style.paw} name="paw" size={45} color={colorGrande} />
-        <Maticons style={style.paw} name="paw" size={35} color={colorMediano} />
-        <Maticons style={style.paw} name="paw" size={25} color={colorChico} />
+        <Maticons
+          style={style.paw}
+          name="paw"
+          size={45}
+          color={mascota?.tamanio === 'GRANDE' ? '#9575cd' : '#FFFFFF'}
+        />
+        <Maticons
+          style={style.paw}
+          name="paw"
+          size={35}
+          color={mascota?.tamanio === 'MEDIANO' ? '#9575cd' : '#FFFFFF'}
+        />
+        <Maticons
+          style={style.paw}
+          name="paw"
+          size={25}
+          color={mascota?.tamanio === 'CHICO' ? '#9575cd' : '#FFFFFF'}
+        />
       </View>
       <Button
         style={style.masInfo}
@@ -87,7 +60,11 @@ const CardMascota = ({mascota, navigation, route}) => {
             <Text style={style.nombre}>{mascota?.fechaInicioS}</Text>
             <Maticons
               style={style.iconSexo}
-              name={nombreSexo}
+              name={
+                mascota?.sexo.toUpperCase() === 'MACHO'
+                  ? 'gender-male'
+                  : 'gender-female'
+              }
               size={30}
               color="#9575cd"
             />
@@ -99,7 +76,11 @@ const CardMascota = ({mascota, navigation, route}) => {
             <Text style={style.edad}>, {mascota?.edad} años</Text>
             <Maticons
               style={style.iconSexo}
-              name={nombreSexo}
+              name={
+                mascota?.sexo.toUpperCase() === 'MACHO'
+                  ? 'gender-male'
+                  : 'gender-female'
+              }
               size={30}
               color="#9575cd"
             />
@@ -108,7 +89,7 @@ const CardMascota = ({mascota, navigation, route}) => {
       </View>
     </TouchableOpacity>
   );
-};
+}
 
 const style = StyleSheet.create({
   viewMascota: {

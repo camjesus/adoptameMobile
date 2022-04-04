@@ -22,8 +22,7 @@ const DetalleMascota = ({navigation, route, props}) => {
   const [nombre, gNombre] = useState('');
   const [solicitado, setsolicitado] = useState(false);
 
-
-    useEffect(() => {
+  useEffect(() => {
     //setsolicitado()
     tomoNombreIcon();
     obtenerDatosStorage();
@@ -123,20 +122,20 @@ const DetalleMascota = ({navigation, route, props}) => {
             <Maticons
               style={style.paw}
               name="paw"
-              size={30}
-              color={colorGrande}
+              size={45}
+              color={mascotaItem?.tamanio === 'GRANDE' ? '#9575cd' : '#FFFFFF'}
+            />
+            <Maticons
+              style={style.paw}
+              name="paw"
+              size={35}
+              color={mascotaItem?.tamanio === 'MEDIANO' ? '#9575cd' : '#FFFFFF'}
             />
             <Maticons
               style={style.paw}
               name="paw"
               size={25}
-              color={colorMediano}
-            />
-            <Maticons
-              style={style.paw}
-              name="paw"
-              size={20}
-              color={colorChico}
+              color={mascotaItem?.tamanio === 'CHICO' ? '#9575cd' : '#FFFFFF'}
             />
           </View>
           <View style={style.viewDetalle}>
@@ -239,7 +238,7 @@ const style = StyleSheet.create({
     position: 'absolute',
     marginStart: 10,
     margin: 10,
-    bottom: 150,
+    bottom: '35%',
     left: 0,
   },
   descripcion: {
