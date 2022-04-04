@@ -132,6 +132,18 @@ const StatusPet = ({navigation, route}) => {
           onPress={() => setPopUp(true)}
           size={30}
         />
+        <IconButton
+          icon="clipboard-text-outline"
+          color="#FFFFFF"
+          style={style.masInfo}
+          onPress={() => {
+            navigation.navigate('DetalleMascota', {
+              mascotaItem: mascotaItem,
+              idMascota: mascotaItem.id,
+            });
+          }}
+          size={30}
+        />
         <Dialog visible={popUp} style={globalStyles.dialog}>
           <View style={style.rowBus}>
             <View style={style.colDia}>
@@ -183,12 +195,19 @@ const StatusPet = ({navigation, route}) => {
 };
 
 const style = StyleSheet.create({
+  masInfo: {
+    position: 'absolute',
+    margin: 20,
+    left: 0,
+    bottom: '55%',
+    backgroundColor: '#F59822',
+  },
   popUp: {
     position: 'absolute',
     margin: 20,
     right: 0,
-    bottom: '58%',
-    backgroundColor: '#c20000',
+    bottom: '50%',
+    backgroundColor: '#F59822',
   },
   columncenter: {
     flexDirection: 'column',

@@ -1,15 +1,18 @@
 import React from 'react';
-import BarraSuperior from './BarraSuperior';
 import {Text, IconButton} from 'react-native-paper';
 import {View} from 'react-native';
+import SearchType from './SearchType';
 
-const HeaderDisponible = ({navigation, goToFiltros, route, styles, props}) => {
+const HeaderDisponible = ({heandlePress, goToFiltros, estado, styles, setEstado}) => {
   return (
-    <View >
-     <BarraSuperior
-          {...props}
-          navigation={navigation}
-          route={route}
+    <View>
+    <View style={styles.header}>
+        <IconButton
+          icon="menu"
+          color="#FFFFFF"
+          style={styles.button}
+          onPress={() => heandlePress()}
+          size={30}
         />
         <Text style={styles.title}>Portal Pet</Text>
         <IconButton
@@ -18,8 +21,10 @@ const HeaderDisponible = ({navigation, goToFiltros, route, styles, props}) => {
           style={styles.iconEdit}
           onPress={goToFiltros}
           size={30}
-         />
-    </View>
+        />
+      </View>
+      <SearchType estado={estado} setEstado={setEstado} styles={styles} />
+      </View>
   );
-}
+};
 export default HeaderDisponible;

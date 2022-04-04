@@ -92,7 +92,7 @@ const EstadosAdopcion = ({navigation, route, props}) => {
 
     let data = dispatch(changeStatus(id, estado));
     console.log('DATA ' + data);
-    mascotaItem.current = data;
+    mascotaItem.estado = estado;
     aplicoEstados();
   };
 
@@ -139,6 +139,18 @@ const EstadosAdopcion = ({navigation, route, props}) => {
             {diasAdaptacion}
           </Text>
         </View>
+        <IconButton
+          icon="clipboard-text-outline"
+          color="#FFFFFF"
+          style={style.masInfo}
+          onPress={() => {
+            navigation.navigate('DetalleMascota', {
+              mascotaItem: mascotaItem,
+              idMascota: mascotaItem.id,
+            });
+          }}
+          size={30}
+        />
         {mascotaItem.estado == 'SEGUIMIENTO' && (
           <IconButton
             icon="close"
@@ -186,6 +198,13 @@ const EstadosAdopcion = ({navigation, route, props}) => {
 };
 
 const style = StyleSheet.create({
+  masInfo: {
+    position: 'absolute',
+    margin: 20,
+    left: 0,
+    bottom: '60%',
+    backgroundColor: '#F59822',
+  },
   descripcion: {
     fontSize: 15,
     marginTop: 0,
@@ -256,7 +275,7 @@ const style = StyleSheet.create({
     position: 'absolute',
     margin: 20,
     right: 0,
-    bottom: '58%',
+    bottom: '55%',
     backgroundColor: '#c20000',
   },
   iconEdit: {
@@ -278,7 +297,6 @@ const style = StyleSheet.create({
     marginHorizontal: '10%',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: '5%',
   },
   imglogoInfo: {
     height: 50,

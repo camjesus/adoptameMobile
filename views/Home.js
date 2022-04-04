@@ -22,13 +22,8 @@ const Home = ({navigation, route, props}) => {
   const [distancia] = useState(100);
   const paramsDefault = new URLSearchParams();
   const [index, setIndex] = useState(0);
-  const [email, gEmail] = useState('none');
-  const transitionRef = React.createRef();
 
   //Botones accion mascota
-  const [colorBL, setColorBL] = useState('#f5bb05');
-  const [colorBR, setColorBR] = useState('#9575cd');
-  const [colorBC, setColorBC] = useState('#9575cd');
 
   paramsDefault.append('sexo', 'MACHO');
   paramsDefault.append('sexo', 'HEMBRA');
@@ -43,6 +38,10 @@ const Home = ({navigation, route, props}) => {
   useEffect(() => {
     gConsHome(true);
   }, [estado]);
+
+  const onSwiped = () => {
+    setIndex(index + 1);
+  };
 
   const obtenerMasDisponilbes = async (latitud, longitud) => {
     paramsDefault.append('latitud', -34.634491); //latitud);
@@ -111,79 +110,29 @@ const Home = ({navigation, route, props}) => {
     //obtenerMasDisponilbes();
   }, [data]);
 
-  const tipoBusqueda = (accion) => {
-    switch (accion) {
-      case 'ADOPCION':
-        setColorBL('#f5bb05');
-        setColorBC('#9575cd');
-        setColorBR('#9575cd');
-        break;
-      case 'ENCONTRADO':
-        setColorBL('#9575cd');
-        setColorBC('#f5bb05');
-        setColorBR('#9575cd');
-        break;
-      case 'BUSCADO':
-        setColorBL('#9575cd');
-        setColorBC('#9575cd');
-        setColorBR('#f5bb05');
-        break;
-    }
-
-    setEstado(accion);
-  };
-
-  return (
+return (
     <View style={globalStyle.base}>
-      <View style={styles.header}>
-        <IconButton
-          icon="menu"
-          color="#FFFFFF"
-          style={styles.button}
-          onPress={() => heandlePress()}
-          size={30}
-        />
-        <Text style={styles.title}>Portal Pet</Text>
-        <IconButton
-          icon="filter"
-          color="#FFFFFF"
-          style={styles.iconEdit}
-          onPress={goToFiltros}
-          size={30}
-        />
-      </View>
-      <View style={styles.tipoBusqueda}>
-        <Button
-          style={styles.buttonGL}
-          mode="contained"
-          color={colorBL}
-          labelStyle={styles.labelStyleGroup}
-          onPress={() => tipoBusqueda('ADOPCION')}>
-          Adopción
-        </Button>
-        <Button
-          style={styles.buttonG}
-          mode="contained"
-          color={colorBC}
-          labelStyle={styles.labelStyleGroup}
-          onPress={() => tipoBusqueda('ENCONTRADO')}>
-          Encontrados
-        </Button>
-        <Button
-          style={styles.buttonGR}
-          mode="contained"
-          color={colorBR}
-          labelStyle={styles.labelStyleGroup}
-          onPress={() => tipoBusqueda('BUSCADO')}>
-          Buscados
-        </Button>
-      </View>
+      <HeaderDisponible
+      heandlePress={heandlePress}
+      goToFiltros={goToFiltros}
+      estado={estado}
+      styles={styles}
+      setEstado={setEstado}
+      />
       {mascotasDisp.length === 0 && (
         <View>
           <Text style={globalStyles.msjAdvertencia}>
-            No hay mascotas Home para los filtros aplicados
+            No hay mascotas disponibles para los filtros aplicados
           </Text>
         </View>
+      )}
+      {mascotasDisp.length > 0 && (
+        <SwiperCard
+          {...props}
+          navigation={navigation}
+          mascotasDisp={mascotasDisp}
+          onSwiped={onSwiped}
+        />
       )}
     </View>
   );
