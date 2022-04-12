@@ -40,12 +40,17 @@ const Home = ({navigation, route, props}) => {
   }, [estado]);
 
   const onSwiped = () => {
+    console.log(index + 1);
+    console.log(mascotasDisp.length);
     setIndex(index + 1);
+    if (mascotasDisp.length === index) {
+      gConsHome(true);
+    }
   };
 
   const obtenerMasDisponilbes = async (latitud, longitud) => {
-    paramsDefault.append('latitud', -34.634491); //latitud);
-    paramsDefault.append('longitud', -58.4648853); //longitud);
+    paramsDefault.append('latitud', latitud); //-34.634491);
+    paramsDefault.append('longitud', longitud); //-58.4648853);
     paramsDefault.append('estado', estado);
 
     console.log();
@@ -59,6 +64,8 @@ const Home = ({navigation, route, props}) => {
       const resultado = await axios.get(url, request);
       console.log(resultado.data);
       console.log('paso por obetener mascotas Home');
+      setIndex(0);
+      gDisponibles([]);
       gDisponibles(resultado.data);
     } catch (error) {
       console.log(error);
@@ -81,7 +88,8 @@ const Home = ({navigation, route, props}) => {
     })
       .then((location) => {
         console.log(location);
-        obtenerMasDisponilbes(location.latitude, location.longitude);
+        obtenerMasDisponilbes(location.latitude, location.longitude); 
+        //obtenerMasDisponilbes(-34.634491, -58.4648853); 
       })
       .catch((error) => {
         const {code, message} = error;
@@ -110,14 +118,14 @@ const Home = ({navigation, route, props}) => {
     //obtenerMasDisponilbes();
   }, [data]);
 
-return (
+  return (
     <View style={globalStyle.base}>
       <HeaderDisponible
-      heandlePress={heandlePress}
-      goToFiltros={goToFiltros}
-      estado={estado}
-      styles={styles}
-      setEstado={setEstado}
+        heandlePress={heandlePress}
+        goToFiltros={goToFiltros}
+        estado={estado}
+        styles={styles}
+        setEstado={setEstado}
       />
       {mascotasDisp.length === 0 && (
         <View>
@@ -126,14 +134,16 @@ return (
           </Text>
         </View>
       )}
-      {mascotasDisp.length > 0 && (
-        <SwiperCard
-          {...props}
-          navigation={navigation}
-          mascotasDisp={mascotasDisp}
-          onSwiped={onSwiped}
-        />
-      )}
+      <View style={{flex: 1}}>
+        {mascotasDisp.length > 0 && (
+          <SwiperCard
+            {...props}
+            navigation={navigation}
+            mascotasDisp={mascotasDisp}
+            onSwiped={onSwiped}
+          />
+        )}
+      </View>
     </View>
   );
 };

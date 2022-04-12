@@ -11,11 +11,10 @@ import {
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import globalStyles from '../styles/global';
-import {useDispatch} from 'react-redux';
-import {updateUser} from '../store/actions/auth.action';
+import constantes from '../components/context/Constantes';
+import axios from 'axios';
 
 const Cuenta = ({navigation}) => {
-  const dispatch = useDispatch();
   const [nombre, gNombre] = useState('');
   const [apellido, gApellido] = useState('');
   const [email, gEmail] = useState('');
@@ -82,7 +81,25 @@ const Cuenta = ({navigation}) => {
         ingresarAlerta(true);
         return;
       }
-      dispatch(updateUser(usuario));
+      try {
+        const url = constantes.BASE_URL + 'modifyUser';
+        console.log(usuario);
+        const resultado = await axios.post(url, usuario);
+        console.log(resultado.data.status);
+        if (resultado.data.status === 'SUCESS') {
+          await AsyncStorage.setItem('nombre', usuario.nombre);
+          await AsyncStorage.setItem('apellido', usuario.apellido);
+          await AsyncStorage.setItem('telefono', usuario.telefono);
+          await AsyncStorage.setItem('email', usuario.email);
+          guardaMensaje('El usuario se editó con éxito');
+          ingresarAlerta(true);
+        }
+      } catch (error) {
+        console.log(error);
+        guardaMensaje('Error al editar el usuario');
+        ingresarAlerta(true);
+        return;
+      }
       initialValues();
     }
   };
@@ -94,9 +111,7 @@ const Cuenta = ({navigation}) => {
           icon="arrow-left"
           color="#FFFFFF"
           style={style.iconBack}
-          onPress={() =>
-            navigation.navigate('BuscarStack', {screen: 'Home'})
-          }
+          onPress={() => navigation.navigate('BuscarStack', {screen: 'Home'})}
           size={30}
         />
         <Text style={style.title}>Mis Datos</Text>

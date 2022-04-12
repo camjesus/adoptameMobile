@@ -5,6 +5,7 @@ import VerMapa from '../views/VerMapa';
 import CrearMascota from '../views/CrearMascota';
 import EstadosAdopcion from '../views/EstadosAdopcion';
 import StatusPet from '../views/StatusPet';
+import DetalleMascota from '../views/DetalleMascota';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
@@ -58,6 +59,11 @@ export default function MisMascotasStack() {
         <Stack.Screen
           name="StatusPet"
           component={StatusPet}
+          options={{headerShown: false}}
+        />
+         <Stack.Screen
+          name="DetalleMascota"
+          component={DetalleMascota}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

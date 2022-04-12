@@ -35,7 +35,6 @@ export default function BuscarStack() {
   return (
     <PaperProvider theme={theme}>
       <Stack.Navigator>
-        
         <Stack.Screen
           name="Home"
           component={Home}

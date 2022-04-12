@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import ChatScreen from '../views/ChatScreen';
 import ListaChats from '../views/ListaChats';
+import DetalleMascota from '../views/DetalleMascota';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
@@ -39,7 +40,11 @@ export default function ChatsStack() {
           component={ChatScreen}
           options={{headerShown: false}}
         />
-       
+        <Stack.Screen
+          name="DetalleMascota"
+          component={DetalleMascota}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </PaperProvider>
   );

@@ -1,5 +1,5 @@
 import Swiper from 'react-native-deck-swiper';
-//import CardMascota from './CardMascota';
+import CardMascota from './CardMascota';
 //import {View, Text} from 'react-native'
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
@@ -7,6 +7,9 @@ import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Button} from 'react-native-paper';
 
 const SwiperCard = ({navigation, mascotasDisp, onSwiped}) => {
+  useEffect(() => {
+  }, [mascotasDisp]);
+
   const Card = ({mascota}) => (
     <TouchableOpacity
       style={style.cardNew}
@@ -96,23 +99,16 @@ const SwiperCard = ({navigation, mascotasDisp, onSwiped}) => {
       cards={mascotasDisp}
       cardIndex={0}
       renderCard={(card) => <Card mascota={card} />}
-      onSwiper={onSwiped}
-      //infinite
+      onSwiped={onSwiped}
       backgroundColor="#FFFFFF"
       disableTopSwipe
       disableBottomSwipe
-      marginTop={60}
-      stackSize={10}
-      stackScale={10}
-      stackSeparation={14}
+      cardVerticalMargin={10}
     />
   );
 };
 
 const style = StyleSheet.create({
-  viewMascota: {
-    marginTop: 'auto',
-  },
   pawRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
@@ -143,9 +139,7 @@ const style = StyleSheet.create({
     borderRadius: 25,
     elevation: 3,
     flexDirection: 'column',
-    margin: 0,
-    padding: 0,
-    marginBottom: 'auto',
+    height: '80%',
   },
   imgMascota: {
     height: '90%',
