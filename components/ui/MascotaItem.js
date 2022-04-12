@@ -110,7 +110,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
     if (mascota.estado === 'ENCONTRADO' || mascota.estado === 'ENTREGADO') {
       navigation.navigate('StatusPet', {
         mascotaItem: mascota,
-        type: 'Encontrado',
+        type: mascota.estado,
       });
     }
     if (
@@ -123,7 +123,7 @@ const MascotaItem = ({mascota, consultarMascotas, navigation, route}) => {
     if (mascota.estado == 'BUSCADO' || mascota.estado == 'ENCASA') {
       navigation.navigate('StatusPet', {
         mascotaItem: mascota,
-        type: 'Encontrado',
+        type: mascota.estado,
       });
     }
   };

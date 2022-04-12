@@ -238,7 +238,7 @@ const style = StyleSheet.create({
     position: 'absolute',
     marginStart: 10,
     margin: 10,
-    bottom: '35%',
+    bottom: '38%',
     left: 0,
   },
   descripcion: {

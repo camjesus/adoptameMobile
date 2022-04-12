@@ -16,27 +16,30 @@ import {
 } from 'react-native-paper';
 import {CheckBox} from 'react-native-elements';
 import globalStyles from '../styles/global';
+import axios from 'axios';
+import ImagePicker from 'react-native-image-picker';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import ImageSelector from '../components/ui/ImageSelector';
-import {useSelector, useDispatch} from 'react-redux';
-import {AddNewPet} from '../store/actions/pet.action';
+import AsyncStorage from '@react-native-community/async-storage';
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
+import constantes from '../components/context/Constantes';
+import * as firebase from 'firebase';
+import firebaseApp from '../database/firebaseDB';
+const db = firebase.firestore(firebaseApp);
 
 const CrearMascota = ({navigation, route, props}) => {
-  const dispatch = useDispatch();
   const {params} = route;
   const {mascotaItem} = params;
-  const [edit] = useState(mascotaItem.id != null ? true : false);
+  const [edit, setEdit] = useState(mascotaItem.id != null ? true : false);
   const [nombre, gNombre] = useState(mascotaItem.nombre);
   const [sexo, gSexo] = useState(mascotaItem.sexo);
   const [tamanio, gTamanio] = useState(mascotaItem.tamanio);
   const [descripcion, gDescripcion] = useState(mascotaItem.descripcion);
   const [edad, gEdad] = useState(mascotaItem.edad.toString());
-  const [raza] = useState('Mestizo');
+  const [raza, gRaza] = useState('Mestizo');
   const [tipoMascota, gTipoMascota] = useState(mascotaItem.tipoMascota);
   const [longitud, gLongitud] = useState(mascotaItem.longitud);
   const [latitud, gLatitud] = useState(mascotaItem.latitud);
-  //const [rescatista, gRescatista] = useState(mascotaItem.rescatista);
-  const rescatista = useSelector((state) => state.auth.userId);
+  const [rescatista, gRescatista] = useState(mascotaItem.rescatista);
   const [accion, setAccion] = useState(mascotaItem.estado);
   const [imagen, gImagen] = useState(null);
   const [cambioFoto, setCambioFoto] = React.useState(
@@ -53,19 +56,29 @@ const CrearMascota = ({navigation, route, props}) => {
   const [colorUbicacion, gColorUbicacion] = useState('#252932');
   const descRef = useRef();
   const edadRef = useRef(mascotaItem.edad);
+  const mascotaItemRef = useRef(mascotaItem);
   const colorSelect = '#f5bb05';
   const colorNoSelect = '#9575cd';
 
   const guardarMascota = async () => {
-    if (checkedAdefinir && accion === 'ENCONTRADO') {
-      gNombre('Sin Collar');
-    } else if (checkedAdefinir) {
-      gNombre('A definir');
-    }
     try {
-      if (nombre === '' || edad === '' || descripcion === '') {
+      if (nombre === '') {
         gTitulo('Advertencia');
-        guardaMensaje('Todos los campos son requeridos');
+        guardaMensaje('Es necesario ingresar un nombre');
+        ingresarAlerta(true);
+        return;
+      }
+
+      if (edad === '') {
+        gTitulo('Advertencia');
+        guardaMensaje('Es necesario ingrasar la edad');
+        ingresarAlerta(true);
+        return;
+      }
+
+      if (descripcion === '') {
+        gTitulo('Advertencia');
+        guardaMensaje('Es necesario ingrasar una descripción');
         ingresarAlerta(true);
         return;
       }
@@ -94,7 +107,7 @@ const CrearMascota = ({navigation, route, props}) => {
         bodyFormData.append('image', {
           name: imagen.fileName,
           type: imagen.type,
-          uri: imagen.uri.replace('file://', ''),
+          uri: imagen.uri,
         });
       }
       bodyFormData.append('nombre', nombre);
@@ -116,22 +129,60 @@ const CrearMascota = ({navigation, route, props}) => {
 
       console.log('bodyFormData');
       console.log(bodyFormData);
-      dispatch(AddNewPet(bodyFormData, cambioFoto));
+      const urlUpload = constantes.BASE_URL + 'uploadPet';
+      axios
+        .request({
+          method: 'post',
+          url: urlUpload,
+          data: bodyFormData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(function (response) {
+          console.log('response');
+          console.log(response);
+          if (edit) {
+            if (cambioFoto) {
+              updateFotoFirebase(response.data.foto_url, response.data.id);
+            }
+            gTitulo('Editar Mascota');
+            guardaMensaje('La mascota se editó con éxito!');
+          } else {
+            gTitulo('Nueva Mascota');
+            guardaMensaje('La nueva mascota se creó con éxito!');
+          }
 
-      if (edit) {
-        gTitulo('Editar Mascota');
-        guardaMensaje('La mascota se editó con éxito!');
-      } else {
-        gTitulo('Nueva Mascota');
-        guardaMensaje('La nueva mascota se creó con éxito!');
-      }
-      ingresarAlerta(true);
+          ingresarAlerta(true);
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response);
+          gTitulo('Nueva Mascota');
+          guardaMensaje('Ha ocurrido un error, intente mas tarde');
+          ingresarAlerta(true);
+        });
     } catch (error) {
       console.log(error);
       gTitulo('Nueva Mascota');
       guardaMensaje('Ha ocurrido un error, intente mas tarde');
       ingresarAlerta(true);
     }
+  };
+
+  const updateFotoFirebase = (newFoto, mascotaId) => {
+    db.collection('chats')
+      .where('idMascota', '==', mascotaId)
+      .onSnapshot((snapshot) => {
+        console.log('snapshot');
+        console.log(snapshot);
+        console.log('encontre chats');
+        snapshot.docs.map((doc) =>
+          db.collection('chats').doc(doc.id).update({
+            imagenMascota: newFoto,
+          }),
+        );
+      });
   };
 
   const abrirMapa = () => {
@@ -141,6 +192,9 @@ const CrearMascota = ({navigation, route, props}) => {
 
   useEffect(() => {
     console.log('entro a useEffec con coordenadas ' + route);
+    AsyncStorage.getItem('userId').then((value) => {
+      gRescatista(value);
+    });
     if (route.params?.coordinates) {
       console.log(route.params?.coordinates);
       gLatitud(route.params?.coordinates.latitude);
@@ -148,6 +202,21 @@ const CrearMascota = ({navigation, route, props}) => {
       gColorUbicacion('#FFFFFF');
     }
   }, [route.params?.coordinates]);
+  
+  useEffect(() => {
+    if (checkedAdefinir) {
+      if (accion === 'ENCONTRADO') {
+        console.log(nombre);
+        gNombre('Sin Collar');
+      } else {
+        console.log(nombre);
+        gNombre('A definir');
+      }
+    } else {
+      console.log(nombre);
+      gNombre('');
+    }
+  }, [checkedAdefinir]);
 
   useEffect(() => {
     if (mascotaItem.id !== null) {
@@ -161,9 +230,82 @@ const CrearMascota = ({navigation, route, props}) => {
       gColorCamara('#FFFFFF');
     }
   }, []);
-
   const focusedTextInput = (ref) => {
     ref.current.focus();
+  };
+
+  const selectPhotoTapped = async () => {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        privateDirectory: true,
+        skipBackup: true,
+      },
+    };
+
+    try {
+      console.log('pidiendo permiso');
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      ]);
+
+      const permissionCamera = await PermissionsAndroid.check(
+        'android.permission.CAMERA',
+      );
+      const permissionWriteStorage = await PermissionsAndroid.check(
+        'android.permission.WRITE_EXTERNAL_STORAGE',
+      );
+      const permissionREADStorage = await PermissionsAndroid.check(
+        'android.permission.READ_EXTERNAL_STORAGE',
+      );
+      console.log('sali de perdir permiso');
+
+      if (
+        !permissionCamera ||
+        !permissionWriteStorage ||
+        !permissionREADStorage
+      ) {
+        console.log('Failed to get the required permissions');
+
+        return {
+          error: 'Failed to get the required permissions.',
+        };
+      }
+    } catch (error) {
+      console.log('error' + error);
+
+      return {
+        error: 'Failed to get the required permissions.',
+      };
+    }
+
+    console.log('abriendo camara');
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        //let source = {uri: response.uri};
+
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        gImagen(response);
+        mascotaItem.foto_url = null;
+        setCambioFoto(true);
+        gColorCamara('#FFFFFF');
+      }
+    });
   };
 
   return (
@@ -212,12 +354,13 @@ const CrearMascota = ({navigation, route, props}) => {
               )}
             </View>
             <View style={style.viewRowIcon}>
-              <ImageSelector
-                onImageSelected={gImagen}
-                colorCamara={colorCamara}
-                setCambioFoto={setCambioFoto}
-                gColorCamara={gColorCamara}
-                mascotaItem={mascotaItem}
+              <FAB
+                icon="camera"
+                style={style.fabLeft}
+                color={colorCamara}
+                onPress={() => selectPhotoTapped()}
+                animated="true"
+                small
               />
               <FAB
                 icon="map-marker-plus"
@@ -280,7 +423,6 @@ const CrearMascota = ({navigation, route, props}) => {
                     checked={checkedAdefinir}
                     onPress={() => {
                       setCheckedAdefinir(!checkedAdefinir);
-                      gNombre('');
                     }}
                   />
                 </View>
@@ -505,6 +647,12 @@ const style = StyleSheet.create({
   buttonG: {
     marginHorizontal: 1,
     flex: 3,
+  },
+  fabLeft: {
+    bottom: 0,
+    backgroundColor: '#9575cd',
+    elevation: 10,
+    shadowOffset: {width: 1, height: 13},
   },
   fabRight: {
     bottom: 0,

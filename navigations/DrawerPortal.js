@@ -15,7 +15,6 @@ import {useDispatch} from 'react-redux';
 import {deleteStorage, checkUserID} from '../store/actions/auth.action';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {View, StyleSheet, Text} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 
 const Drawer = createDrawerNavigator();
 //Defino el tema

@@ -93,7 +93,7 @@ const StatusPet = ({navigation, route}) => {
       />
       <View style={style.cardNew}>
         <CardDetalle mascotaItem={mascotaItem} nombreSexo={nombreSexo} />
-        {type == 'Buscado' && (
+        {(type === 'BUSCADO' || type === 'ENCASA') && (
           <View style={style.rowEstado} key={'buscado'}>
             <ProgressStatus
               key={'buscadoani'}
@@ -109,7 +109,7 @@ const StatusPet = ({navigation, route}) => {
             />
           </View>
         )}
-        {type == 'Encontrado' && (
+        {(type === 'ENTREGADO' || type === 'ENCONTRADO') && (
           <View style={style.rowEstado} key={'buscado'}>
             <ProgressStatus
               key={'encAnima'}
@@ -151,7 +151,7 @@ const StatusPet = ({navigation, route}) => {
               <Maticons name="information-variant" size={24} color="#000000" />
             </View>
             <Dialog.Content>
-              {type == 'Buscado' && (
+              {(type === 'BUSCADO' || type === 'ENCASA') && (
                 <Text style={style.textBusc} key={'buscado'}>
                   Adopta.Me es una sociedad en crecimiento, recuerda consultar
                   por las mascotas encontradas. {'\n'} Entre todxs lo
@@ -159,7 +159,7 @@ const StatusPet = ({navigation, route}) => {
                 </Text>
               )}
 
-              {type == 'Encontrado' && (
+              {(type === 'ENCONTRADO' || type === 'ENTREGADO') && (
                 <Text style={style.textBusc} key={'encText'}>
                   En la espera de que lo encuentre su familia. Acordate de
                   revisar si lo estan buscando en "Buscados"
@@ -184,10 +184,10 @@ const StatusPet = ({navigation, route}) => {
           {botonLabel}
         </Button>
       </View>
-      {type == 'Buscado' && (
+      {(type === 'BUSCADO' || type === 'ENCASA') && (
       <InfoBuscado visible={visible} hideModal={hideModal} />
       )}
-      {type == 'Encontrado' && (
+      {(type === 'ENCONTRADO' || type === 'ENTREGADO') && (
       <InfoEncontrado visible={visible} hideModal={hideModal} />
       )}
     </View>

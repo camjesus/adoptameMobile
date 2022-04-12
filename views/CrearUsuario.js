@@ -127,6 +127,7 @@ const CrearUsuario = ({navigation}) => {
               style={style.input}
               value={email}
               ref={emailRef}
+              autoCapitalize="none"
               onSubmitEditing={(event) => {
                 focusedTextInput(teleRef);
               }}
@@ -137,6 +138,7 @@ const CrearUsuario = ({navigation}) => {
               style={style.input}
               value={telefono}
               ref={teleRef}
+              keyboardType="numeric"
               onSubmitEditing={(event) => {
                 focusedTextInput(passRef);
               }}
@@ -307,10 +309,10 @@ const style = StyleSheet.create({
     elevation: 10,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
-    paddingTop: 30,
+    paddingTop: 10,
     paddingHorizontal: 20,
-    paddingBottom: 0,
-    marginTop: -50,
+    paddingBottom: '5%',
+    marginTop: -60,
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
